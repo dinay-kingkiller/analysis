@@ -1,0 +1,2985 @@
+\documentclass{amsart}
+\title{Analysis}
+\author{}
+
+% Include packages
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+% \usepackage{hyperref}
+
+% Options
+% \mathtoolsset{showonlyrefs}
+% \allowdisplaybreaks
+
+% Begin Definitions
+\DeclareMathOperator{\mesh}{mesh}
+\newcommand{\dif}{\mathrm{d}}
+\newcommand{\Dif}{\mathrm{D}}
+\newcommand{\lequiv}{:\Leftrightarrow}
+\newcommand{\lxor}{\otimes}
+\newcommand{\comp}{\backslash}
+\newcommand{\union}{\cup}
+\renewcommand{\implies}{\Rightarrow}
+\renewcommand{\impliedby}{\Leftarrow}
+%\iff
+\def\revdots{\mathinner{\mkern1mu\raise1pt\vbox{\kern7pt\hbox{.}}\mkern2mu\raise4pt\hbox{.}\mkern2mu \raise7pt\hbox{.}\mkern1mu}}
+% Custom Proof environment to allow cases
+\expandafter\let\expandafter\oldproof\csname\string\proof\endcsname
+\let\oldendproof\endproof
+\renewenvironment{proof}[1][\proofname]{%
+  \setcounter{case}{0}
+  \oldproof[#1]%
+}{\oldendproof}
+% Theorem
+\newtheorem*{theorem*}{Theorem}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{definition*}{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{case}{Case}
+\newtheorem*{case*}{Case}
+% Begin Document
+\begin{document}
+\begin{titlepage}
+\maketitle
+\end{titlepage}
+\setcounter{tocdepth}{1}
+\tableofcontents
+\newpage
+
+
+\section{Metric Spaces}
+\begin{definition}[Metric]
+  A \emph{metric} is a function defined by
+  \begin{align}
+    d: M \times M \to \mathbb{R}
+  \end{align}
+  such that for any $x,y,z\in M$, the separation axiom
+  \begin{align}
+    d(x,y) \geq 0,
+  \end{align}
+  the indiscernible identity
+  \begin{align}
+    d(x,y) = 0 \iff x = y
+  \end{align}
+  the symmetry axiom
+  \begin{align}
+    d(x,y) = d(y,x)
+  \end{align}
+  and the triangle inequality
+  \begin{align}
+    d(x,z) \leq d(x,y) + d(y,z)
+  \end{align}
+  all hold. A \emph{metric space} is a set with a metric defined.
+\end{definition}
+
+\begin{definition}[Absolute Difference]
+  The \emph{absolute difference} is a function $\mathbb{R}\times \mathbb{R}\to \mathbb{R}$
+  \begin{align}
+    d(x,y) := |x - y|
+  \end{align}
+\end{definition}
+
+\begin{definition}[Euclidean Metric]
+  \begin{align}
+    d(x,y) := \sqrt{\sum_{i} d_i(x_i,y_i)^2}
+  \end{align}
+\end{definition}
+
+\begin{definition}[Taxi-Cab Metric]
+  \begin{align}
+    d(x,y) := \sum_{i} d_i(x_i,y_i) 
+  \end{align}
+\end{definition}
+
+\begin{definition}[Maximum Metric]
+  \begin{align}
+    d(x,y) := \max\{d_i(x_i,y_i) \}
+  \end{align}
+\end{definition}
+
+
+\section{Bounded Sequences}
+
+\begin{definition}[Bounded Sequence]
+  A sequence is \emph{bounded} if there is a $p\in M$ and $r\in\mathbb{R}$ , such that
+  \begin{align}
+    \forall n\in\mathbb{N}: d(s_n, p) \leq r
+  \end{align}
+\end{definition}
+
+\begin{definition}[Pinched Sequence]
+  A sequence is \emph{pinched} by $r\in\mathbb{R}$, if
+  \begin{align}
+    \forall m,n\in\mathbb{N}: d(s_m, s_n) \leq r
+  \end{align}
+\end{definition}
+
+\begin{definition}
+  A real sequence is \emph{bounded above} by $B$ if
+  \begin{align}
+    \forall n: s_n < B
+  \end{align}
+  and is \emph{bounded below} by $b$ if
+  \begin{align}
+    \forall n: b < s_n
+  \end{align}
+  A sequence is \emph{totally bounded} if it is bounded above and below.
+\end{definition}
+
+\begin{theorem}
+  A real sequence is totally bounded, iff it is bounded.
+\end{theorem}
+\begin{proof}
+  Let $s:\mathbb{N}\to \mathbb{R}$ be a totally bounded sequence
+  \begin{align}
+    \forall n\in\mathbb{N}:b< s_n < B
+  \end{align}
+  Let $p$ be the average of the two bounds
+  \begin{align}
+    p:= \frac{B+b}{2}
+  \end{align}
+  and $r$ be the distance from $B$ to $p$
+  \begin{align}
+    r:= B-p
+  \end{align}
+  Rearranging
+  \begin{align*}
+    B = r+p
+    b = 2p-B
+  \end{align*}
+  \begin{align*}
+    2p- (r+p) < s_n &< r+p\\
+    p-r < s_n &< p+r\\
+    |s_n-p| &< r
+  \end{align*}
+  Now assume that $\langle s_n \rangle$ is bounded, that is that there are $p,r\in\mathbb{R}$ such that 
+  \begin{align*}
+    |s_n - p| &< r\\
+    p-r < s_n &< p+r
+  \end{align*}
+  Let $b := p-r$ and $B:= p+r$
+  \begin{align}
+    b < s_n < B
+  \end{align}
+\end{proof}
+
+
+\section{Convergent Sequences}
+
+\begin{definition}[Convergent Sequence]
+  A sequence $\langle s_n \rangle$ in $M$ \emph{converges} to $l\in M$, if
+  \begin{align}
+    \forall \varepsilon > 0: \exists N \in \mathbb{N}:\forall n>N: d(s_{n}, l)< \varepsilon
+  \end{align}
+\end{definition}
+
+
+\begin{theorem}\label{Thm:ConvergentImpliesBounded}
+  Every convergent sequence is bounded.
+\end{theorem}
+\begin{proof}
+  Let $M= (A, d)$ be a metric space and 
+  let $\langle s_n \rangle$ be a sequence in $M$ that converges to $l\in M$. Let $\varepsilon>0$. Since $\langle s_n \rangle$ converges, there is an $N$ such that if $n>N$
+  \begin{align}
+    d(s_n, l) < \varepsilon
+  \end{align}
+  Set $B'$ be a bound of the sequence before $N$
+  \begin{align}
+    B'&:= \max \{ d(s_n, l) : n\leq N \}\nonumber
+  \end{align}
+  Finally set
+  \begin{align}
+    B &:= \max \{ B', \varepsilon \}
+  \end{align}
+  Then $B$ is a bound for all $n\in\mathbb{N}$
+  \begin{align}
+    \forall n\in\mathbb{N}: d(s_n, l) \leq B
+  \end{align}
+  which implies that $\langle s_n \rangle$ is bounded.
+\end{proof}
+
+
+\begin{theorem}
+  If
+  \begin{align}
+    S &= \lim_n s_n\nonumber\\
+    T &= \lim_n t_n
+  \end{align}
+  Then
+  \begin{align}
+    \lim_n (s_n + t_n ) &= S+T
+  \end{align}
+\end{theorem}
+\begin{proof}
+  Choose an $\varepsilon'>0$ and define $\varepsilon:= 2\varepsilon'$. 
+  By the definition of convergence, there exists an $N_s$ and $N_t$ such that
+  \begin{align}
+    n > N_s \implies |s_n - S| < \varepsilon'\\
+    n> N_t \implies |t_n - T| < \varepsilon'
+  \end{align}
+  Let $N:= \max \{ N_s, N_t\}$, then for $n>N$, by the triangle inequality
+  \begin{align}
+    |(s_n+t_n) - (S+T) | \leq |s_n - S| + |t_n - T|
+  \end{align}
+  By the definition of convergence
+  \begin{align}
+    |s_n - S | + |t_n - T| < \varepsilon ' + \varepsilon' = \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon
+  \end{align}
+  Thus 
+  \begin{align}
+    \lim_n (s_n+t_n) = S+T
+  \end{align}
+\end{proof}
+
+\begin{theorem}
+  If
+  \begin{align}
+    S &= \lim_n s_n\nonumber\\
+    T &= \lim_n t_n
+  \end{align}
+  Then
+  \begin{align}
+    \lim_n (s_n \cdot t_n ) &= ST
+  \end{align}
+\end{theorem}
+\begin{proof}
+  Choose an $\varepsilon'>0$
+  By the definition of convergence, there exists an $N_s$ and $N_t$ such that
+  \begin{align}
+    n > N_s \implies |s_n - S| < \varepsilon'\\
+    n> N_t \implies |t_n - T| < \varepsilon'
+  \end{align}
+  Let $N:= \max \{ N_s, N_t\}$, then for $n>N$
+  \begin{align}
+    |(s_nt_n) - (ST) | &= |s_nt_n - s_nT + s_nT -ST |\\
+    &= |s_n (t_n - T) +(s_n - S) T|
+  \end{align}
+  By the triangle inequality
+  \begin{align}
+    |s_n(t_n - T) + (s_n - S) T| &\leq |s_n (t_n - T) | + |(s_n - S) T|\nonumber\\
+    &\leq |s_n| |t_n - T| + |s_n - S| |T|
+  \end{align}
+  Since every convergent sequence is also bounded, there is some bound $B$, such that for every $n$
+  \begin{align}
+    |s_n| < B
+  \end{align}
+  \begin{align}
+    |s_n| |t_n - T| + |s_n - S| |T| \leq B |t_n - T| + |s_n - S| |T|
+  \end{align}
+  Let $M:= \max\{ C , |T| \}$.
+  Then
+  \begin{align}
+    B |t_n - T| + |s_n - S| |T| \leq M (|s_n - S| + |t_n -T|)
+  \end{align}
+  Let $\varepsilon := 2M \varepsilon'$, then
+  \begin{align}
+    |s_n - S| < \varepsilon' = \frac{\varepsilon}{2M}\\
+    |t_n - T| < \varepsilon' = \frac{\varepsilon}{2M}
+  \end{align}
+  Then
+  \begin{align}
+    M (|s_n - S| + |t_n -T|) < M \left(\frac{\varepsilon}{2M} + \frac{\varepsilon}{2M}\right) = \varepsilon
+  \end{align}
+  Thus, for $n> N$
+  \begin{align}
+    |s_nt_n - ST| < \varepsilon
+  \end{align}
+  or
+  \begin{align}
+    \lim_n s_n t_n = ST
+  \end{align}
+\end{proof}
+
+
+\begin{theorem}
+  If a sequence converges, then the limit is unique.
+\end{theorem}
+\begin{proof}
+  Assume without loss of generality that some convergent sequence $s$ has two distinct limits $L$ and $L'$.
+  %By the non-negativity property of the metric $|L-L| \geq 0$.
+  %By the identity of indiscernibles $|L-L'|\neq0 $ giving $|L-L'| > 0$.
+  Define the distance between these two limits $d:= |L- L'|$. From the definition of the metric, $d>0$. 
+  From the definition of convergence, there is a $N$ and $N'$ such that
+  \begin{align}
+    n > N \implies |s_n - L | < \frac{d}{2}
+  \end{align}
+  and
+  \begin{align}
+    n > N' \implies |s_n - L | < \frac{d}{2}
+  \end{align}
+  Let $M:= \max \{N, N'\}$. For $n>M$
+  \begin{align}
+    d:=|L- L' | = |L - s_n +s_n-L'|
+  \end{align}
+  By the triangle identity
+  \begin{align}
+    |L- s_n + s_n - L'| \leq |s_n - L | + |s_n - L'|
+  \end{align}
+  From the definition of convergence
+  \begin{align}
+    |s_n - L | &< \frac{d}{2} \\
+    |s_n - L' | &< \frac{d}{2}
+  \end{align}
+  By $a<b \land c< d \implies a+c < b+d$
+  \begin{align}
+    |s_n - L | + |s_n - L'| < \frac{d}{2} + \frac{d}{2} = d
+  \end{align}
+  which implies 
+  \begin{align}
+    d < d
+  \end{align}
+  which is a contradiction.
+\end{proof}
+
+
+\begin{theorem}[Squeeze Theorem]
+  For all sequences $s$, and all convergent sequences $r, t$ such that
+  \begin{align}
+    \lim_n r_n = L\nonumber\\
+    \lim_n t_n = L
+  \end{align}
+  and for all $n\in\mathbb{Z}^+$
+  \begin{align}
+    r_n < s_n < t_n
+  \end{align}
+  implies that $s$ is a convergent sequence and its limit is given by
+  \begin{align}
+    \lim_n s_n = L
+  \end{align}
+\end{theorem}
+\begin{proof}
+  Fix $\varepsilon> 0 $.
+  Then by the definition of the convergent sequence
+  \begin{align}
+    \exists N_1: n > N_1 \implies |y_n - L | < \varepsilon\nonumber\\
+    \exists N_2: n > N_2 \implies |z_n - L| < \varepsilon
+  \end{align}
+  Let $N:= \max \{ N_1, N_2 \}$, then for all $n> N$
+  \begin{align}
+    L- \varepsilon < y_n < L + \varepsilon\nonumber\\
+    L - \varepsilon < z_n < L + \varepsilon
+  \end{align}
+  Using the trichotomy property of order
+  \begin{align}
+    L - \varepsilon < y_n < x_n < z_n < L+\varepsilon
+  \end{align}
+  or
+  \begin{align}
+    L - \varepsilon < x_n < L+ \varepsilon
+  \end{align}
+  Therefor $n>N$ implies
+  \begin{align}
+    |x_n - L | < \varepsilon
+  \end{align}
+  or
+  \begin{align}
+    \lim_n x_n = L
+  \end{align}
+\end{proof}
+
+\begin{theorem}
+  \begin{align}
+    \lim_n \frac{1}{n} = 0
+  \end{align}
+\end{theorem}
+\begin{proof}
+  Choose an $\varepsilon' \in \mathbb{R}^+$.
+  By the Archimedean property
+  \begin{align}
+    \exists N \in \mathbb{Z}^+: N > \varepsilon '
+  \end{align}
+  Since both $N>0$ and $\varepsilon'>0$
+  \begin{align}
+    \frac{1}{N} < \frac{1}{\varepsilon'}
+  \end{align}
+  Define $\varepsilon:= \frac{1}{\varepsilon'} \in\mathbb{R}^+$
+  \begin{align}
+    \frac{1}{N} < \varepsilon
+  \end{align}
+  Let $n>N>0$, then
+  \begin{align}
+    \frac{1}{N} > \frac{1}{n}
+  \end{align}
+  By trichotomy
+  \begin{align}
+    \frac{1}{n} &< \varepsilon\\
+    n>N \implies \left| \frac{1}{n} - 0 \right| &< \varepsilon
+  \end{align}
+  or
+  \begin{align}
+    \lim_n \frac{1}{n} = 0
+  \end{align}
+\end{proof}
+
+\begin{lemma}\label{Lemma:ExponentialConvergentSequence}
+  If $\{|a_n-L|\}$ converges to zero, then $\{a_i\}$ converges to $L$.
+  \begin{align}
+    \lim_n |a_n-L| = 0 \implies \lim_n a_n = L
+  \end{align}
+\end{lemma}
+\begin{proof}
+  Since $\{|a_n-L|\}$ converges to zero, for any $\varepsilon>0$, there is an $N$
+  \begin{align}
+    n> N \implies \left| |a_n- L | - 0\right|&< \varepsilon\\
+    \left| |a_n - L | \right|&< \varepsilon\\
+    n>N\implies |a_n-L| &< \varepsilon
+  \end{align}
+  Then
+  \begin{align}
+    \lim_n a_n = L
+  \end{align}
+\end{proof}
+
+\section{Closed Sets}
+
+\begin{definition}[Closed Set]
+  A subset $S\subset M$ is \emph{closed} in $M$ if every sequence $\langle s_n \rangle$ in $S$ that converges in $M$ also converges in $S$.
+  \begin{align}
+    \lim_n s_n \in M \implies \lim_n s_n \in S
+  \end{align}
+\end{definition}
+
+%\begin{definition}[Open Set]
+%A \emph{open set} in $M$ is a subset $S\subset M$ such that
+%\begin{align}
+%\forall x\in S, y\in M: \exists \varepsilon >0: d(x,y) < \varepsilon \implies y \in S
+%\end{align}
+%\end{definition}
+%
+%\begin{theorem}
+%If $S$ is closed in $M$, then $M-S$ is open.
+%\end{theorem}
+%\begin{proof}
+%Let $S$ be a closed set, and $L\in M-S$. Suppose that $M-S$ is not open. Then
+%\begin{align}
+%\forall \varepsilon' >0: d(p,L) < \varepsilon' \land p\notin M-S\nonumber\\
+%\forall \varepsilon' >0: d(p,L) < \varepsilon' \land p\in S\nonumber\\
+%\end{align}
+%Define a sequence $s:\mathbb{N}\to S$ such that
+%\begin{align}
+%d(s_n , L) < \frac{1}{n}
+%\end{align}
+%Let $\varepsilon>0$, by Archimedean property, there is an $N$ such that
+%\begin{align}
+%\frac{1}{N} < \varepsilon
+%\end{align}
+%For all $n>N\implies \frac{1}{n} < \frac{1}{N}$ so for all $\varepsilon >0$ there is an $N$, such that if $n>N$
+%\begin{align}
+%d(s_n, L) < \varepsilon
+%\end{align}
+%Or
+%\begin{align}
+%\lim_n s_n = L
+%\end{align}
+%Since $S$ is closed, $L\in S$ which is a contradiction, therefor $M-S$ is open.
+%\end{proof}
+%
+%
+%\begin{theorem}
+%If $S$ is open in $M$, then $M-S$ is closed.
+%\end{theorem}
+%\begin{proof}
+%Let $S\subset M$ be a open set, and $s: \mathbb{N}\to M- S$ be a convergent sequence.
+%\begin{align}
+%L = \lim_n s_n
+%\end{align}
+%Suppose $L\in S$. Since $S$ is open, 
+%\begin{align}
+%\forall x\in M: \exists \varepsilon > 0 : d(x,L) < \varepsilon \implies x\in S
+%\end{align}
+%And since $s$ is convergent, there is an $N$, such that $n>N$
+%\begin{align}
+%d(s_n , L ) < \varepsilon
+%\end{align}
+%Then for $n>N: s_n \in S$, which contradicts the definition of $s$. Therefor $L\notin S$, $L\in M-S$, and $M-S$ is closed.
+%\end{proof}
+
+\begin{theorem}
+  The real interval $[a,b]$ is closed.
+  \begin{align}
+    \forall s: \mathbb{N} \to [a,b]: \lim_n s_n = L \implies L \in [a,b]
+  \end{align}
+\end{theorem}
+\begin{proof}
+  Suppose not, then
+  \begin{align}
+    \exists s: \mathbb{N} \to [a,b]: \lim_n = L \land (L<a \lor b< L)
+  \end{align}
+  From the definition of a limit
+  \begin{align}
+    \forall \varepsilon > 0 : \exists N\in \mathbb{N}: n>N \implies L - \varepsilon < s_n < L + \varepsilon
+  \end{align}
+  \begin{case}[$b<L$]
+    Then $L-b>0$. Let $\varepsilon = L -b$, then there is a $N_1$, such that $n>N_1$
+    \begin{align}
+      L - L + b = b < s_n
+    \end{align}
+    but the definition of the sequence restricts the domain to $s_n< b$, so we obtain a contradiction.
+  \end{case}
+  \begin{case}[$a<L$]
+    Then $a-L>0$, let $\varepsilon = a-L$, which implies there is a $N_2$, such that $n>N_2$
+    \begin{align}
+      s_n < L + a - L = a
+    \end{align}
+    which contradicts the restriction on the domain $a<s_n$
+  \end{case}
+\end{proof}
+
+\begin{theorem}[Inheritence Principle]
+  If $S$ is closed in $M$ and $N$ is a subspace of $M$, then $N\cap S$ is closed in $N$.
+\end{theorem}
+\begin{proof}
+  Let $N$ be a subspace of $M$ and $S$ some closed subset of $M$. Define a sequence $s:\mathbb{N} \cap S$ such that
+  \begin{align}
+    \exists L \in N: \forall \varepsilon >0: \exists N \in \mathbb{N}: \forall n \in \mathbb{N}: |s_{N+n}- L | < \varepsilon
+  \end{align}
+  Since $S$ is closed and $N\cap M$, $L\in S\cap N$. Hence $S\cap N $ is closed.
+\end{proof}
+
+\begin{corollary}
+  If $N$ is closed in $M$, then $S$ is closed in $N$ if and only if $S$ is closed in $M$.
+\end{corollary}
+
+
+\section{Monotonic Sequences}
+
+
+\begin{definition}[Monotonic Sequence]
+  An \emph{increasing sequence} is a sequence where
+  \begin{align}
+    m > n \implies s_m > s_n
+  \end{align}
+  A \emph{strictly increasing sequence} is a sequence where
+  \begin{align}
+    m > n \implies s_m \geq s_n
+  \end{align}
+  Similarly, a \emph{decreasing sequence} is a sequence where
+  \begin{align}
+    m > n \implies s_m < s_n
+  \end{align}
+  And a \emph{strictly decreasing sequence} is a sequence where
+  \begin{align}
+    m > n \implies s_m \leq s_n
+  \end{align}
+  A \emph{monotonic sequence} is a sequence that is either increasing or decreasing.
+\end{definition}
+
+
+\begin{lemma}
+  If $n:\mathbb{Z}^+\to \mathbb{Z}^+$ is a strictly increasing sequence ($i>j\implies n_i> n_j$), then for any positive integer $N$ 
+  \begin{align}
+    \exists i \in \mathbb{Z}^+: n_i > N
+  \end{align}
+\end{lemma}
+\begin{proof}
+  Hypothesis for induction:
+  \begin{align}
+    \forall i \in \mathbb{Z}^+: n_i \geq i
+  \end{align}
+  \begin{case}[Base]
+    If $n_1\in\mathbb{Z}^+$, then $n_1 \geq 1$.
+  \end{case}
+  \begin{case}[Induction]
+    Assume without loss of generality,
+    \begin{align}
+      n_i \geq i
+    \end{align}
+    Since $n$ is strictly increasing
+    \begin{align}
+      n_{i+1} > n_i
+    \end{align}
+    By trichotomy
+    \begin{align}
+      n_{i+1} > i
+    \end{align}
+    Then
+    \begin{align}
+      n_{i+1} \geq i+1
+    \end{align}
+  \end{case}
+  Thus by induction, 
+  \begin{align}
+    \forall i \in \mathbb{Z}^+: n_i \geq i
+  \end{align}
+\end{proof}
+
+
+
+\section{Subsequential Limits}
+
+\begin{definition}[Subsequence]
+  A \emph{subsequence} of a sequence $s$ is a sequence that is a composition $s \circ n$ where $n:\mathbb{Z}^+\to \mathbb{Z}^+$ is strictly increasing.
+\end{definition}
+
+\begin{definition}[Tail]
+  The $N$-tail of a sequence $s:n\mapsto s_n$ is the subsequence $s_{N+n}$, where $N\in\mathbb{Z}^{\geq 0}$
+\end{definition}
+
+
+\begin{theorem}
+  If a sequence converges to a limit, then all of its subsequential limits are equal to that limit.
+\end{theorem}
+\begin{proof}
+  Consider a sequence $s$, that converges to $L$, and $s\circ n$ a subsequence of $s$.
+  Fix $\varepsilon>0$. Since $s$ converges to $L$, there exists an $N$ such that
+  \begin{align}
+    n > N \implies |s_n - L | < \varepsilon
+  \end{align}
+  Let $I:=\inf\{i\in \mathbb{Z}^+: n_i >N \}$ (The set is not empty, by the lemma above $n_N\geq N$).
+  Since $n_I\geq I>N$
+  \begin{align}
+    n > n_I \implies |s_n - L | < \varepsilon
+  \end{align}
+  From the definition of strictly increasing
+  \begin{align}
+    i> I \implies n_i > n_I
+  \end{align}
+  So
+  \begin{align}
+    i > I \implies n_i> n_I \implies |s_{n_i} - L | < \varepsilon
+  \end{align}
+  Or
+  \begin{align}
+    \lim_i s_{n_i} = L
+  \end{align}
+\end{proof}
+
+\begin{theorem}
+  If a sequence is bounded, then all subsequences have the same bounds.
+\end{theorem}
+\begin{proof}
+  Let $s$ be a sequence bounded by $(b, B)$
+  \begin{align}
+    \forall n: b\leq s_n \leq B
+  \end{align}
+  Let $s\circ n$ be some subsequence, then
+  \begin{align}
+    \forall i: b\leq s_{n_i} \leq B
+  \end{align}
+\end{proof}
+
+\begin{theorem}
+  Every subsequence of a monotonic sequence is the same type of monotonic.
+\end{theorem}
+\begin{proof}
+  Let $s$ be a sequence and $\sim$ be some order relation on the monotonic sequence such that
+  \begin{align}
+    m> n \implies s_m \sim s_n
+  \end{align}
+  Let $s\circ n$ be some subsequence, then
+  \begin{align}
+    i> j \implies n_i > n_j \implies s_{n_i} \sim s_{n_j}
+  \end{align}
+\end{proof}
+
+\begin{lemma}\label{Lemma:PointPeak}
+  If a tail of a sequence has a maximum, the parent sequence has a maximum.
+  %If a subsequence has a maximum, the parent sequence has a maximum?
+\end{lemma}
+\begin{proof}
+  Let $a:= \max \{s_n:n>N\}$, which exists by assumption.
+  Let $b:= \max \{s_n:n\leq N\}$, which exists because the set is finite.
+  If we let $c:= \max\{a,b\}$, then $c=\max\{s_n: n\in\mathbb{Z}^+\}$.
+\end{proof}
+
+\begin{theorem}[Point Peak Theorem]
+  Every real sequence has a monotonic subsequence.
+\end{theorem}
+\begin{proof}
+  Let $\langle s_n\rangle$ be any real sequence. Either every tail of $\langle s_n\rangle$ has a maximum
+  \begin{align}
+    \forall N\in\mathbb{Z}^{\geq 0},\exists m, \forall n: s_{N+m} \geq s_{N+n}
+  \end{align}
+  or there is a tail without a maximum.
+  \begin{align}
+    \exists N\in\mathbb{Z}^{\geq 0}, \forall m, \exists n: s_{N+m} < s_{N+n}
+  \end{align}
+  First suppose every tail of $\langle s\rangle$ has a maximum
+  \begin{align}
+    \forall N\in\mathbb{Z}^{\geq 0},\exists m, \forall n: s_{N+m} \geq s_{N+n}\nonumber
+  \end{align}
+  Define a sequence $k:\mathbb{Z}^+ \to \mathbb{Z}^+$
+  \begin{align}
+    k_1 &:= \min \{ m| \forall n: s_m \geq s_n\}\\
+    k_{i+1} &:= \min \{ m | \forall n: s_{k_i+m} \geq s_{k_i+n} \} + k_i
+  \end{align}
+  The sequence $s\circ k$ is a subsequence because $k$ strictly increasing
+  \begin{align}
+    m \in \mathbb{Z}^+ \implies k_{i+1} > k_i
+  \end{align}
+  From the definition of $k_{i+1}$
+  \begin{align}
+    \forall i,n: s_{k_{i+1}} \geq s_{k_i+n}
+  \end{align}
+  Since $k$ is strictly increasing
+  \begin{align}
+    k_{i+2} > k_{i+1} > k_i
+  \end{align}
+  Let $n$ be the positive integer such that
+  \begin{align}
+    n:= k_{i+2} - k_i \in \mathbb{Z}^+
+  \end{align}
+  Applying this $n$ to the definition
+  \begin{align}
+    s_{k_{i+1}} \geq s_{k_i+k_{i+2}-k_i} = s_{k_{i+2}}
+  \end{align}
+  which shows that $s\circ k$ is decreasing.
+  \begin{align}
+    s_{k_i} \geq s_{k_{i+1}}
+  \end{align}
+  Now suppose there is a tail that does not have a maximum
+  \begin{align}
+    \exists N\in\mathbb{Z}^{\geq 0}, \forall m, \exists n: s_{N+m} < s_{N+n}\nonumber
+  \end{align}
+  Every tail of the tail without a maximum has no maximum, by lemma \ref{Lemma:PointPeak}.
+  \begin{align}
+    \forall M\in\mathbb{Z}^{\geq 0}, m, \exists n: s_{N+M+m} < s_{N+M+n}
+  \end{align}
+  This implies there is always a larger number further down the sequence.
+  \begin{align}
+    \forall m, \exists n: s_{N+m} < s_{N+m+n}
+  \end{align}
+  Define a sequence $k:\mathbb{Z}^+ \to \mathbb{Z}^+$
+  \begin{align}
+    k_1&:= N+1\\
+    k_{i+1} &:= \min\{ n : s_{k_i+n} > s_{k_i} \} +k_i
+  \end{align}
+  The sequence $s\circ k$ is a subsequence because $k$ is strictly increasing
+  \begin{align}
+    n \in \mathbb{Z}^+ \implies k_{i+1} > k_i
+  \end{align}
+  From the definition of $k_{i+1}$, $s\circ k$ is strictly increasing
+  \begin{align}
+    s_{k_{i+1}} > s_{k_i}
+  \end{align}
+  Thus all real sequences have monotonic subsequences.
+\end{proof}
+
+\begin{theorem}
+  For $|a|<1$
+  \begin{align}
+    \lim_n a^n = 0
+  \end{align}
+\end{theorem}
+\begin{proof}
+  Let $a$ be a number such that $|a| < 1$. Since $|a|>0$, multiplying the inequalities by $|a|$ gives
+  \begin{align}
+    0\geq|a|^2 &<|a|\\
+    0\geq\left|a^2\right| &<|a|
+  \end{align}
+  Assume without loss of generality
+  \begin{align}
+    0\geq\left|a^{n+1}\right|< |a^n|
+  \end{align}
+  Then multiplying by $|a|$ gives
+  \begin{align}
+    0\geq\left|a^{n+1}\right||a|<\left|a^{n}\right||a|\\
+    0\geq\left|a^{n+2}\right| < \left|a^{n+1}\right|
+  \end{align}
+  Then, by induction, for all $n\in\mathbb{Z}^+$
+  \begin{align}
+    0\geq\left|a^{n+1}\right| < \left|a^n\right|
+  \end{align}
+  which implies that the sequence $|a^n|$ is strictly decreasing, and bounded below by zero.
+  By the monotonic convergence theorem, $|a^n|$ converges. Assume it converges to limit $L$.
+  \begin{align}
+    L:= \lim_n \left|a^n\right|
+  \end{align}
+  The sequence $\left|a^{2n}\right|$ is a subsequence of $\left|a^n\right|$, so it converges to the same limit
+  \begin{align}
+    L &= \lim_n \left|a^{2n}\right|\\
+    &= \lim_n \left|a^n\right|^2\\
+    &= \left(\lim_n \left|a^n\right|\right)^2\\
+    &= L^2
+  \end{align}
+  Thus, either $L=0$ or $L=1$.
+  Since $\left|a^1\right|=|a|<1$ and $a^n$ is strictly decreasing, $L \neq 1$. Therefor
+  \begin{align}
+    \lim_n |a^n| = 0
+  \end{align}
+  By lemma \ref{Lemma:ExponentialConvergentSequence}
+  \begin{align}
+    \lim_n a^n = 0
+  \end{align}
+\end{proof}
+
+\section{Compact Sets}
+
+\begin{definition}[Compact Set]
+  A set is \emph{compact} if every sequence $s:\mathbb{Z}^+ \to S$ has a subsequential limit in $S$.
+\end{definition}
+
+\begin{theorem}
+  A compact subset of $M$ is a closed subset of $M$
+\end{theorem}
+\begin{proof}
+  Let $S$ be a compact subset of $M$ and $s: \mathbb{N} \to S$ be a sequence that converges to some $L\in M$. Since $s$ converges, every subsequential limit is equal to $L$. Since $S$ is compact $L\in S$. Thus $S$ is closed.
+\end{proof}
+
+\begin{theorem}
+  A compact subset of $M$ is bounded in $M$
+\end{theorem}
+\begin{proof}
+  Let $p$ be a point in $M$ and $S\subset M$. Suppose $S$ is not bounded, then there is some sequence $s:\mathbb{N}\to S$ defined by 
+  \begin{align}
+    d(s_n, p) \geq n
+  \end{align}
+  Since $S$ is compact, there is some subsequence of $s$ that converges. For every $\varepsilon>0$, there is an $N$
+  \begin{align}
+    i> N \implies d(s_{n_i} , L) < \varepsilon
+  \end{align}
+  Choose some $\varepsilon >0$. By the Archimedean property there is an $N'$ such that
+  \begin{align}
+    \varepsilon < N '
+  \end{align}
+  Let $M:= \max\{N,N'\}$. Since $M> N$
+  \begin{align}
+    d(s_{n_M} , p) < \varepsilon < N' < M
+  \end{align}
+  And since $s\circ n$ is a subsequence $M \leq n_M$, which along with the definition of the sequence gives
+  \begin{align}
+    M \leq n_M \leq d(s_{n_M} , p) < M
+  \end{align}
+  which is a contradiction. So $S$ is bounded.
+\end{proof}
+
+
+\section{Fundamental Sequences}
+
+\begin{definition}[Fundamental Sequence]
+  A sequence is fundamental if every $\varepsilon$ has a $N$-tail, that is $\varepsilon$-pinched.
+  \begin{align}
+    \forall \varepsilon>0: \exists N\in \mathbb{N}: \forall m,n> N: d(s_{m} , s_{n} ) < \varepsilon
+  \end{align}
+\end{definition}
+
+\begin{theorem}
+  Every convergent sequence is fundamental.
+\end{theorem}
+
+\section{Complete Spaces}
+
+\begin{definition}
+  A space is complete if every fundamental sequence is convergent.
+\end{definition}
+
+\begin{theorem}[Monotone Convergence Theorem]
+  A monotonic sequence converges if and only if it is bounded.
+\end{theorem}
+\begin{proof}
+  Let $s$ be an increasing sequence bounded above by $B$.
+  \begin{align}
+    m>n \implies B\geq s_m \geq s_n
+  \end{align}
+  Without loss of generality, assume $s$ is non-fundamental
+  \begin{align}
+    \exists \varepsilon>0, \forall N: \exists m,n> N: |s_m - s_n | > \varepsilon
+  \end{align}
+  Let $m>n$ (If $m=n$, then $s_m-s_m = 0\ngtr \varepsilon$).
+  \begin{align}
+    \forall n: \exists m> n: |s_m - s_n | > \varepsilon
+  \end{align}
+  Since $s$ is increasing
+  \begin{align}
+    \forall n: \exists m> n \implies s_m - s_n&> \varepsilon\\ 
+    s_m &> \varepsilon + s_n
+  \end{align}
+  Let $p:= m-n \implies m= k+n$
+  \begin{align}
+    \forall n, \exists p: s_{n+p} > \varepsilon + s_n
+  \end{align}
+  Define a sequence $k:\mathbb{Z}^+\to \mathbb{Z}^+$
+  \begin{align}
+    k_1&:=1\\
+    k_{i+1}&:= \min\{p | s_{k_i+p} > s_{k_i}+\varepsilon\} + k_i
+  \end{align}
+  The sequence $s\circ k$ is a subsequence because $k$ is strictly increasing
+  \begin{align}
+    p\in\mathbb{Z}^+ \implies k_{i+1} > k_i
+  \end{align}
+  By construction of $k$
+  \begin{align}
+    s_{k_{i+1}} > s_{k_i} + \varepsilon
+  \end{align}
+  Let $A:=s_1 = s_{n_1}$.
+  Consider the induction hypothesis
+  \begin{align}
+    \forall i>1: s_{k_i} - A > (i-1) \varepsilon
+  \end{align}
+  \begin{case}[Base ($i=2$)]
+    \begin{align}
+      s_{n_{2}} > s_{n_1} + \varepsilon = A + (2-1) \varepsilon
+    \end{align}
+  \end{case}
+  \begin{case}[Induction]
+    Assume without loss of generality
+    \begin{align}
+      s_{k_i} >A + (i-1) \varepsilon
+    \end{align}
+    Along with
+    \begin{align}
+      s_{k_{i+1}} - \varepsilon > s_{k_i}
+    \end{align}
+    Gives
+    \begin{align}
+      s_{k_{i+1}} - \varepsilon > A+ (i-1) \varepsilon\\
+      s_{k_{i+1}} - A > [(i+1)-1] \varepsilon
+    \end{align}
+  \end{case}
+  By induction 
+  \begin{align}
+    \forall i>1: s_{n_i} - A > (i-1) \varepsilon
+  \end{align}
+  Choose $N\in\mathbb{Z}^+$ such that
+  \begin{align}
+    N > \frac{B-A}{\varepsilon} +1
+  \end{align}
+  By the Archimedean property, $N$ exists.
+  \begin{align}
+    s_N - A &> \left(\frac{B-A}{\varepsilon} +1 - 1\right) \varepsilon\\
+    s_N &> B
+  \end{align}
+  Which contradicts the assumption that $s$ is bounded above by $B$.
+  Therefor if $s$ is bounded above, it is fundamental.
+  By the completion theorem, since $s$ is fundamental, it is also convergent.
+  Thus it has shown that bounded, increasing sequences are convergent.
+  If $s$ is a bounded, monotonic decreasing sequence, then $-s$ is bounded, monotonic increasing sequence, and therefor convergent, which implies $s$ is convergent.
+  Thus all bounded, monotonic sequences are convergent.
+  The converse is proven by theorem \ref{Thm:ConvergentImpliesBounded}, all convergent sequences are bounded.
+\end{proof}
+
+%\begin{theorem}[Nested Interval Theorem]
+%\end{theorem}
+
+
+\section{Summable Sequences}
+
+
+\begin{definition}[Series]
+  A \emph{series} of partial sums of $a$ is the sequence
+  \begin{align}
+    s_n := \sum^n_{i=1} a_i
+  \end{align}
+\end{definition}
+
+\begin{definition}[Summable Sequence]
+  A sequence is \emph{summable} if its series of partial sums converges
+  \begin{align}
+    \sum^\infty_{i=1} a_i := \lim_n \sum^n_{i=1} a_i
+  \end{align}
+  The \emph{sum} of a sequence is the limit of its series.
+\end{definition}
+
+\begin{theorem}
+  Each sequence with the same sign has a monotonic series.
+  \begin{itemize}
+  \item A non-negative sequence has an increasing series.
+  \item A positive sequence has a strictly increasing series.
+  \item A non-positive sequence has a decreasing series.
+  \item A negative sequence has a strictly decreasing series.
+  \end{itemize}
+\end{theorem}
+\begin{proof}
+  Let $\sim$ be the relationship between the sequence $a$ and zero.
+  \begin{align}
+    \forall n: a_n\sim 0
+  \end{align}
+  Then %holds only for sums not = 0 
+  \begin{align}
+    a_{n+1} \sim 0\\
+    a_{n+1} + s_n \sim s_n\\
+    s_{n+1} \sim s_n
+  \end{align}
+\end{proof}
+
+\begin{theorem}[Series Linearity]
+  If $a$ and $b$ are summable and $c$ and $d$ are some numbers, then $ca+bd$ is summable and
+  \begin{align}
+    c\sum_{i=1}^\infty a_i + d\sum_{i=1}^\infty b_i = \sum_{i=1}^\infty (ca_i+db_i)
+  \end{align}
+\end{theorem}
+\begin{proof}
+  \begin{align}
+    c\sum_{i=1}^\infty a_i + d\sum_{i=1}^\infty b_i &= c\lim_{n} \sum^n_{i =1} a_i + d \lim_n \sum^n_{i=1}b_i\\
+    &= \lim_n \left(c\sum^n_{i=1} a_i +  d\sum^n_{i=1} b_i \right)\\
+    &= \lim_n \sum^n_{i=1} (ca_i+db_i)\\
+    &= \sum^\infty_{i=1} (ca_i + db_i)
+  \end{align}
+\end{proof}
+
+\begin{theorem}[Fundamental Criterion]
+  A sequence $a$ is summable if and only if
+  \begin{align}
+    \forall \varepsilon > 0: \exists N: n, m> N: \left| \sum_{i=m+1}^n a_i \right| < \varepsilon
+  \end{align}
+\end{theorem}
+\begin{proof}
+  Fix $\varepsilon>0$. By assumption, there is an $N$ such that
+  \begin{align}
+    n, m > N \implies \left|\sum^n_{i=m+1} a_i \right| < \varepsilon
+  \end{align}
+  If $n\leq m$, $\sum^n_{i=m+1} = 0$, which is less than all $\varepsilon>0$.Restrict $n>m$, then
+  \begin{align}
+    \left| \sum^n_{i=1} a_i - \sum^{m}_{i=1} a_i \right| < \varepsilon
+  \end{align}
+  which by the completeness theorem, shows that the series of $a$ converges and $a$ is summable.
+\end{proof}
+
+\begin{theorem}[Vanishing Condition]
+  If $a$ is summable
+  \begin{align}
+    \lim_n a_n = 0
+  \end{align}
+\end{theorem}
+\begin{proof}
+  Since $a$ is summable it has a sum. Let $S$ be the sum of $a$
+  \begin{align}
+    S:= \sum^\infty_{i=1} a_i
+  \end{align}
+  Then
+  \begin{align}
+    \lim_n a_n &= \lim_n \left(\sum^n_{i=1} a_n- \sum^{n-1}_{i=1} a_n \right) \\
+    &= \lim_n \sum^n_{i=1} a_n - \lim_n \sum^{n-1}_{i=1} a_n\\
+    &= S - S = 0
+  \end{align}
+\end{proof}
+
+\begin{theorem}[Boundness Criterion]
+  A non-negative sequence is summable, if and only if its series is bounded.
+\end{theorem}
+\begin{proof}
+  Let $a$ be a non-negative sequence. Then its series is increasing. By the monotonic convergence theorem, this monotonic series is convergent if and only if it is bounded. Therefor the non-negative sequence is summable if and only if it is bounded.
+\end{proof}
+
+\begin{theorem}[Comparison Test]
+  If $\forall n:|a_n| \leq b_n$	and $b$ is summable, then $a$ is summable
+\end{theorem}
+\begin{proof}
+  Choose $\varepsilon>0$. By fundamental criterion, there is an $N$, such that $m, n> N$
+  \begin{align}
+    \left| \sum^n_{i=m} b_i\right| < \varepsilon
+  \end{align}
+  Since $b$ is non-negative
+  \begin{align}
+    \sum^n_{i=m} b_i = \left| \sum^n_{i=m} b_i\right| < \varepsilon
+  \end{align}
+  Using the triangle inequality
+  \begin{align}
+    \left| \sum_{i=m}^n a_i \right| \leq \sum^n_{i=m} |a_i| \leq \sum_{i=m}^n b_i < \varepsilon
+  \end{align}
+  By the fundamental criterion, $a$ is then summable.
+\end{proof}
+
+\begin{theorem}[Geometric Series]
+  If $|a|<1$, then $\langle a^k \rangle$ is summable. The sum is given by
+  \begin{align}
+    \sum^\infty_{i=0} a^i = \frac{1}{1-a}
+  \end{align}
+\end{theorem}
+\begin{proof}
+  Let $\langle s_n \rangle$ be the series of partial sums
+  \begin{align}
+    s_n := \sum^n_{i=0} a^i
+  \end{align}
+  
+  \begin{align}
+    \lim_n s_n = \lim_n \frac{1-a^{n+1}}{1-a} = \frac{1}{1-a}
+  \end{align}
+\end{proof}
+
+\begin{lemma}
+  \begin{align}
+    \limsup_n s_n < B \implies \exists N\in\mathbb{N}: \forall n\geq N: s_n \leq B
+  \end{align}
+\end{lemma}
+\begin{proof}
+  Let $\langle s_n\rangle$ be a bounded sequence
+  \begin{align}
+    L : = \limsup_n s_n
+  \end{align}
+  Define $B$ such that
+  \begin{align}
+    L < B
+  \end{align}
+  Suppose that
+  \begin{align}
+    \forall N\in \mathbb{N}: \exists n > N: s_n > B
+  \end{align}
+  Define a sequence $k: \mathbb{N} \to \mathbb{N}$, such that
+  \begin{align}
+    k_1 &= \min \{ n: s_n > B \}\\
+    k_{i+1} &= \min \{ n : s_{k_i+n} > B \} + k_i
+  \end{align}
+  Since $k_{i+1}> k_i$, $\langle s\circ k \rangle$ is a subsequence. By its definition, $\forall i\in \mathbb{N}: s_{k_i} > B > L$.
+  Then $\lim_i s_{k_i} > \limsup_n s_n$ which is a contradiction.
+  Therefor $\exists N: \forall n \geq N: s_n < B$
+\end{proof}
+
+
+\begin{theorem}[Ratio Test]
+  If 
+  \begin{align}
+    \limsup_n \left|\frac{a_{n+1}}{a_n}\right| < 1
+  \end{align}
+  Then $a$ is summable.
+\end{theorem}
+\begin{proof}
+  Let $a$ be some sequence such that
+  \begin{align}
+    \limsup_n \left|\frac{a_{n+1}}{a_n} \right|< 1
+  \end{align}
+  Define $s$ such that
+  \begin{align}
+    \limsup_n \left|\frac{a_{n+1}}{a_n} \right|< s< 1
+  \end{align}
+  By the above lemma, there is an $N$, such that for every $n\geq N$
+  \begin{align}
+    \left|\frac{a_{n+1}}{a_n}\right| &< s\\
+    \left|a_{n+1} \right|&< s |a_n|
+  \end{align}
+  Induction hypothesis
+  \begin{align}
+    \forall k \in\mathbb{Z}^+: |a_{N+k} | < s^k | a_N |
+  \end{align}
+  The base case is given by $n = N$
+  \begin{align}
+    |a_{N+1} | < s | a_N|
+  \end{align}
+  Assume without loss of generality $|a_{N+k}| < s^k |a_N|$, multiplying by $s>0$
+  \begin{align}
+    |a_{N+k} | s < s^{k+1} |a_n|
+  \end{align}
+  Applying the inequality from before
+  \begin{align}
+    |a_{N+k+1} | < |a_{N+k} | s < s^{k+1} |a_n|
+  \end{align}
+  Thus, by induction
+  \begin{align}
+    \forall k \in\mathbb{Z}^+: |a_{N+k} | < s^k | a_N |
+  \end{align}
+  By the comparison test, $a_{N+k}$ is summable, therefor $a_n$ is summable.
+\end{proof}
+
+\begin{definition}[Absolutely Summable]
+  A sequence is \emph{absolutely summable} if $\langle |a_n| \rangle$ is summable.
+\end{definition}
+
+
+\begin{theorem}
+  An absolutely summable sequence is summable.
+\end{theorem}
+\begin{proof}
+  By assumption the series
+  \begin{align}
+    \sum^\infty_{i=1} |a_i|
+  \end{align}
+  converges. Then by the fundamental criterion, for every $\varepsilon>0$, there is an $N$, such that
+  \begin{align}
+    m,n > N \implies \left| \sum^n_{i=m+1} |a_i| \right|&< \varepsilon\\
+    \sum^n_{i=m+1} |a_i| \leq \left| \sum^n_{i=m+1} |a_i| \right|&< \varepsilon
+  \end{align}
+  By the triangle identity
+  \begin{align}
+    \left|\sum^n_{i=m+1} a_i\right|\leq \sum^n_{i=m+1} |a_i|< \varepsilon
+  \end{align}
+  Then, for every $\varepsilon>0$, there is an $N$, such that
+  \begin{align}
+    m,n >N \implies \left|\sum^n_{i=m+1} a_i\right|
+  \end{align}
+  By the fundamental criterion, $a$ is summable.
+\end{proof}
+
+\begin{lemma}
+  If $\langle a_n \rangle$ is non-negative and decreasing, then
+  \begin{align}
+    \forall m,n\in\mathbb{N}: \left| \sum_{i=m}^n  (-1)^{i} a_i \right| \leq a_m
+  \end{align}
+\end{lemma}
+\begin{proof}
+  Fix $m\in\mathbb{N}$. Let the induction hypothesis be that for all $n\in\mathbb{N}$
+  \begin{align}
+    0 \leq \sum^n_{i=m} (-1)^{i-m}a_i \leq a_m
+  \end{align}
+  \begin{case}[Basis for Induction $P(m)$]
+    Since $\langle a_n \rangle$ is non-negative
+    \begin{align}
+      0 \leq a_m = (-1)^{m-m} a_m = \sum^m_{i=m} (-1)^{i-m} a_i
+    \end{align}
+  \end{case}
+  
+  \begin{case}[Basis for Induction $P(m+1)$]
+    Since $\langle a_n \rangle$ is non-negative
+    \begin{align*}
+      a_m &\geq -a_{m+1} + a_m \geq 0\\
+      a_m &\geq (-1)^{m+1-m} a_{m+1} + (-1)^{m-m} a_m \geq 0\\
+      a_m &\geq \sum_{i=m}^{m+1} (-1)^{i-m} a_i \geq 0
+    \end{align*}
+  \end{case}
+  For the induction step, suppose for $\forall k: m\leq k \leq n$
+  \begin{align}
+    0 \leq \sum^k_{i=m} (-1)^{i-m} a_i \leq a_m
+  \end{align}
+  \begin{case}
+    Further restrict $n-m$ to odd integers. Since $\langle a_n \rangle$ is non-negative $a_{n+1} \geq 0$ along with the induction hypothesis
+    \begin{align}
+      0 &\leq a_{n+1} + \sum^n_{i=m} (-1)^{i-m} a_i\\
+      &= (-1)^{n+1-m} a_{n+1} +  \sum^n_{i=m} (-1)^{i-m} a_i\\
+      &= \sum^{n+1}_{i=m} (-1)^{i-m} a_i
+    \end{align}
+    Since $\langle a_n\rangle$ is decreasing
+    \begin{align}
+      a_{n+1} \leq a_n \implies a_{n+1} - a_n \leq 0
+    \end{align}
+    Along with the induction hypothesis
+    \begin{align}
+      a_m &\geq a_{n+1} - a_n + \sum^{n-1}_{i=m} (-1)^{i-m} a_i\\
+      &= (-1)^{n+1-m} a_{n+1} + (-1)^{n-m} a_n + \sum_{i=m}^{n-1} (-1)^{i-m} a_i\\
+      &= \sum^{n+1}_{i=m} (-1)^{i-m} a_i
+    \end{align}
+  \end{case}
+  \begin{case}
+    Now restrict $n-m$ to only even integers.
+    Since $\langle a_n \rangle$ is decreasing
+    \begin{align}
+      a_n \geq a_{n+1} \implies a_n - a_{n+1} \geq 0
+    \end{align}
+    Applying the induction hypothesis
+    \begin{align}
+      0 &\leq -a_{n+1} + a_n + \sum_{i=m}^{-1} (-1)^{i-m} a_i\\
+      &=(-1)^{n+1-m} a_{n+1} + (-1)^{n-m} a_n + \sum_{i=m}^{n-1} (-1)^{i-m} a_i\\
+      &= \sum^{n+1}_{i=m} (-1)^{i-m} a_i
+    \end{align}
+    Since $\langle a_n \rangle$ is non-negative $-a_{n+1} \leq 0$. Applying the hypothesis gives
+    \begin{align}
+      a_m &\geq -a_{n+1} + \sum^n_{i=m} (-1)^{i-m} a_i \\
+      &=(-1)^{n+1-m} a_{n+1} + \sum^n_{i=m} (-1)^{i-m}a_i \\
+      &=\sum^{n+1}_{i=m} (-1)^{i-m} a_i
+    \end{align}
+  \end{case}
+  Therefor for all $n$, $P(n)\implies P(n+1)$. By induction, for all $n$,
+  \begin{align}
+    0 \leq \sum^n_{i=m} (-1)^{i-m}a_i \leq a_m
+  \end{align}
+  Since the sum is greater than zero
+  \begin{align}
+    \sum^n_{i=m} (-1)^{i-m}a_i &= \left|\sum^n_{i=m} (-1)^{i-m}a_i \right|\\
+    &=\left|(-1)^m \sum^n_{i=m} (-1)^{i-m}a_i \right|\\
+    &=\left| \sum^n_{i=m} (-1)^{i}a_i \right| \leq a_m
+  \end{align}
+\end{proof}
+
+\begin{theorem}[Alternating Series Test]
+  If $a$ is decreasing, non-negative and converges to zero, then $\left\langle (-1)^n a_n \right\rangle$ is summable.
+\end{theorem}
+\begin{proof}
+  Let $\langle s_n \rangle$ be a series of partial sums
+  \begin{align}
+    s_n:= \sum^n_{i=0} (-1)^n a_n
+  \end{align}
+  Fix $\varepsilon>0$. Since $\lim_n a_n =0$, choose some $N$ such that if $n>N$
+  \begin{align}
+    |a_n| < \varepsilon
+  \end{align}
+  Choose $n$ and $m$ such that $n>m>N$, then
+  \begin{align}
+    %|s_n-s_m| &= \left| \sum_{i=0}^n (-1)^i a_i - \sum_{i=0}^m (-1)^i a_i \right|\\
+    %&=
+    \left| \sum_{i=m}^n (-1)^i a_i \right| \leq a_{m} \leq |a_{m} | < \varepsilon
+  \end{align}
+  By the fundamental criterion, $\langle a_n \rangle$ is summable.
+\end{proof}
+
+
+\section{Functional Limits}
+
+\begin{definition}[Limit]
+  The \emph{limit} $L$ of a function $f: [a,b]\to \mathbb{R}$ at $c$ is
+  \begin{align}
+    \forall \varepsilon> 0: \exists \delta >0: \forall x\in[A,B]:  0<|x-c| < \delta \implies |f(x)- L| < \varepsilon
+  \end{align}
+  The limit at $c$ of $f$ is denoted by
+  \begin{align}
+    \lim_{x\to c} f(x) = L 
+  \end{align}
+\end{definition}
+
+\begin{theorem}[Sequential Limit Criterion]
+  \begin{align}
+    \lim_{x\to c} f(x) = L
+  \end{align}
+  if and only if, for all sequences such that $\forall i: x_i \neq c$:
+  \begin{align}
+    \lim_n x_n = c \implies \lim_n f(x_n) = L
+  \end{align}
+\end{theorem}
+\begin{proof}
+  Choose a sequence $x$ such that $\forall x_n\neq c$ and
+  \begin{align}
+    \lim_n x_n = c
+  \end{align}
+  Fix $\varepsilon > 0$. By assumption $\exists \delta>0$ such that for every $x$
+  \begin{align}
+    0 < |x-c | < \delta \implies |f(x) - L| < \varepsilon
+  \end{align}
+  Since $x_n$ converges to $c$, there is an $N$ such that
+  \begin{align}
+    n> N \implies |x_n - c| < \delta
+  \end{align}
+  Using the definition of the functional limit, this implies
+  \begin{align}
+    |f(x_n) - L | < \varepsilon
+  \end{align}
+  Thus
+  \begin{align}
+    \lim_n f(x_n) = L
+  \end{align}
+  For the converse, assume
+  \begin{align}
+    \lim_{x\to c} f(x) \neq L
+  \end{align}
+  Then there is an $\varepsilon >0$ such that for every $\delta>0$ there is an $x$ such that
+  \begin{align}
+    0< |x-c| < \delta \land |f(x) - L| \geq \varepsilon
+  \end{align}
+  Choose such an $\varepsilon$. Generate a sequence such that
+  \begin{align}
+    0< |x_n-c| < \frac{1}{n} \land |f(x_n) - L| \geq \varepsilon
+  \end{align}
+  By the squeeze theorem
+  \begin{align}
+    \lim_n x_n = c
+  \end{align}
+  The other part of the generator
+  \begin{align}
+    \forall n: |f(x_n) - L | \geq \varepsilon
+  \end{align}
+  implies
+  \begin{align}
+    \lim_n f(x_n) \neq L
+  \end{align}
+  Thus
+  \begin{align}
+    \lim_n x_n = c \implies \lim_n f(x_n) =L \implies \lim_{x\to c} f(x) =L
+  \end{align}
+\end{proof}
+
+\begin{theorem}[Squeeze Theorem]
+  If
+  \begin{align}
+    \lim_{x\to c} f(x) = L\\
+    \lim_{x\to c} g(x) = L
+  \end{align}
+  and
+  \begin{align}
+    f(x) \leq h(x) \leq g(x)
+  \end{align}
+  Then
+  \begin{align}
+    \lim_{x\to c} h(x) = L
+  \end{align}
+\end{theorem}
+
+\begin{theorem}[Uniqueness]
+  If a function converges to a limit at some point, then that limit is unique.
+\end{theorem}
+
+\begin{theorem}
+  \begin{align}
+    \lim_{x\to c} f(x) = F\\
+    \lim_{x\to c} g(x) = G
+  \end{align}
+  implies
+  \begin{align}
+    \lim_{x\to c} \left[f(x) + g(x) \right] = F+G 
+  \end{align}
+\end{theorem}
+
+\begin{theorem}
+  \begin{align}
+    \lim_{x\to c} f(x) = F\\
+    \lim_{x\to c} g(x) = G
+  \end{align}
+  implies
+  \begin{align}
+    \lim_{x\to c} f(x)g(x) = FG
+  \end{align}
+\end{theorem}
+
+\section{Continuous Functions}
+
+
+\begin{definition}[Continuous Function]
+  A function $f$ is continuous at $a$ if
+  \begin{align}
+    \lim_{x\to a} f(x) = f(a)
+  \end{align}
+\end{definition}
+
+\begin{theorem}[Sequential Limit Criterion]
+  For continuous functions $f$
+  \begin{align}
+    \lim_n f\left(x_n\right) = f\left(\lim_n x_n\right)
+  \end{align}
+\end{theorem}
+
+\begin{theorem}[$\varepsilon$-$\delta$ Condition]
+\end{theorem}
+
+\begin{theorem}[Closed Set Condition]
+  If $f:M\to N$ is continuous and $M$ is closed, then the pre-image of each closed set in $N$ is closed in $M$.
+\end{theorem}
+\begin{proof}
+  Let $I$ be a closed subset of $N$. Define a sequence $s:\mathbb{N}\to I\subset M$ such that
+  \begin{align}
+    \lim_n s_n = L \in M
+  \end{align}
+  By sequential convergence condition
+  \begin{align}
+    \lim_n f(s_n) = f(\lim_n s_n ) = f(L)
+  \end{align}
+  Since the set $I$ is closed
+  \begin{align}
+    \lim_n f(s_n) \in I \implies f(L) \in I
+  \end{align}
+  So $L \in f^{-1} [I]$ which implies that $f^{-1} I$ is closed
+\end{proof}
+
+%\begin{corollary}[Open Set Condition]
+%If $f:M\to N$ is continuous, then the pre-image of each open set in $N$ is open in $M$.
+%\end{corollary}
+%\begin{proof}
+%Let $I$ be an open subset of $N$, then $N-I$ is closed. By the closed set condition $f^{-1}[N-I]$ is closed. So $M-f^{-1} [N-I]$ is open.
+%\end{proof}
+
+\begin{theorem}
+  If $f:M\to N$ is continuous and $I$ is compact in $M$, then the image of $f$ restricted to $I$ is compact
+\end{theorem}
+\begin{proof}
+  Let $b:\mathbb{N}\to f[I]$ and define $a:\mathbb{N}\to I$ such that
+  \begin{align}
+    f(a_n) = b_n
+  \end{align}
+  Since $I$ is compact, $a$ has a subsequential limit in $I$
+  \begin{align}
+    L:= \lim_i a_{n_i} \in I
+  \end{align}
+  Since $f$ is continuous
+  \begin{align}
+    \lim_i b_{n_i} = \lim_i f(a_{n_i}) = f(L) \in f[I]
+  \end{align}
+  There for the image of $f$ is restricted to $A$ is compact.
+\end{proof}
+
+
+\begin{lemma}\label{Lemma:IntermediateValueTheorem}
+  \begin{align}
+    a_{n+1} := \frac{a_n}{2} \implies a_n = \frac{1}{2^{n-1}} a_1
+  \end{align}
+\end{lemma}
+\begin{proof}
+  The induction hypothesis is that, $\forall n\in\mathbb{Z}^+$
+  \begin{align}
+    a_n = \frac{1}{2^{n-1}} a_1
+  \end{align}
+  \begin{case}[Base]
+    The base case is trivially true
+    \begin{align}
+      a_1 &= \frac{1}{2^{1-1}} a_1
+    \end{align}
+  \end{case}
+  \begin{case}[Induction]
+    Assume without loss of generality
+    \begin{align}
+      a_n &= \frac{1}{2^{n-1}} a_1
+    \end{align}
+    From the opening assumption
+    \begin{align}
+      a_{n+1} &= \frac{a_n}{2}\\
+      &=\frac{1}{2} \frac{1}{2^{n-1}} a_1\\
+      &= \frac{1}{2^{n+1-1}} a_1
+    \end{align}
+  \end{case}
+  By induction, $\forall n \in \mathbb{Z}^+$
+  \begin{align}
+    a_n = \frac{1}{2^{n-1}} a_1
+  \end{align}
+\end{proof}
+
+\begin{theorem}[Intermediate Value Theorem]
+  If $f:[A,B] \to \mathbb{R}$ is continuous and $f(A)\leq u \leq f(B)$ or $f(A)\geq u \geq f(B)$, then there exists $C\in[A,B]: f(C)= u$
+\end{theorem}
+\begin{proof}
+  Define four sequences, $a$, $b$, $c$, and $e$ with the following algorithm
+  \begin{align}
+    a_1&:=A\\
+    b_1&:=B\\
+    c_n &:= \frac{1}{2} (a_n + b_n)
+    e_n = b_n - a_n
+  \end{align}
+  If $f(c_n) < u$:
+  \begin{align}
+    a_{n+1} &= c_n\\
+    b_{n+1} &= b_n
+  \end{align}
+  Else:
+  \begin{align}
+    a_{n+1} &= a_n\\
+    b_{n+1} &= c_n
+  \end{align}
+  Using the algorithm, if $f(c_n) = u$, then there  is a $C=c_n\in[A,B]: f(C) = u$, and we are done.
+  For the rest of this proof, we will assume that $\forall n: f(c_n) \neq u$.
+  Finishing off the algorithm, if $f(c_n) > u$
+  \begin{align}
+    a_{n+1} &= a_n\\
+    b_{n+1} &= c_n = \frac{a_n+b_n}{2}\\
+    e_{n+1} &= \frac{a_n+b_n}{2} - a_n= \frac{b_n- a_n}{2}
+  \end{align}
+  If $f(c_n) < u$
+  \begin{align}
+    a_{n+1} &= c_n = \frac{a_n+b_n}{2} \\
+    b_{n+1} &= b_n\\
+    e_{n+1} &= b_n - \frac{a_n + b_n}{2} = \frac{b_n - a_n}{2}
+  \end{align}
+  Since $\forall n:a_n<c_n<b_n$, $a_n$ is increasing and $b_n$ is decreasing. Since they are also bounded by $(A,B)$, by the monotone convergence theorem, they both converge.
+  From the definition of $e_n$
+  \begin{align}
+    e_n = b_n- a_n
+  \end{align}
+  So
+  \begin{align}
+    e_{n+1} = \frac{e_n}{2}
+  \end{align}
+  By the lemma \ref{Lemma:IntermediateValueTheorem}
+  \begin{align}
+    e_n = \frac{1}{2^{n-1}} e_1 = \frac{1}{2^{n-1}} \left(B-A\right)		
+  \end{align}
+  which converges to zero. 
+  Then $\lim_n b_n = \lim_n a_n$. Let $C:=\lim_n a_n$, for continuous functions $f$
+  \begin{align}
+    \lim_n f(a_n) = f(C) = \lim_n f(b_n)
+  \end{align}
+  By the squeeze theorem, since $\forall n: f(a_n) \leq u \leq f(b_n)$
+  \begin{align}
+    f(C) = u
+  \end{align}
+  Thus it is proved that there exists such a $C$ for $f(A) \leq u \leq f(B)$.
+  If $f(A) \geq u \geq f(B)$, then 
+  \begin{align}
+    - f(A) \leq - u \leq -f(B)
+  \end{align}
+  Let $g(x) = -f(x)$ and $v= -u$, then
+  \begin{align}
+    g(A) \leq v \leq g(B)
+  \end{align}
+  By the earlier result, $\exists C\in [A,B]: g(C) = v$, then $-f(C) = -u$ or $f(C) = u$.
+\end{proof}
+
+\begin{theorem}
+  If $f:M \to N$ is continuous and $S$ is compact in $M$, then $f[S]$ is compact.
+\end{theorem}
+
+\begin{corollary}[Bounded Value Theorem]
+  If $f:M \to N$ is continuous and $S$ is compact in $M$, then $f[S]$ is bounded.
+\end{corollary}
+
+\begin{theorem}[Bounded Value Theorem]
+  If $f:[a,b]\to \mathbb{R}$ is a continuous function, then $f$ is bounded.
+  \begin{align}
+    \exists C: \forall x\in [a,b]: m\leq f(x) \leq M
+  \end{align}
+\end{theorem}
+\begin{proof}
+  Let $f:[A,B]\to \mathbb{R}$ be any continuous function.
+  Assume without loss of generality
+  \begin{align}
+    \forall C: \exists x\in{a,B}: f(x) > C
+  \end{align}
+  Since $\mathbb{Z}^+\subset \mathbb{R}$
+  \begin{align}
+    \forall n\in\mathbb{Z}^+, \exists x \in [A,B]: f(x) >n
+  \end{align}
+  Then there is a sequence $x$ such that for all $n$
+  \begin{align}
+    x_n\in[A,B] \land f(x_n)>n
+  \end{align}
+  By the point peak theorem, there is a monotonic subsequence $x\circ k$.
+  Since $x$ is bounded, the subsequence $x\circ k$ is bounded.
+  Since $x\circ k$ is bounded and monotone $x\circ k$ converges by the monotone convergence theorem.
+  Since $f$ is continuous, $f(x\circ k)$ also converges.
+  Since $x\circ k$ is a subsequence
+  \begin{align}
+    k_i \geq i
+  \end{align}
+  By trichotomy, for all $i$
+  \begin{align}
+    f(x_{k_i}) > i
+  \end{align}
+  Thus $f(x\circ k)$ diverges, which is a contradiction. 
+  Therefore $f$ is bounded above.
+\end{proof}
+
+\begin{theorem}[Extreme Value Theorem]
+  If $f:[A,B]\to \mathbb{R}$ is continuous
+  \begin{align}
+    \exists M\in[A,B], \forall x\in[A,B]: f(x)\leq f(M)
+  \end{align}
+\end{theorem}
+\begin{proof}
+  By the boundedness theorem, there is a bound, $B$ to the continuous function. Define four sequences $a$, $b$, $c$, $e$ such that
+  \begin{align}
+    a_1&:= f(A)\\
+    b_1&:=B
+  \end{align}
+  For all $n$:
+  \begin{align}
+    c_n:= \frac{a_n+b_n}{2}\\
+    e_n := b_n - a_n
+  \end{align}
+  If $c_n$ is a bound of the continuous function ($\forall x\in[A,B]: c_n\geq f(x)$):
+  \begin{align}
+    a_{n+1} := a_n\\
+    b_{n+1} := c_n
+  \end{align}
+  Else
+  \begin{align}
+    a_{n+1} := c_n\\
+    b_{n+1} := b_n
+  \end{align}
+  If $c_n$ is a bound
+  \begin{align}
+    a_{n+1} &= a_n\\
+    b_{n+1} &= c_n = \frac{a_n+b_n}{2}\\
+    e_{n+1} &= \frac{a_n+b_n}{2} - a_n= \frac{b_n- a_n}{2}
+  \end{align}
+  If $c_n$ is not a bound
+  \begin{align}
+    a_{n+1} &= c_n = \frac{a_n+b_n}{2} \\
+    b_{n+1} &= b_n\\
+    e_{n+1} &= b_n - \frac{a_n + b_n}{2} = \frac{b_n - a_n}{2}
+  \end{align}
+  Since $\forall n:a_n<c_n<b_n$, $a_n$ is increasing and $b_n$ is decreasing. Since they are also bounded by $(A,B)$, by the monotone convergence theorem, they both converge.
+  From the definition of $e_n$
+  \begin{align}
+    e_n = b_n- a_n
+  \end{align}
+  So
+  \begin{align}
+    e_{n+1} = \frac{e_n}{2}
+  \end{align}
+  By the lemma \ref{Lemma:IntermediateValueTheorem}
+  \begin{align}
+    e_n = \frac{1}{2^{n-1}} e_1 = \frac{1}{2^{n-1}} \left(B-A\right)		
+  \end{align}
+  which converges to zero. Therefor
+  \begin{align}
+    \lim_n (b_n - a_n) &= 0\\
+    L:=\lim_n b_n &= \lim_n a_n
+  \end{align}
+\end{proof}
+
+\section{Connected Spaces}
+
+\begin{definition}[Connected Space]
+  A set is \emph{connected}, if it has no non-empty, proper, clopen subset. A set that is not connected is \emph{disconnected}.
+\end{definition}
+
+\begin{theorem}
+  If $f:M\to N$ is continuous, and $M$ is connected, then $f[M]$ is connected.
+\end{theorem}
+\begin{proof}
+  Suppose $f[M]$ is disconnected. Then there is some non-empty, proper, clopen subset $A$.
+  \begin{align}
+    A \subsetneq f[M]
+  \end{align}
+  The pre-image of $A$, then is a non-empty, proper subset of $M$
+  \begin{align}
+    f^{-1}[A] \subsetneq M
+  \end{align}
+  By the open and closed set conditions, the preimage $f^{-1}[A]$ is clopen.
+  But by assumption, there is no non-empty, proper, clopen subset. So $f[M]$ must be connected.
+\end{proof}
+
+\begin{lemma}
+  If $I$ is a connected interval on $\mathbb{R}$,
+  \begin{align}
+    \forall a,b\in I: a< b \implies \exists c\in I: a<c<b
+  \end{align}
+\end{lemma}
+\begin{proof}
+  Suppose its not,
+  \begin{align}
+    \exists a,b,\in I: a<b \land c\in (-\infty, a] \cup [b, \infty)
+  \end{align}
+  Let $J:= (-\infty, a] \cup [b, \infty)$. The subsets of $J$, $(-\infty, a]$ and its conjugate $[b,\infty)$ are both closed, therefor both are clopen, and $I$ is disconnected.
+\end{proof}
+
+\begin{theorem}[Generalized Intermediate Value Theorem]
+  If $f:M\to \mathbb{R}$ is continuous and $I \subset M$ is connected, then
+  \begin{align}
+    \forall a,b\in I: &f(a) < f(b) \nonumber\\
+    \implies \exists c\in I:& f(a) < f(c) < f(b)
+  \end{align}
+\end{theorem}
+\begin{proof}
+  Since $I$ is connected, $f[I]$ is connected. Hence there is a $\gamma\in f[I]$
+  \begin{align}
+    f(a) < \gamma< f(b)
+  \end{align}
+  Therefor there is a $c\in I$ such that
+  \begin{align}
+    \exists c \in I : f(a) < f(c) < f(b)
+  \end{align}
+\end{proof}
+
+\section{Differentiable Functions}
+
+\begin{definition}[Differentiable Function]
+  A function $f$ is \emph{differentiable} at $a$ if the following exists.
+  \begin{align}
+    f'(a) = \lim_{x\to a} \frac{f(x) - f(a)}{x-a}
+  \end{align}
+  This limit $f'(a)$ is called the \emph{derivative} of $f$ at $a$
+\end{definition}
+
+\begin{theorem}
+  Every differentiable function is continuous.
+\end{theorem}
+\begin{proof}
+  \begin{align}
+    f(x) - f(a) &= \frac{f(x)-f(a)}{x-a} (x-a)\\
+    \lim_{x\to a} \left[f(x) - f(a)\right] &= \lim_{x\to a} \left[\frac{f(x) -f(a)}{x-a} (x-a)\right]
+  \end{align}
+  If $f:[A,B] \to \mathbb{R}$ is differentiable at $a\in [A,B]$, then $f'(a)$ exists.
+  \begin{align}
+    f'(a) = \lim_{x\to a} \frac{f(x)-f(a)}{x-a}
+  \end{align}
+  \begin{align}
+    \lim_{x\to a} \left[f(x)- f(a)\right] &= f'(a) \cdot 0\\
+    &= 0\nonumber\\
+    \lim_{x\to a} f(x) &= \lim_{x\to a} f(a)\nonumber\\
+    \lim_{x\to a} f(x) &= f(a)
+  \end{align}
+  Thus $f(x)$ is continuous at $a$
+\end{proof}
+
+\begin{theorem}[Chain Rule]
+  If $f:[a,b] \to I$ and $g:I \to \mathbb{R}$ are differentiable, then
+  \begin{align}
+    (f\circ g)'(x) = (f'\circ g)(x) g'(x)
+  \end{align}
+\end{theorem}
+\begin{proof}
+  Define $u,v$ such that
+  \begin{align}
+    u(t):= f'\circ g(x) - \frac{(f\circ g)(x) - (f\circ g)(t)}{g(x)-g(t)}\\
+    v(t):= g'(x) - \frac{g(x)-g(t)}{x-t}
+  \end{align}
+  The limit of $u$ at $x$ is then
+  \begin{align}
+    \lim_{t\to x} u(t) &= (f'\circ g)(x) - \lim_{t\to x} \frac{(f\circ g)(x) - (f\circ g)(t)}{g(x)-g(t)}\\
+    &= (f'\circ g)(x) - \lim_{g(t)\to g(x)} \frac{(f\circ g)(x) - (f\circ g)(t)}{g(x)-g(t)}\\
+    &= (f'\circ g)(x) - (f'\circ g) (x) =0
+  \end{align}
+  And the limit of $v$ at $x$ is also
+  \begin{align}
+    \lim_{t\to x} v(t) &=g'(x) - \lim_{t\to x} \frac{g(x)-g(t)}{x-t} \\
+    &= g'(x) - g'(x) = 0
+  \end{align}
+  Rearranging the definition of $v$ gives
+  \begin{align}
+    g(x) - g(t) = (x-t) \left[g'(x) - v(t)\right]
+  \end{align}
+  and the definition of $u$
+  \begin{align}
+    (f\circ g) (x) - (f\circ g) (t) = \left[g(x) - g(t)\right] \left[f'\circ g(x) - u(t)\right]
+  \end{align}
+  Substituting gives
+  \begin{align}
+    (f\circ g) (x) - (f\circ g) (t) = (x-t) \left[g'(x) - v(t)\right] \left[f'\circ g(x) - u(t)\right]
+  \end{align}
+  The definition of the limit of the composite function gives
+  \begin{align}
+    (f\circ g)'(x) &= \lim_{t\to x} \frac{(f \circ g)(x) - (f\circ g) (t) }{x-t}\\
+    &= \lim_{t \to x} \frac{x-t}{x-t}  \left[g'(x) - v(t)\right] \left[f'\circ g(x) - u(t)\right]\\
+    &= (f'\circ g) (x) \cdot g'(x)
+  \end{align}
+\end{proof}
+
+\begin{lemma}%[Rolle's Theorem]
+  If $f$ is continuous on $[a,b]$ and differentiable on $(a,b)$, then
+  \begin{align}
+    f(a) = f(b) \implies \exists c\in(a,b) : f'(c) = 0
+  \end{align}
+\end{lemma}
+\begin{proof}
+  Since $f$ is continuous on $[a,b]$, $f$ achieves a maximum $M\in[a,b]$ and a minimum $m\in[a,b]$.
+  \begin{case}
+    Suppose $m$ and $M$ are both end points of $[a,b]$. Then 
+    \begin{align}
+      f(a) = f(b) \implies f(m) = f(M)
+    \end{align}
+    Since $f(m)$ and $f(M)$ are minimum and maximums of $f$ respectively
+    \begin{align}
+      \forall x\in[a,b]: f(m)\leq f(x) \leq f(M)
+    \end{align}
+    along with $f(m)=f(M)$, implies
+    \begin{align}
+      \forall x\in[a,b]: f(m) = f(x) = f(M)
+    \end{align}
+    So $f$ is a constant function on $[a,b]$, and the derivative of the constant function is
+    \begin{align}
+      \forall x\in(a,b): f'(x) = 0
+    \end{align}
+  \end{case}
+  \begin{case}
+    Now suppose that $m$ or $M$ is not an end point of $[a,b]$.
+    Then there is a $c\in(a,b)$ such that $f$ has a local extrema at $c$. Since the derivative at a local extrema is zero.
+    \begin{align}
+      f'(c) = 0
+    \end{align}
+  \end{case}
+  So for all cases,
+  \begin{align}
+    \exists c\in(a,b) : f'(c) = 0
+  \end{align}
+\end{proof}
+
+
+\begin{theorem}[Generalized Mean Value Theorem]
+  If $f$ and $g$ are continuous on $[a,b]$ and differentiable on $(a,b)$, then
+  \begin{align}
+    \exists c\in (a,b) : \left[f(b)-f(a)\right] g'(c) = \left[g(b)-g(a)\right] f'(c)
+  \end{align}
+\end{theorem}
+\begin{proof}
+  Define $h$ such that
+  \begin{align}
+    h(x):= \left[f(b)-f(a)\right] g(x) - \left[ g(b) - g(a) \right] f(x)
+  \end{align}
+  Since $f$ and $g$ both are continuous on $[a,b]$ and differentiable on $(a,b)$, $h$ is continuous on $[a,b]$ and differentiable on $(a,b)$. So the derivative of $h$ on $(a,b)$ is
+  \begin{align}
+    h'(x) = \left[f(b)-f(a)\right] g'(x) - \left[ g(b) - g(a) \right] f'(x)
+  \end{align}
+  At the end points
+  \begin{align}
+    h(a) &= f(b) g(a) - f(a) g(a) - g(b) f(a) +g(a)f(a)\nonumber\\
+    &=f(b)g(a) - f(a) g(b)\nonumber
+  \end{align}
+  And
+  \begin{align}
+    h(b) &= f(b) g(b) - f(a) g(b) - g(b) f(b) + g(a) f(b)\nonumber\\
+    &=f(b)g(a) - f(a) g(b)
+  \end{align}
+  So
+  \begin{align}
+    h(a)=h(b)
+  \end{align}
+  By the above lemma
+  \begin{align}
+    \exists c\in(a,b) : h'(c) =0
+  \end{align}
+  So there is a $c\in(a,b)$ such that
+  \begin{align}
+    h'(c) = 0 = \left[f(b)-f(a)\right] g'(c) - \left[ g(b) - g(a) \right] f'(c)
+  \end{align}
+  or
+  \begin{align}
+    \left[f(b)-f(a)\right] g'(c) = \left[ g(b) - g(a) \right] f'(c)
+  \end{align}
+\end{proof}
+
+\begin{theorem}[L'h\^{o}pital's Rule]
+  If $f$ and $g$ are differentiable functions and
+  \begin{align}
+    \lim_{x\to a} f(x) &= 0\nonumber\\
+    \lim_{x\to a} g(x) &= 0
+  \end{align}
+  Then
+  \begin{align}
+    \lim_{x\to a} \frac{f(x)}{g(x)}= \lim_{x\to a} \frac{f'(x)}{g'(x)} \label{Equation:LHopitalRatio}
+  \end{align}
+\end{theorem}
+\begin{proof}
+  Choose some $\varepsilon$ and $\varepsilon'$ such that $\varepsilon>\varepsilon'>0$. By \ref{Equation:LHopitalRatio}, there is some $\delta>0$ such that $\forall x\in[a,b]$
+  \begin{align}
+    0<|x-c|< \delta \implies \left|\frac{f'(x)}{g'(x)} - L\right|<\varepsilon'
+  \end{align}
+  For all $(x,y) \subset (c,c+\delta)$ or $(x,y)\subset (c-\delta, c)$, by generalized mean value theorem, there is a $t\in(x,y)$ such that
+  \begin{align}
+    \frac{f(x)-f(y)}{g(x)-g(y)} = \frac{f'(t)}{g'(t)}
+  \end{align}
+  Hence 
+  \begin{align}
+    \left|\frac{f(x)-f(y)}{g(x)-g(y)} - L\right|< \varepsilon'\nonumber\\
+    L - \varepsilon'< \frac{f(x)-f(y)}{g(x)-g(y)} < L +  \varepsilon'\nonumber\\
+    L-\varepsilon'\leq \lim_{x\to c} \frac{f(x) - f(y)}{g(x)-g(y)}\leq L + \varepsilon'
+  \end{align}
+  Assume that $\lim_{x\to c} f(x) = 0$ and $\lim_{x\to c} g(x) = 0$, then
+  \begin{align}
+    L - \varepsilon' \leq \frac{f(y)}{g(y)} \leq L + \varepsilon'\\
+    \left|\frac{f(y)}{g(y)} - L\right|\leq \varepsilon'< \varepsilon
+  \end{align}
+  So for every $\varepsilon>0$, there is a $\delta>0$ such that for all $y\in[a,b]$
+  \begin{align}
+    |y-c| < \delta \implies \left|\frac{f(y)}{g(y)} - L\right|< \varepsilon
+  \end{align}
+  Or
+  \begin{align}
+    \lim_{y\to c} \frac{f(x)}{g(x)} = L
+  \end{align}
+\end{proof}
+
+\section{Integrable Functions}
+
+\begin{definition}[Partition]
+  A \emph{partition} on $[a,b]$ is a finite, increasing sequence $x:[0,n]\to [a,b]$, such that
+  \begin{align}
+    x_0 = a\nonumber\\
+    x_n = b
+  \end{align}
+  The sequence of lengths of partitions $\Delta x_i$ is defined simply as
+  \begin{align}
+    \Delta x_i := x_{i-1} - x_i
+  \end{align}
+  The \emph{mesh} of a partition is given by
+  \begin{align}
+    \mesh x := \max_i \Delta x_i
+  \end{align}
+  A sequence of sample points $t:[0,n]\to[a,b]$ for a partition 
+  \begin{align}
+    \forall i: x_{i-1}\leq t_i \leq x_i
+  \end{align}
+  A \emph{partition pair} is a tuple of sequences, the partition $x$ and one of its sequence of sample points $t$.
+\end{definition}
+
+\begin{definition}[Partition Sum]
+  The \emph{partition sum} of a function on $f$ with partition pair $x,t$ is given by
+  \begin{align}
+    R(f,x,t):= \sum_{i=1}^n f(t_i) \Delta x_i
+  \end{align}
+\end{definition}
+
+\begin{definition}[Integral]
+  A function is \emph{integrable} on $[a,b]$ if there is an $I\in\mathbb{R}$ such that, for all $\varepsilon>0$ there is a $\delta>0$ such that for all partitions $x$
+  \begin{align}
+    \mesh x < \delta \implies |R(f,x,t)- I| < \varepsilon
+  \end{align}
+  If $f$ is integrable on $[a,b]$, $I$ is the integral of $f$ over $[a,b]$ and it is denoted by
+  \begin{align}
+    \int^b_a f(x) \,\mathrm{d} x = I = \lim_{\mesh x \to 0} \sum^n_{i=1} f(t_i) \Delta x_i
+  \end{align}
+\end{definition}
+
+
+\begin{definition}[Upper Sum]
+  \begin{align}
+    U(f,x) := \sum_{i=1}^n M_i \Delta x_i
+  \end{align}
+  where
+  \begin{align}
+    M_i := \sup\{ f(x) : t_{i-1} \leq x_i \leq t_i \}
+  \end{align}
+\end{definition}
+
+\begin{definition}[Lower Sum]
+  \begin{align}
+    L(f,x) := \sum_{i=1}^n m_i \Delta x_i
+  \end{align}
+  where
+  \begin{align}
+    m_i := \inf\{ f(x) : t_{i-1} \leq x_i \leq t_i \}
+  \end{align}
+\end{definition}
+
+\begin{lemma}
+  If $t^*$ is a refinement of $t$, such that $t= t^*\circ p$
+  \begin{align}
+    \sum^{p_i}_{j=p_{i-1}+1} a (t_j^* - t_{j-1}^*) = a (t_i-t_{i-1})
+  \end{align}
+\end{lemma}
+\begin{proof}
+  \begin{align}
+    \sum^{p_i}_{j=p_{i-1}+1} a \left(t^*_j - t_{j-1}^*\right)
+    &= a \sum^{p_i}_{j=p_{i-1}+1} \left(t^*_j - t_{j-1}^*\right)\\
+    &= a \sum^i_{j={i-1}+1} \left(t^*_{p_j} - t^*_{p_{j-1}}\right)\\
+    &= a\sum^i_{j=i} \left(t_j - t_{j-1}\right) \\
+    &= a \left( t_i - t_{i-1} \right) 
+  \end{align}
+\end{proof}
+
+\begin{theorem}
+  If $x^*$ is a refinement of $x$, then
+  \begin{align}
+    L(f,x) \leq L(f,x^*)\nonumber\\
+    U(f,x) \geq U(f,x^*)
+  \end{align}
+\end{theorem}
+\begin{proof}
+  Define $M$, $M^*$, $m$ and $m^*$ such that
+  \begin{align*}
+    M_i = \sup \{ f(x) : t_{i-1} \leq x \leq t_{i} \}\\
+    M_i^* = \sup \{ f(x) : t^*_{i-1} \leq x \leq t^*_{i} \}\\
+    m_i = \inf \{ f(x) : t_{i-1} \leq x \leq t_{i} \}\\
+    m_i^* = \inf \{ f(x) : t^*_{i-1} \leq x \leq t^*_{i} \}
+  \end{align*}
+  Let $p:[0,n]\to [0,n^*]$ be a finite sequence such that
+  \begin{align}
+    t = t^* \circ p
+  \end{align}
+  Then $M$ and $m$ can be written as
+  \begin{align*}
+    M_i = \sup \{ f(x) : t^*_{p_{i-1}} \leq x \leq t^*_{p_i} \}\\
+    m_i = \inf \{ f(x) : t^*_{p_{i-1}} \leq x \leq t^*_{p_i} \}
+  \end{align*}
+  Thus $\forall i\in[0,n]:\forall j\in[p_{i-1},p_i]: m^*_j\geq m_i$ and $M^*_j\leq M_i$, thus
+  \begin{align}
+    \sum_{j=p_{i-1}+1}^{p_i} m_j^* (t_j^* - t_{j-1}^*) &\geq \sum_{j=p_{i-1}+1}^{p_i}  m_i (t_j^* - t_{j-1}^*)\\
+    \sum_{j=p_{i-1}+1}^{p_i} M_j^* (t_j^* - t_{j-1}^*) &\leq \sum_{j=p_{i-1}+1}^{p_i} M_i (t_j^* - t_{j-1}^*)
+  \end{align}
+  By the above lemma
+  \begin{align}
+    \sum_{j=p_{i-1}+1}^{p_i} m_j^* (t_j^* - t_{j-1}^*) &\geq m_i (t_i - t_{i-1})\\
+    \sum_{j=p_{i-1}+1}^{p_i} M_j^* (t_j^* - t_{j-1}^*) &\leq M_i (t_i - t_{i-1})
+  \end{align}
+  And
+  \begin{align}
+    \sum_{i=1}^n \sum_{j=p_{i-1}+1}^{p_i} m_j^* (t_j^* - t_{j-1}^*) &\geq \sum_{i=1}^n  m_i (t_i - t_{i-1})\\
+    \sum_{i=1}^n \sum_{j=p_{i-1}+1}^{p_i} M_j^* (t_j^* - t_{j-1}^*) &\leq\sum_{i=1}^n   M_i (t_i - t_{i-1})
+  \end{align}
+  And finally
+  \begin{align}
+    \sum_{i=1}^{n^*=p_n} m_i^* (t_i^* - t_{i-1}^*) &\geq \sum_{i=1}^n  m_i (t_i - t_{i-1})\\
+    \sum_{i=1}^{n^*=p_n} M_i^* (t_i^* - t_{i-1}^*) &\leq\sum_{i=1}^n   M_i (t_i - t_{i-1})
+  \end{align}
+  Giving
+  \begin{align}
+    L(f,t^*) \geq L(f,t)\\
+    U(f,t^*) \leq U(f,t)
+  \end{align}
+\end{proof}
+
+\begin{lemma}
+  For a partition $P$
+  \begin{align}
+    L(f,P) \leq U(f,P)
+  \end{align}
+\end{lemma}
+\begin{proof}
+  Define $M$ and $m$ such that
+  \begin{align}
+    M_i = \sup \{ f(x) : t_{i-1} \leq x \leq t_{i} \}\\
+    m_i = \inf \{ f(x) : t_{i-1} \leq x \leq t_{i} \}
+  \end{align}
+  then for every $i: m_i \leq M_i$, thus
+  \begin{align}
+    \sum^n_{i=1} m_i (t_i - t_{i-1} \leq \sum^n_{i=1} M_i (t_i - t_{i-1})
+  \end{align}
+  Hence $L(f,t) \leq U(f,t)$
+\end{proof}
+
+\begin{theorem}
+  For all partitions, $P_1$, $P_2$,
+  \begin{align}
+    L(f,P_1) \leq U(f,P_2)
+  \end{align}
+\end{theorem}
+\begin{proof}
+  Let $t^*$ be the common refinement of $t_1$ and $t_2$, then
+  \begin{align}
+    L(f,t_1) \leq L(f,t^*)\\
+    U(f,t^*) \leq U(f,t_2)
+  \end{align}
+  By the above lemma
+  \begin{align}
+    L(f,t^*) \leq U(f,t^*)
+  \end{align}
+  Hence
+  \begin{align}
+    L(f,t_1) \leq U(f, t_2)
+  \end{align}
+\end{proof}
+
+%\begin{corollary}
+%The set $\{L(f,t): t\textrm{ is a partition} \}$ is bounded above and $\{U(f,t): t\textrm{ is a partition} \}$ is bounded below.
+%\end{corollary}
+
+\begin{theorem}
+  A bounded function $f$ is integrable on $[a,b]$, if for every $\varepsilon>0$, there is a partition $x$ such that
+  \begin{align}
+    U(f,x) - L(f,x) < \varepsilon
+  \end{align}
+\end{theorem}
+\begin{proof}
+  Let $\varepsilon>0$ and suppose such a partition $x$ exists such that
+  \begin{align}
+    U(f,x)-L(f,x)<\varepsilon
+  \end{align}
+\end{proof}
+
+
+\section{Primitives}
+
+\begin{definition}[Primitive]
+  Let $f$ be continuous on $(a,b)$. The function $F$ is a primitive of $f$, if $F$ is differentiable on $(a,b)$ and
+  \begin{align}
+    \forall x\in(a,b): F'(x) = f(x)
+  \end{align}
+  
+\end{definition}
+
+\begin{lemma}
+  If $f$ is continuous on $[a,b]$, then the function $F(x) = \int^x_a f(t)\, \dif t$ is uniformly continuous on $[a,b]$.
+\end{lemma}
+
+\begin{lemma}
+  If $f$ is continuous on $[a,b]$, then the function $F(x) = \int^x_a f(t)\, \dif t$ is differentiable on $(a,b)$.
+\end{lemma}
+
+\begin{theorem}
+  If $f$ is continuous on $[a,b]$, then the function $F(x) = \int^x_a f(t)\, \dif t$ is a primitive of $f$.
+\end{theorem}
+
+
+\begin{theorem}
+  If $f$ is integrable on $[a,b]$, $F$ is differentiable on $[a,b]$, and $F$ is a primitive of $f$, then
+  \begin{align}
+    \int^b_a f(x) \, \dif x = F(b) - F(a)
+  \end{align}
+\end{theorem}
+
+
+\pagebreak
+\appendix
+\section{Real Numbers}
+
+\subsection{Rational Sequences}
+
+\begin{definition}[Sequence] 
+  A \emph{sequence} of rationals is a function whose domain is the positive integers and co-domain is a subset of rationals.
+  \begin{align}
+    s: \mathbb{Z}^+ &\to \mathbb{Q}\nonumber\\
+    n &\mapsto s_n
+  \end{align}
+  Let $\mathcal{S}$ denote the set of all rational sequences.
+\end{definition}
+
+\begin{definition}[Constant Sequence]
+  A \emph{constant sequence} is a sequence $c^*\in\mathcal{S}$ in which all the values are the same. 
+  \begin{align}
+    \forall n \in \mathbb{Z}^+: c^*_n = c
+  \end{align}
+  where $c\in\mathbb{Q}$. Let $\mathbb{Q}^*$ denote the set of all constant, rational sequences.
+\end{definition}
+
+\begin{definition}[Convergent Sequence]
+  A \emph{convergent sequence} of rationals is a sequence $s\in\mathcal{S}$, in which there is an $L \in\mathbb{Q}$ such that
+  \begin{align}
+    \forall \varepsilon \in\mathbb{Q}^+ : \exists N \in\mathbb{Z}^+: n > N \implies |s_n - L | < \varepsilon
+  \end{align}
+  If $s$ converges to $L$, then $L$ is called the \emph{limit} of the sequence, denoted by
+  \begin{align}
+    \lim_n s = L
+  \end{align}
+  Let $\mathcal{C}$ denote the set of all convergent, rational sequences.
+\end{definition}
+
+\begin{theorem}\label{Theorem:ConstantIsConvergent}
+  Every constant sequence is convergent, the limit being the value of the function.
+  \begin{align}
+    \mathbb{Q}^* \subset \mathcal{C}
+  \end{align}
+  and for $c \in \mathbb{Q}$
+  \begin{align}
+    c^*: n \mapsto c \implies \lim_n c^*_n = c
+  \end{align}
+\end{theorem}
+\begin{proof}
+  Let $c^*:n\mapsto c$ be a rational, constant sequence.
+  Choose any $\varepsilon\in \mathbb{Q}^+$ and any $N \in \mathbb{Z}^+$.
+  For all $n$, including $n>N$,
+  \begin{align}
+    |c^*_n - c | = 0 < \varepsilon
+  \end{align}
+  which is the criterion for a convergent sequence
+  \begin{align}
+    \lim_n c^*_n = c
+  \end{align}
+\end{proof}
+
+\begin{definition}[Fundamental Sequence] 
+  A \emph{fundamental sequence} of rationals is a sequence $s\in\mathcal{S}$, where
+  \begin{align}
+    \forall \varepsilon\in\mathbb{Q}^+: \exists N \in \mathbb{Z}^+: m,n > N  \implies |s_m-s_n| < \varepsilon
+  \end{align}
+  Let $\mathcal{F}$ denote the set of all fundamental, convergent sequences.
+\end{definition}
+
+\begin{theorem}
+  Every convergent sequence is fundamental.
+  \begin{align}
+    \mathcal{C} \subset \mathcal{F}
+  \end{align}
+\end{theorem}
+\begin{proof}
+  Let $s$ be a convergent sequence $s\in\mathcal{F}$.
+  Choose $\varepsilon\in \mathbb{Q}^+$, which implies $\exists N \in \mathbb{Z}^+$, such that for $m,n > N$, the convergent criterion holds.
+  \begin{align}
+    |s_m - s_n | = |(s_m - L) - (s_n - L)|
+  \end{align}
+  By triangle inequality
+  \begin{align}
+    |(s_m- L) - (s_n - L) | \leq|s_m - L | + |s_n - L|
+  \end{align}
+  Define $\varepsilon' := 2\varepsilon$. By the definition of a convergent sequence, for all $n > N$
+  \begin{align}
+    |s_n - L | < \varepsilon = \frac{\varepsilon'}{2}
+  \end{align}
+  By $a<b\land c<d \implies a_c<b+d$
+  \begin{align}
+    |s_m- L | + |s_n- L| < \frac{\varepsilon'}{2} + \frac{\varepsilon'}{2} = \varepsilon'
+  \end{align}
+  Therefor
+  \begin{align}
+    |s_m - s_n | < \varepsilon'
+  \end{align}
+  which is the fundamental criterion.
+\end{proof}
+
+\begin{definition}[Bounded Sequence]
+  A sequence $s\in\mathcal{S}$ is \emph{completely bounded} by the interval $(b,B)$ if
+  \begin{align}
+    \forall n\in\mathbb{Z}^+: b< s_n < B
+  \end{align}
+  Let $\mathcal{B}$ denote the set of all bounded sequences
+\end{definition}
+
+\begin{theorem}
+  Every fundamental sequence is bounded.
+  \begin{align}
+    \mathcal{F} \subset \mathcal{B}
+  \end{align}
+\end{theorem}
+\begin{proof}
+  Choose a fundamental sequence $s\in\mathcal{F}$ and choose a $\varepsilon \in \mathbb{Q}^+$. This implies the existence of $N\in\mathbb{Z}^+$ where if $m, n>N$ the fundamental criterion holds.
+  Define $M:=N+1$.
+  Since $\{|s_n|:n\leq M\}$ is a finite set, $\max\{|s_n|:n\leq M\}$ is just a rational number.
+  Define a number
+  \begin{align}
+    B:= \max \{|s_n|:n\leq M\}+ \varepsilon
+  \end{align}
+  The number $B-\varepsilon$ bounds the sequence for $n\leq M$; for $n> M$:
+  \begin{align*}
+    |s_n| = |s_n -s_M +s_M|
+  \end{align*}
+  By the triangle inequality
+  \begin{align*}
+    |s_n| \leq |s_n- s_M| + |s_M|
+  \end{align*}
+  From the definition of a fundamental sequence
+  \begin{align}
+    |s_n - s_M| < \varepsilon
+  \end{align}
+  Since $B-\varepsilon$ is a bound for $n\leq M$
+  \begin{align}
+    |s_M| < B - \varepsilon
+  \end{align}
+  By $a<b\land c<d\implies a+c<b+d$
+  \begin{align}
+    |s_n| < \varepsilon + B - \varepsilon = B
+  \end{align}
+\end{proof}
+
+
+\subsection{The Sequence Subrings}
+
+\begin{definition}
+  Define addition of two sequences as
+  \begin{align}
+    s+t:=i\mapsto s_i+t_i
+  \end{align}
+  Subtraction of two sequences by
+  \begin{align}
+    s-t := i \mapsto s_i - t_i
+  \end{align}
+  and multiplication of two sequences as
+  \begin{align}
+    st:= i \mapsto s_i t_i
+  \end{align}
+\end{definition}
+
+\begin{theorem}
+  The sum of two fundamental sequences is fundamental.
+\end{theorem}
+\begin{proof}
+  By the triangle inequality
+  \begin{align}
+    |s_m - s_n + t_m - t_n | \leq |s_m - s_n| + |t_m - t_n|
+  \end{align}
+  By the definition of fundamental sequences, $\forall \varepsilon_s, \varepsilon_t\in\mathbb{Q}^+$, there is a $N_s, N_t\in\mathbb{Z}^+$ and $N:=\max\{N_s, N_t\}$, such that if $m,n > N$
+  \begin{align}
+    |s_m - s_n| &< \varepsilon_s\nonumber\\
+    |t_m - t_n| &< \varepsilon_t
+  \end{align}
+  By $a<b\land c<d\implies a+c<b+d$
+  \begin{align}
+    |s_m - s_n| + |t_m - t_n| < \varepsilon_s + \varepsilon_t
+  \end{align}
+  Let $\varepsilon:= \varepsilon_s+\varepsilon_t$
+  \begin{align}
+    |s_m - s_n +t_m - t_n| &< \varepsilon\\
+    \left|(s_m + t_m) - (s_n + t_n) \right| &< \varepsilon
+  \end{align}
+\end{proof}
+
+\begin{theorem}
+  The product of two fundamental sequences is fundamental.
+\end{theorem}
+\begin{proof}
+  \begin{align}
+    |s_m t_m - s_n t_n | &= |s_m t_m - s_m t_n + s_m t_n - s_n t_n |\\
+    &= \left|s_m ( t_m - t_n) + t_n (s_m - s_n) \right| 
+  \end{align}
+  By the triangle identity
+  \begin{align}
+    |s_m ( t_m - t_n) + t_n (s_m - s_n) |  \leq |s_m (t_m - t_n ) | + |t_n (s_m -s_n ) |
+  \end{align}
+  Let $b_s$ and $b_t$ be bounds of sequences $s$ and $t$ respectively.
+  Define $B:=2 \max\{b_s, b_t\}$, then by the definition of bounding and order transitivity
+  \begin{align}
+    |s_m| < \frac{B}{2} \land |t_n| < \frac{B}{2}
+  \end{align}
+  The definition of a closing sequences holds for $\frac{\varepsilon}{B}$, so
+  \begin{align}
+    |s_m - s_n | < \frac{\varepsilon }{ B} \land |t_m - t_n | < \frac{\varepsilon}{B}
+  \end{align}
+  By $0<a<b\land 0<c<d \implies ac< bd$
+  \begin{align}
+    |s_m | |t_m - t_n | &< \frac{B}{2} \frac{\varepsilon}{B} = \frac{\varepsilon}{2}\nonumber\\
+    |t_n | |s_m - s_n | &< \frac{B}{2} \frac{\varepsilon}{B} = \frac{\varepsilon}{2}
+  \end{align}
+  By $a<b \land c<d\implies a+c < b+d$
+  \begin{align}
+    |s_m||t_m- t_n| + |t_n| |s_m - s_n| < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon
+  \end{align}
+  Therefor
+  \begin{align}
+    |s_m t_m - s_n t_n| < \varepsilon
+  \end{align}
+\end{proof}
+
+\begin{theorem}
+  The sum of two convergent sequences is convergent
+  \begin{align}
+    \lim_n s_n + \lim_n t_n = \lim_n (s_n+t_n)
+  \end{align}
+\end{theorem}
+
+\begin{theorem}
+  The product of two convergent sequences is convergent
+  \begin{align}
+    \lim_n s_n \cdot \lim_n t_n = \lim_n (s_n t_n)
+  \end{align}
+\end{theorem}
+
+\subsection{Ordered Rings}
+
+\begin{definition}
+  \begin{align}
+    \mathcal{Z} := \left\{\{s_n\}\in\mathcal{C}:\lim_n s_n = 0\right\}
+  \end{align}
+\end{definition}
+
+\begin{definition}[Positive]
+  The set of \emph{positive} fundamental sequences are sequences that have a tail that eventually is greater than some positive rational.
+  \begin{align}
+    \mathcal{F}^+ := \left\{ \{s_n\}\in \mathcal{F}\middle| \exists \varepsilon\in\mathbb{Q}^+,N\in\mathbb{Z}^+: n>N \implies s_n >\varepsilon \right\}
+  \end{align}
+\end{definition}
+
+\begin{theorem}
+  For all fundamental sequences $\{s_n\} \in\mathcal{F}$, exactly one of the following is true: $\{s_n\} \in \mathcal{Z}$, $\{s_n\} \in\mathcal{F}^+$, or $\{-s_n\} \in \mathcal{F}^+$
+\end{theorem}
+\begin{proof}
+  If a sequence $\{s_n\}$ is fundamental then,
+  \begin{align}
+    \forall \varepsilon\in\mathbb{Q}^+, \exists N \in \mathbb{Z}^+, \forall m,n>N: |s_m-s_n| < \varepsilon
+  \end{align}
+  but not $\mathcal{Z}$
+  \begin{align}
+    \exists \varepsilon' \in \mathbb{Q}^+, \forall N \in \mathbb{Z}^+, \exists n > N: |s_n| \geq \varepsilon'
+  \end{align}
+  If there is such an $\varepsilon'$, then there must be an $r$ such that $\varepsilon'> r> 0$
+  \begin{align}
+    \forall N \in\mathbb{Z}^+, \exists n > N : |s_n| > r
+  \end{align}
+  Choose some $\varepsilon$, such that $r>\varepsilon>0$ and $N$
+  \begin{align}
+    \forall m,n>N \implies |s_m -s _n| < \varepsilon
+  \end{align}
+  Choose $n>N$ such that
+  \begin{align}
+    |s_n| > r
+  \end{align}
+  Use the definition of a fundamental sequence
+  \begin{align}
+    s_n - \varepsilon < s_m < s_n + \varepsilon
+  \end{align}
+  If $s_n>0$, then $s_n>r$
+  \begin{align}
+    r-\varepsilon < s_n - \varepsilon < s_m
+  \end{align}
+  Since $r> \varepsilon$
+  \begin{align}
+    0< r- \varepsilon <s_m
+  \end{align}
+  So that, for every $m>N$
+  \begin{align}
+    0< s_m
+  \end{align}
+  If $s_n<0$, then $s_n<-r$
+  \begin{align}
+    s_m<\varepsilon + s_n < \varepsilon - r
+  \end{align}
+  Since $r>\varepsilon$
+  \begin{align}
+    s_m<\varepsilon-r<0
+  \end{align}
+  So that, for every $m>N$
+  \begin{align}
+    s_m < 0
+  \end{align}
+  Therefor, for every sequence $\{s_n\}\in\mathbb{F} - \mathbb{Z}$, one of the following is true
+  \begin{align}
+    \exists N: n>N \implies 0 < s_n\\
+    \exists N: n>N \implies s_n < 0
+  \end{align}
+  The first one implies that $\{s_n\}\in\mathcal{F}^+$, for the second one, take $\{-s_n\}$, then
+  \begin{align}
+    \exists N: n>N \implies 0 < -s_n
+  \end{align}
+  so that $\{-s_n\}\in\mathcal{F}^+$
+\end{proof}
+
+\begin{theorem}[Closure]
+  Addition and multiplication are closed on $\mathcal{F}^+$
+\end{theorem}
+\begin{proof}
+  Choose two sequences $s,t\in\mathcal{F}^+$, then there is an $N_s$, $N_t$ such that
+  \begin{align}
+    n> N_s \implies s_n > 0\\
+    n> N_t \implies t_n >0
+  \end{align}
+  Define $N:=\max\{N_s, N_t\}$, then for any $n>N$
+  \begin{align}
+    s_n > 0\land t_n >0
+  \end{align}
+  Since addition and multiplication are closed on positive rationals
+  \begin{align}
+    s_n+t_n>0 \land s_nt_n > 0
+  \end{align}
+  And
+  \begin{align}
+    s+ t \in \mathcal{F}^+\\
+    s\cdot t \in \mathcal{F}^+
+  \end{align}
+\end{proof}
+
+\begin{definition}
+  \begin{align}
+    x>y \iff x-y \in \mathcal{F}\\
+    x<y \iff y-x \in \mathcal{F}
+  \end{align}
+\end{definition}
+
+\subsection{The Real Field}
+
+\begin{definition*}
+  \begin{align}
+    \mathcal{Z} := \left\{\{s_n\}\in\mathcal{C}:\lim_n s_n = 0\right\}
+  \end{align}
+\end{definition*}
+
+\begin{theorem}
+  $\mathcal{Z}$ is a subgroup of $(\mathcal{S},+)$
+\end{theorem}
+\begin{proof}
+  The additive identity $0^*$ is in $\mathcal{Z}$, since it converges to zero.
+  \begin{align}
+    \lim_n 0^* = 0
+  \end{align}
+  And addition and subtraction is closed on $\mathcal{Z}$. If $a,b\in\mathcal{Z}$
+  \begin{align}
+    \lim_n(a_n+b_n) &= \lim_n a_n + \lim_n b_n = 0+0 = 0\\
+    \lim_n(a_n-b_n) &= \lim_n a_n - \lim_n b_n = 0-0 = 0
+  \end{align}
+\end{proof}
+
+\begin{lemma}
+  The product of a bounded sequence and a sequence in $\mathcal{Z}$ is in $\mathcal{Z}$
+  \begin{align}
+    \forall s\in\mathcal{B}, t\in\mathcal{Z}: st\in\mathcal{Z}
+  \end{align}
+\end{lemma}
+\begin{proof}
+  Since $s$ is bounded
+  \begin{align}
+    \forall n\in\mathbb{Z}^+: b< s_n &< B\\
+    |s_n|&< |B|
+  \end{align}
+  Fix $\varepsilon\in\mathbb{Q}^+$ and $N\in\mathbb{Z}^+$, then for all $n>N$
+  \begin{align}
+    |t_n|< \varepsilon
+  \end{align}
+  Then for all $n>N$
+  \begin{align}
+    |s_n||t_n|< |B| \varepsilon
+    |s_n\cdot t_n| < |B| \varepsilon
+  \end{align}
+  Let $\varepsilon' := |B|\varepsilon$, then for all $\varepsilon'\in\mathbb{Q}^+$
+  \begin{align}
+    n>N \implies |s_n t_n| < \varepsilon'
+  \end{align}
+  or
+  \begin{align}
+    \lim_n s_n t_n = 0
+  \end{align}
+  and
+  \begin{align}
+    s\cdot t\in\mathcal{Z}
+  \end{align}
+\end{proof}
+
+\begin{definition}[Equivalence]
+  Two sequences are equivalent mod $\mathcal{Z}$ if and only if their difference is in $\mathcal{Z}$
+  \begin{align}
+    s\equiv_\mathcal{Z} t \iff s-t\in\mathcal{Z}
+  \end{align}
+\end{definition}
+
+\begin{theorem}[Equivalence Reflexivity]
+  \begin{align}
+    a\equiv_\mathcal{Z} a 
+  \end{align}
+\end{theorem}
+\begin{proof}
+  \begin{align}
+    a-a&: n \mapsto a_n - a_n = 0\\
+    a-a&: n \mapsto 0\\
+    a-a &= 0^*\in\mathbb{Z}
+  \end{align}
+  \begin{align}
+    a\equiv_\mathcal{Z} a
+  \end{align}
+\end{proof}
+
+\begin{theorem}[Equivalence Symmetry]
+  \begin{align}
+    a\equiv_\mathcal{Z} b \iff b\equiv_\mathcal{Z} a
+  \end{align}
+\end{theorem}
+\begin{proof}
+  \begin{align}
+    a\equiv_\mathcal{Z} b
+  \end{align}
+  \begin{align}
+    a-b&\in\mathcal{Z}\\
+    -(a-b) &\in\mathcal{Z}\\
+    b-a &\in\mathcal{Z}
+  \end{align}
+  \begin{align}
+    b\equiv_\mathcal{Z} a
+  \end{align}
+\end{proof}
+
+\begin{theorem}[Equivalence Transitivity]
+  \begin{align}
+    a\equiv_\mathcal{Z} b \land b \equiv_\mathcal{Z} c \implies a\equiv_\mathcal{Z} c
+  \end{align}
+\end{theorem}
+\begin{proof}
+  \begin{align}
+    a\equiv_\mathcal{Z} b &\land b \equiv_\mathcal{Z} c\\
+    a-b\in\mathcal{Z} &\land b-c \in\mathcal{Z}
+  \end{align}
+  Since addition is closed on $\mathbb{Z}$
+  \begin{align}
+    (a-b) + (b-c) &\in\mathcal{Z}\\
+    a-c &\in\mathcal{Z}
+  \end{align}
+  \begin{align}
+    a\equiv_\mathcal{Z} c
+  \end{align}
+\end{proof}
+
+\begin{theorem}
+  Addition is compatible with equivalence
+  \begin{align}
+    s\equiv_\mathcal{Z} s' \land t\equiv_\mathcal{Z} t' \implies s+t \equiv_\mathcal{Z} s'+t'
+  \end{align}
+\end{theorem}
+\begin{proof}
+  Since $s\equiv_\mathcal{Z} s'$ and $t\equiv_\mathcal{Z} t'$
+  \begin{align}
+    s-s'\in\mathcal{Z}\\
+    t-t'\in\mathcal{Z}
+  \end{align}
+  Since $\mathcal{Z}$ is closed on addition
+  \begin{align}
+    (s-s')+(t-t')\in\mathcal{Z}\\
+    (s+t)-(s'+t') \in\mathcal{Z}
+  \end{align}
+  which implies that
+  \begin{align}
+    s+t \equiv_\mathcal{Z} s'+t'
+  \end{align}
+\end{proof}
+
+\begin{theorem}
+  Multiplication is compatible with equivalence for bounded sequences
+  \begin{align}
+    \forall s,s',t,t'\in\mathcal{B}:s\equiv_\mathcal{Z} s' \land t\equiv_\mathcal{Z} t' \implies st \equiv_\mathcal{Z} s't'
+  \end{align}
+\end{theorem}
+\begin{proof}
+  Assume $s\equiv_\mathcal{Z} s'$ and $t\equiv_\mathcal{Z} t'$, then
+  \begin{align}
+    s-s'&\in\mathcal{Z}\\
+    t-t'&\in\mathcal{Z}
+  \end{align}
+  Since $s\in\mathcal{B}$ and $t'\in\mathcal{B}$
+  \begin{align}
+    s(t-t')\in\mathcal{Z}\\
+    st-st'\in\mathcal{Z}
+  \end{align}
+  and
+  \begin{align}
+    (s-s')t'\in\mathcal{Z}\\
+    st'-s't'\in\mathcal{Z}
+  \end{align}
+  Since $\mathcal{Z}$ is closed on addition
+  \begin{align}
+    st-st'+st'-s't'\in\mathcal{Z}\\
+    st-s't'\in\mathcal{Z}
+  \end{align}
+  By the definition of equivalence
+  \begin{align}
+    st \equiv_\mathcal{Z} s't'
+  \end{align}
+\end{proof}
+
+\begin{theorem}
+  If $x\equiv_\mathcal{z} y$ and $\lim_n x_n = L$, then $\lim_n y_n = L$
+\end{theorem}
+\begin{proof}
+  Fix $\varepsilon\in\mathbb{Q}^+$
+  \begin{align}
+    \exists N_1\in\mathbb{Z}^+: \forall n> N_1: |x_n - y_n|< \varepsilon\\
+    \exists N_2\in\mathbb{Z}^+: \forall n> N_2: |x_n - L| < \varepsilon
+  \end{align}
+  Let $N:= \max\{N_1, N_2\}$, if $n>N$
+  \begin{align}
+    |x_n-y_n| < \varepsilon\\
+    |x_n - L| < \varepsilon
+  \end{align}
+  By the triangle identity
+  \begin{align}
+    |y_n-L | = |y_n-x_n+x_n-L| \leq |x_n-y_n| + |x_n- L| < \varepsilon +  \varepsilon = 2\varepsilon
+  \end{align}
+  Let $\varepsilon':= 2\varepsilon$. For all $n>N$
+  \begin{align}
+    |y_n-L| < \varepsilon
+  \end{align}
+  Or
+  \begin{align}
+    \lim_n y_n = L
+  \end{align}
+\end{proof}
+
+\begin{theorem}
+  Positive fundamental sequences are closed over equivalence
+  \begin{align}
+    \forall x\in\mathcal{F}^+: x\equiv_\mathcal{Z} y \implies y\in\mathcal{F}^+
+  \end{align}
+\end{theorem}
+\begin{proof}
+  Since $x$ is in $\mathcal{F}^+$, there is an $r\in\mathcal{Q}^+$ and $N\in\mathbb{Z}^+$ such that for all $n>N$
+  \begin{align}
+    x_n > r>0
+  \end{align}
+  Since the rationals are dense, there is a rational $s$ such that
+  \begin{align}
+    r> s>0\\
+    r-s>0
+  \end{align}
+  Since $x-y\in\mathcal{Z}$, there is an $N'\in\mathcal{Z}^+$ such that
+  \begin{align}
+    n> N'> N \implies |x_n - y_n| < r-s
+  \end{align}
+  If $n> N'$
+  \begin{align}
+    s-r < y_n - x_n
+  \end{align}
+  Along with $r< x_n$
+  \begin{align}
+    s- r+ r = s < y_n- x_n +x_n = y_n
+  \end{align}
+  \begin{align}
+    \forall n>N': s>y_n
+  \end{align}
+  So $y\in\mathcal{F}^+$
+\end{proof}
+
+\begin{definition}[The Real Field]
+  The \emph{real field} is the partition of equivalence classes in $\mathcal{F}$
+  \begin{align}
+    \mathbb{R} := \mathcal{F} / \equiv_\mathcal{Z}
+  \end{align}
+\end{definition}
+
+
+\begin{theorem}
+  Every fundamental sequence not in $\mathcal{Z}$, has a multiplicative inverse.
+  \begin{align}
+    \forall x\in\mathcal{F}-\mathcal{Z}, \exists x^{-1} \in\mathcal{F}: xx^{-1} \equiv_\mathcal{Z} 1^*
+  \end{align}
+\end{theorem}
+\begin{proof}
+  If $x\in\mathcal{F}-\mathcal{Z}$, then either $x\in\mathcal{F}^+$ or $-x\in\mathcal{F}^+$. First assume $x\in\mathcal{F}^+$, then there is an $r\in\mathbb{Q}^+$ such that there is a $N$-tail such that
+  \begin{align}
+    x_n > r >0
+  \end{align}
+  Define $x^{-1}$, such that
+  \begin{align}
+    n>N : x_n^{-1} := \frac{1}{x_n}\\
+    n\geq N : x_n^{-1} := 0
+  \end{align}
+  And let $y_n:= x_{N+n}$ and $y_n^{-1} := x^{-1}_{N+n}$
+  \begin{align}
+    \forall n: y_n y_n^{-1} = x_{N+n} \frac{1}{x_{N+n}} = 1\\
+    y y^{-1} = 1^*
+  \end{align}
+  Since $yy^{-1}$ is a tail of $xx^{-1}$
+  \begin{align}
+    xx^{-1} \equiv_\mathcal{Z} yy^{-1} = 1^*
+  \end{align}
+  Now assume $-x\in\mathcal{F}^+$, then there is a $(-x)^{-1}\in\mathcal{F}$
+  \begin{align}
+    (-x)(-x)^{-1} \equiv_\mathcal{Z} 1^*\\
+    x\left[-(-x)^{-1}\right] \equiv_\mathcal{Z} 1^*
+  \end{align}
+  Therefor each fundamental sequence not in $\mathcal{Z}$ has a multiplicative inverse.
+\end{proof}
+
+
+\subsection{Completion of the Field}
+
+\begin{definition}[Fundamental Sequence]
+  A real, fundamental sequence is defined by
+  \begin{align}
+    \forall \varepsilon \in \mathbb{R}^+: \exists N \in \mathbb{Z}^+: n,m > N \implies |x_m - x_n | < \varepsilon
+  \end{align}
+\end{definition}
+
+\begin{definition}[Convergent Sequence]
+  A real, convergent sequence converges to $L\in\mathbb{R}$ if
+  \begin{align}
+    \forall \varepsilon \in \mathbb{R}^+: \exists N \in \mathbb{Z}^+: n > N \implies |x_n - L | < \varepsilon
+  \end{align}
+  If $L$ exists it is called the \emph{limit} of the function
+  \begin{align}
+    L = \lim_n x_n
+  \end{align}
+\end{definition}
+
+\begin{theorem}%[Archimedean Property]
+  For every real number there is a greater positive integer.
+  \begin{align}
+    \forall x\in\mathbb{R}: \exists n \in \mathbb{Z}^+: n^* > x 
+  \end{align}
+  where $n^*:= m \mapsto n$ and $\mathbb{Z}^+ \subset \mathbb{Q}$
+\end{theorem}
+\begin{proof}
+  Let $x\in\mathbb{R}$ be any real number.
+  By definition it is a fundamental sequence of rationals $x\in\mathcal{C}$.
+  Every fundamental sequence is bounded, so there exists $b,B\in\mathbb{Q}$, such that, for all $i\in\mathbb{Z}+$
+  \begin{align}
+    b < x_i < B
+  \end{align}
+  By the Archimedean property of rationals, there exists an $n\in\mathbb{Z}^+$, such that $n>B$.
+  \begin{align}
+    x_i < n
+  \end{align}
+  Consider the constant sequence $n^*: i \mapsto n$
+  \begin{align}
+    x_i < n = n^*_i
+  \end{align}
+  Choose any $\varepsilon \in\mathbb{Q}^+$ and any $N\in\mathbb{Z}^+$
+  \begin{align}
+    i > N \implies x_i < n_i^*
+  \end{align}
+  which by definition of order on the reals
+  \begin{align}
+    x< n^*
+  \end{align}
+\end{proof}
+
+\begin{theorem}
+  $\mathbb{Q}^*$ is a dense subset of $\mathbb{R}$
+  \begin{align}
+    \forall x \in \mathbb{R}, \varepsilon \in \mathbb{Q}^+: \exists r \in \mathbb{Q}^*: |x - r | < \varepsilon
+  \end{align}
+\end{theorem}
+\begin{proof}
+  Fix $\varepsilon\in \mathbb{Q}^+$ and $x \in\mathbb{R}$.
+  Since $x$ is a rational, fundamental sequence, there is an $N\in\mathbb{Z}^+$ such that
+  \begin{align}
+    m,n > N \implies |x_m - x_n | < \varepsilon
+  \end{align}
+  Choose $l>m$, let $r:= n \mapsto x_l$
+  \begin{align}
+    n> N \implies |x_n - r_n| < \varepsilon
+  \end{align}
+  By the definition of order on $\mathbb{R}$ and the definition of a limit
+  \begin{align}
+    \lim_n |x_n - r_n | < \varepsilon
+  \end{align}
+  By the definition of the absolute value on $\mathbb{R}$
+  \begin{align}
+    |x- r| < \varepsilon
+  \end{align}
+\end{proof}
+
+\begin{theorem}
+  Every fundamental sequence of rational, constant sequences converges to a fundamental sequence.
+  \begin{align}
+    \lim_n r^*_n = r
+  \end{align}
+  where $r^*: n \mapsto ( m \mapsto r_n)$
+\end{theorem}
+\begin{proof}
+  Let $r\in\mathcal{F}$ be a rational, fundamental sequence. Choose some $\varepsilon\in\mathbb{R}^+$, then there is some $N\in\mathbb{Z}^+$ such that
+  \begin{align}
+    m,n > N \implies |r_m - r_n | <\varepsilon
+  \end{align}
+  Fixing $m>N$, the definition of a limit gives
+  \begin{align}
+    \lim_n r_n = r_m
+  \end{align}
+  \begin{align}
+    \left|\lim_n r_n - r_m \right| = 0 < \varepsilon
+  \end{align}
+  Define $r^*: m  \mapsto (n \mapsto r_m)$, then the limit of the constant sequences $r_m^*$ are the constant
+  \begin{align}
+    \lim_n r_{mn}^* = r_m
+  \end{align}
+  Giving
+  \begin{align}
+    \left|\lim_n r_n - \lim_n r_{mn}^* \right| < \varepsilon
+  \end{align}
+  % Clean after this
+  By the definition of order on $\mathbb{R}$
+  \begin{align}
+    |r_n^* - r | < \varepsilon
+  \end{align}
+  Therefor
+  \begin{align}
+    \forall \varepsilon\in\mathbb{Q}^+: \exists N \in \mathbb{Z}^+: n > N \implies |r_n^* - r| < \varepsilon
+  \end{align}
+  or more succinctly
+  \begin{align}
+    \lim_n r_n^* = r
+  \end{align}
+\end{proof}
+
+\begin{theorem}[Completeness]
+  Every real, fundamental sequence converges to a real number.
+\end{theorem}
+\begin{proof}
+  Let $x$ be a real, fundamental sequence. Define a sequence of constant, rational sequences $r^*:\mathbb{Z}^+\to\mathbb{Q}^*$ such that
+  \begin{align}
+    x_n-\frac{1}{n} < r_n^* < x_n+\frac{1}{n}
+  \end{align}
+  or
+  \begin{align}
+    |r_n^*-x_n | < \frac{1}{n}
+  \end{align}
+  For any $m,n\in\mathbb{Z}^+$, by triangle identity
+  \begin{align}
+    |r^*_m - r^*_n | &= |r^*_m - x_m + x_m - x_n +x_n - r^*_n|\\
+    &\leq |r_m^* - x_m| + |x_m - x_n| + |r_n^* - x_n|\\
+    &< |x_m - x_n| + \frac{1}{m} + \frac{1}{n}
+  \end{align}
+  Since $x$ is a fundamental sequence, for every $\varepsilon\in\mathbb{R}^+$ there is an $N\in\mathbb{Z}^+$, such that $m,n>N$
+  \begin{align}
+    |x_m - x_n | < \frac{\varepsilon}{3}
+  \end{align}
+  Choose $N'\in\mathbb{Z}^+:N'>\frac{3}{\varepsilon}$, and define $M:=\max\{ N , N'\}$. For all $m, n > M $
+  \begin{align}
+    m > M &> \frac{3}{\varepsilon} > 0\nonumber\\
+    n > M &> \frac{3}{\varepsilon} > 0
+  \end{align}
+  implies
+  \begin{align}
+    \frac{1}{m} < \frac{\varepsilon}{3}\nonumber\\
+    \frac{1}{n} < \frac{\varepsilon}{3}
+  \end{align}
+  Applying this to the earlier inequality
+  \begin{align}
+    |r^*_m - r^*_n| < \frac{\varepsilon}{3} + \frac{\varepsilon}{3} + \frac{\varepsilon}{3} = \varepsilon
+  \end{align}
+  Hence $r^*$ is a fundamental sequence.
+  %Clean after this
+  Therefore by the lemma above
+  \begin{align}
+    \lim_n r^*_n = r
+  \end{align}
+  where $r^*: n \mapsto ( m \mapsto r_n)$. 
+  From the definition of $r^*$, for every $n\in\mathbb{Z}^+$
+  \begin{align}
+    |r^*_n - x_n | < \frac{1}{n}
+  \end{align}
+  Since $\mathbb{R}$ is unbounded
+  \begin{align}
+    \forall \varepsilon \in \mathbb{R}^+: \exists N\in\mathbb{Z}^+ : \frac{1}{N} < \varepsilon
+  \end{align}
+  If $n>N$, then $\frac{1}{n} < \frac{1}{N} < \varepsilon$
+  \begin{align}
+    |r^*_n-x_n| <\frac{1}{N} <  \varepsilon
+  \end{align}
+  Then, for every $\varepsilon\in\mathbb{R}^+$ there is a $N\in\mathbb{Z}^+$ such that if $n>N$
+  \begin{align}
+    |r^*_n-x_n| < \varepsilon
+  \end{align}
+  Since $\lim_n r^*_n = r$
+  \begin{align}
+    \exists N'\in\mathbb{Z}^+: \forall n> N': |r^*_n - r| < \varepsilon
+  \end{align}
+  Let $M:= \max\{N, N'\}$, if $n>M$, then for all $\varepsilon\in\mathbb{R}^+$
+  \begin{align}
+    |r^*_n-x_n| < \frac{\varepsilon}{2}\\
+    |r^*_n - r| < \frac{\varepsilon}{2}
+  \end{align}
+  By the triangle identity
+  \begin{align}
+    |x_n-r | &= |x_n-r^*_n+r^*_n-r|\nonumber\\
+    &\leq |r^*_n-x_n| + |r^*_n - r| < \frac{\varepsilon}{2} +  \frac{\varepsilon}{2} = \varepsilon
+  \end{align}
+  Hence for all $n>M$
+  \begin{align}
+    |x_n-r| < \varepsilon
+  \end{align}
+  Or
+  \begin{align}
+    \lim_n x_n = r
+  \end{align}
+\end{proof}
+
+\end{document}
