@@ -8,10 +8,12 @@
 \usepackage{amssymb}
 \usepackage{amsthm}
 % \usepackage{hyperref}
+\usepackage{mathrsfs}
 
 % Options
 % \mathtoolsset{showonlyrefs}
 % \allowdisplaybreaks
+\numberwithin{equation}{section}
 
 % Begin Definitions
 \DeclareMathOperator{\mesh}{mesh}
@@ -21,10 +23,6 @@
 \newcommand{\lxor}{\otimes}
 \newcommand{\comp}{\backslash}
 \newcommand{\union}{\cup}
-\renewcommand{\implies}{\Rightarrow}
-\renewcommand{\impliedby}{\Leftarrow}
-%\iff
-\def\revdots{\mathinner{\mkern1mu\raise1pt\vbox{\kern7pt\hbox{.}}\mkern2mu\raise4pt\hbox{.}\mkern2mu \raise7pt\hbox{.}\mkern1mu}}
 % Custom Proof environment to allow cases
 \expandafter\let\expandafter\oldproof\csname\string\proof\endcsname
 \let\oldendproof\endproof
@@ -32,7 +30,10 @@
   \setcounter{case}{0}
   \oldproof[#1]%
 }{\oldendproof}
+% Changes the header to \partmark{Part Title}
+\newcommand{\partmark}[1]{\markboth{\MakeUppercase{#1}}{\MakeUppercase{#1}}}
 % Theorem
+\theoremstyle{plain}
 \newtheorem*{theorem*}{Theorem}
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{axiom}[theorem]{Axiom}
@@ -42,265 +43,195 @@
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem*{definition*}{Definition}
 \theoremstyle{remark}
-\newtheorem{remark}[theorem]{Remark}
+\newtheorem*{remark}{Remark}
+\newtheorem*{example}{Example}
 \newtheorem{case}{Case}
 \newtheorem*{case*}{Case}
 % Begin Document
 \begin{document}
-\begin{titlepage}
 \maketitle
-\end{titlepage}
-\setcounter{tocdepth}{1}
+% \setcounter{tocdepth}{1}
 \tableofcontents
-\newpage
-
-
-\section{Metric Spaces}
+\partmark{Real Analysis}
+\section{Convergent Sequences}
 \begin{definition}[Metric]
-  A \emph{metric} is a function defined by
-  \begin{align}
+  Let $M$ be a set. A \emph{metric} on $M$ is a function
+  \begin{align*}
     d: M \times M \to \mathbb{R}
-  \end{align}
-  such that for any $x,y,z\in M$, the separation axiom
-  \begin{align}
-    d(x,y) \geq 0,
-  \end{align}
-  the indiscernible identity
-  \begin{align}
-    d(x,y) = 0 \iff x = y
-  \end{align}
-  the symmetry axiom
-  \begin{align}
-    d(x,y) = d(y,x)
-  \end{align}
-  and the triangle inequality
-  \begin{align}
-    d(x,z) \leq d(x,y) + d(y,z)
-  \end{align}
-  all hold. A \emph{metric space} is a set with a metric defined.
+  \end{align*}
+  satisfying, for all $x,y,z\in M$:
+  \begin{enumerate}
+    \item \emph{Non-negativity}: $d(x,y) \geq 0$,
+    \item \emph{Identity of indiscernibles}: $d(x,y) = 0 \iff x = y$,
+    \item \emph{Symmetry}: $d(x,y) = d(y,x)$,
+    \item \emph{Triangle inequality}: $d(x,z) \leq d(x,y) + d(y,z)$.
+  \end{enumerate}
+  A \emph{metric space} $\mathscr{M}$ is a pair $(M, d)$ where $M$ is a set and $d$ is a metric on $M$.
 \end{definition}
-
-\begin{definition}[Absolute Difference]
-  The \emph{absolute difference} is a function $\mathbb{R}\times \mathbb{R}\to \mathbb{R}$
-  \begin{align}
-    d(x,y) := |x - y|
-  \end{align}
-\end{definition}
-
-\begin{definition}[Euclidean Metric]
-  \begin{align}
-    d(x,y) := \sqrt{\sum_{i} d_i(x_i,y_i)^2}
-  \end{align}
-\end{definition}
-
-\begin{definition}[Taxi-Cab Metric]
-  \begin{align}
-    d(x,y) := \sum_{i} d_i(x_i,y_i) 
-  \end{align}
-\end{definition}
-
-\begin{definition}[Maximum Metric]
-  \begin{align}
-    d(x,y) := \max\{d_i(x_i,y_i) \}
-  \end{align}
-\end{definition}
-
-
-\section{Bounded Sequences}
+\begin{example}
+  The following are commonly used metrics, all of which satisfy the metric space axioms:
+\begin{itemize}
+  \item On $\mathbb{R}$, the metric defined by
+  \begin{equation*}
+    d(x, y) := |x - y|
+  \end{equation*}
+  measures the usual distance between real numbers.
+  \item On $\mathbb{R}^n$, we define the \emph{flat metric} by
+  \begin{equation*}
+  d(x, y) := \sqrt{\sum_{i=1}^n |x_i - y_i|^2}.
+  \end{equation*}
+  \item Another metric on $\mathbb{R}^n$ is the \emph{taxicab metric}
+  \begin{equation*}
+  d(x, y) := \sum_{i=1}^n |x_i - y_i|.
+  \end{equation*}
+  \item We may also define a metric using the \emph{maximum difference} in any coordinate:
+  \begin{equation*}
+  d(x, y) := \max_{1 \leq i \leq n} |x_i - y_i|.
+  \end{equation*}
+\end{itemize}
+\end{example}
 
 \begin{definition}[Bounded Sequence]
-  A sequence is \emph{bounded} if there is a $p\in M$ and $r\in\mathbb{R}$ , such that
-  \begin{align}
-    \forall n\in\mathbb{N}: d(s_n, p) \leq r
-  \end{align}
-\end{definition}
-
-\begin{definition}[Pinched Sequence]
-  A sequence is \emph{pinched} by $r\in\mathbb{R}$, if
-  \begin{align}
-    \forall m,n\in\mathbb{N}: d(s_m, s_n) \leq r
-  \end{align}
-\end{definition}
-
-\begin{definition}
-  A real sequence is \emph{bounded above} by $B$ if
-  \begin{align}
-    \forall n: s_n < B
-  \end{align}
-  and is \emph{bounded below} by $b$ if
-  \begin{align}
-    \forall n: b < s_n
-  \end{align}
-  A sequence is \emph{totally bounded} if it is bounded above and below.
-\end{definition}
-
-\begin{theorem}
-  A real sequence is totally bounded, iff it is bounded.
-\end{theorem}
-\begin{proof}
-  Let $s:\mathbb{N}\to \mathbb{R}$ be a totally bounded sequence
-  \begin{align}
-    \forall n\in\mathbb{N}:b< s_n < B
-  \end{align}
-  Let $p$ be the average of the two bounds
-  \begin{align}
-    p:= \frac{B+b}{2}
-  \end{align}
-  and $r$ be the distance from $B$ to $p$
-  \begin{align}
-    r:= B-p
-  \end{align}
-  Rearranging
+  A sequence $(s_n)$ in a metric space $(M, d)$ is \emph{bounded} if there exists $p \in M$ and $r>0$ such that
   \begin{align*}
-    B = r+p
-    b = 2p-B
+    d(s_n, p) \leq r \quad \text{for all } n \in \mathbb{N}.
   \end{align*}
-  \begin{align*}
-    2p- (r+p) < s_n &< r+p\\
-    p-r < s_n &< p+r\\
-    |s_n-p| &< r
-  \end{align*}
-  Now assume that $\langle s_n \rangle$ is bounded, that is that there are $p,r\in\mathbb{R}$ such that 
-  \begin{align*}
-    |s_n - p| &< r\\
-    p-r < s_n &< p+r
-  \end{align*}
-  Let $b := p-r$ and $B:= p+r$
-  \begin{align}
-    b < s_n < B
-  \end{align}
-\end{proof}
-
-
-\section{Convergent Sequences}
+\end{definition}
 
 \begin{definition}[Convergent Sequence]
-  A sequence $\langle s_n \rangle$ in $M$ \emph{converges} to $l\in M$, if
-  \begin{align}
-    \forall \varepsilon > 0: \exists N \in \mathbb{N}:\forall n>N: d(s_{n}, l)< \varepsilon
-  \end{align}
+  A sequence $(s_n)$ in a metric space $(M, d)$ \emph{converges} to $l\in M$ if, for every $\epsilon>0$, there exists an integer $N\in\mathbb{N}$ such that whenever $n>N$, we have:
+  \begin{align*}
+    d(s_n, l) < \varepsilon.
+  \end{align*}
+  The limit of a sequence is denoted by
+  \begin{align*}
+    l = \lim_n s_n.
+  \end{align*}
 \end{definition}
 
-
-\begin{theorem}\label{Thm:ConvergentImpliesBounded}
+\begin{theorem}[Convergence Implies Bounded]\label{Thm:ConvergentImpliesBounded}
   Every convergent sequence is bounded.
 \end{theorem}
 \begin{proof}
-  Let $M= (A, d)$ be a metric space and 
-  let $\langle s_n \rangle$ be a sequence in $M$ that converges to $l\in M$. Let $\varepsilon>0$. Since $\langle s_n \rangle$ converges, there is an $N$ such that if $n>N$
-  \begin{align}
-    d(s_n, l) < \varepsilon
-  \end{align}
-  Set $B'$ be a bound of the sequence before $N$
-  \begin{align}
-    B'&:= \max \{ d(s_n, l) : n\leq N \}\nonumber
-  \end{align}
-  Finally set
-  \begin{align}
-    B &:= \max \{ B', \varepsilon \}
-  \end{align}
-  Then $B$ is a bound for all $n\in\mathbb{N}$
-  \begin{align}
-    \forall n\in\mathbb{N}: d(s_n, l) \leq B
-  \end{align}
-  which implies that $\langle s_n \rangle$ is bounded.
+  Let $(s_n)$ be a sequence in a metric space $(M, d)$ that converges to $l\in M$. Since $(s_n)$ converges, there exists $\varepsilon > 0$ and some $N \in \mathbb{N}$ such that for all $n > N$, we have
+  \begin{align*}
+    d(s_n, l) < \varepsilon.
+  \end{align*}
+  The finitely many terms $\{s_n : 0 \leq n \leq N\}$ are each at some distance from $l$, so define
+  \begin{align*}
+    B' := \max_{0 \leq n \leq N} \{ d(s_n, l) \}.
+  \end{align*}
+  Now let
+  \begin{align*}
+    B := \max \{B', \varepsilon\}.
+  \end{align*}
+  Then for all $n\in\mathbb{N}$, we have $d(s_n, l) \leq B$, so the entire sequence lies within the ball of radius $B$ centered at $l$. Hence, $s_n$ is bounded.
 \end{proof}
 
+\begin{definition}[Commutative Metric Group]
+  A triple $(M, +, d)$ is called a \emph{commutative metric group} if:
+  \begin{enumerate}
+    \item $(M, +)$ forms a commutative group, and
+    \item $(M, d)$ forms a metric space.
+  \end{enumerate}
+  In these notes, whenever we work with such a structure using the symbol $+$, we tacitly assumed the metric is \emph{translation-invariant} with respect to this operation:
+  \begin{equation*}
+    d(x + z, y + z) = d(x, y)\text{ for all }x, y, z \in M.
+  \end{equation*}
+\end{definition}
 
 \begin{theorem}
-  If
-  \begin{align}
-    S &= \lim_n s_n\nonumber\\
-    T &= \lim_n t_n
-  \end{align}
-  Then
-  \begin{align}
-    \lim_n (s_n + t_n ) &= S+T
-  \end{align}
+  Let $(s_n)$ and $(t_n)$ be convergent sequences in a commutative metric group $(M, +, d)$. Then the sequence $(s_n + t_n)$ also converges, and
+  \begin{align*}
+    \lim_n (s_n + t_n) &= \lim_n s_n + \lim_n t_n.
+  \end{align*}
 \end{theorem}
 \begin{proof}
-  Choose an $\varepsilon'>0$ and define $\varepsilon:= 2\varepsilon'$. 
-  By the definition of convergence, there exists an $N_s$ and $N_t$ such that
-  \begin{align}
-    n > N_s \implies |s_n - S| < \varepsilon'\\
-    n> N_t \implies |t_n - T| < \varepsilon'
-  \end{align}
-  Let $N:= \max \{ N_s, N_t\}$, then for $n>N$, by the triangle inequality
-  \begin{align}
-    |(s_n+t_n) - (S+T) | \leq |s_n - S| + |t_n - T|
-  \end{align}
+  Let $(s_n)$ and $(t_n)$ converge to $S$ and $T$ respectively.
+  Choose $\varepsilon'>0$ and define $\varepsilon:= 2\varepsilon'$.
+  By the definition of convergence, there exists integers $N_s$ and $N_t$ such that:
+  \begin{align*}
+    n > N_s \implies d(s_n, S) < \varepsilon'\\
+    n > N_t \implies d(t_n, T) < \varepsilon'.
+  \end{align*}
+  Let $N:= \max \{ N_s, N_t\}$, then for all $n>N$, we compute
+  \begin{align*}
+    d(s_n+t_n, S+T) &= d(s_n+t_n-S-T,0)&&\text{(by translation invariance)},\\
+    &= d((s_n-S)+(t_n-T),0)&&\text{(by commutativity and associativity)},\\
+    &\leq d(s_n-S, 0) + d(t_n-T, 0)&&\text{(by symmetry and triangle identity)}\\
+    &= d(s_n, S) + d(t_n, T)&&\text{(by translation invariance)}.
+  \end{align*}
   By the definition of convergence
-  \begin{align}
-    |s_n - S | + |t_n - T| < \varepsilon ' + \varepsilon' = \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon
-  \end{align}
-  Thus 
-  \begin{align}
-    \lim_n (s_n+t_n) = S+T
-  \end{align}
+  \begin{align*}
+    d(s_n+t_n, S+T) \leq d(s_n, S) + d(t_n, T) < \varepsilon ' + \varepsilon' = \varepsilon.
+  \end{align*}
+  Thus, again by the definition of convergence
+  \begin{align*}
+    \lim_n (s_n+t_n) = S+T = \lim_n s_n + \lim_n t_n.
+  \end{align*}
 \end{proof}
 
+\begin{definition}[Commutative Metric Ring]
+  A quadruple $(M, +, \cdot, d)$ is called a \emph{commutative metric ring} if:
+  \begin{enumerate}
+    \item $(M, +, \cdot)$ is a commutative ring,
+    \item $(M, d)$ is a metric space.
+  \end{enumerate}
+  In these notes, for a commutative metric ring, we assume:
+  \begin{itemize}
+    \item The metric is \emph{translation-invariant}:
+    \begin{equation*}
+      d(x + z, y + z) = d(x, y)\text{ for all } x, y, z \in M,
+    \end{equation*}
+    \item Multiplication is \emph{uniformly compatible} with the metric: there exists a constant $C > 0$ such that
+    \begin{equation*}
+      d(x \cdot y, x \cdot z) \leq C \cdot d(y, z)\text{ for all } x, y, z \in M.
+    \end{equation*}
+  \end{itemize}
+\end{definition}
+
 \begin{theorem}
-  If
-  \begin{align}
-    S &= \lim_n s_n\nonumber\\
-    T &= \lim_n t_n
-  \end{align}
-  Then
-  \begin{align}
-    \lim_n (s_n \cdot t_n ) &= ST
-  \end{align}
+  Let $(s_n)$ and $(t_n)$ be convergent sequences in a commutative metric ring $(M, +, \cdot, d)$. Then the sequence $(s_n \cdot t_n)$ also converges, and
+  \begin{align*}
+    \lim_n (s_n \cdot t_n) &= \left(\lim_n s_n\right)\left( \lim_n t_n\right).
+  \end{align*}
 \end{theorem}
 \begin{proof}
-  Choose an $\varepsilon'>0$
-  By the definition of convergence, there exists an $N_s$ and $N_t$ such that
+  Let $(s_n)$ and $(t_n)$ converge to $S$ and $T$ respectively.
+  Choose $\varepsilon'>0$.
+  By the definition of convergence, there exists integers $N_s$ and $N_t$ such that:
+  \begin{align*}
+    n > N_s \implies d(s_n, S) < \varepsilon',\\
+    n > N_t \implies d(t_n, T) < \varepsilon'.
+  \end{align*}
+  Let $N := \max\{N_s, N_t\}$, then for all $n > N$, we compute:
+  \begin{align*}
+    d(s_n \cdot t_n, S \cdot T)
+    &= d(s_n \cdot t_n - T \cdot T, 0) && \text{(by translation invariance)}\\
+    &= d(s_n \cdot t_n -s_n \cdot T + s_n \cdot T - S \cdot T, 0) && \text{(by additive inverse and identity)}\\
+    &= d(s_n \cdot (t_n - T) + (s_n - S) \cdot T, 0) && \text{(by distributivity)}\\
+    &= d(s_n \cdot (t_n - T), (s_n - S) \cdot T) && \text{(by translation invariance)}\\
+    &\leq d(s_n \cdot (t_n - T), 0)+d((s_n - S) \cdot T, 0) && \text{(by triangle inequality)}\\
+    &= d(s_n \cdot t_n , s_n \cdot T) +d(s_n \cdot T, S \cdot T) && \text{(by translation invariance)}
+  \end{align*}
+  By uniform compatibility, there is $C_1, C_2>0$:
+  \begin{align*}
+    d(s_n\cdot t_n, s_n\cdot T)&\leq C_1\cdot d(t_n, T) < C_1 \cdot \varepsilon'\\
+    d(s_n\cdot T, S\cdot T)&\leq C_2\cdot d(s_n, S) < C_2 \cdot \varepsilon'
+  \end{align*}
+  Let $\varepsilon:=C_1\cdot \varepsilon' + C_2 \cdot \varepsilon'$. Then for all $n > N$:
+  \begin{align*}
+    d(s_n \cdot t_n, S \cdot T) < \varepsilon
+  \end{align*}
+  Therefore, by the definition of convergence,
   \begin{align}
-    n > N_s \implies |s_n - S| < \varepsilon'\\
-    n> N_t \implies |t_n - T| < \varepsilon'
-  \end{align}
-  Let $N:= \max \{ N_s, N_t\}$, then for $n>N$
-  \begin{align}
-    |(s_nt_n) - (ST) | &= |s_nt_n - s_nT + s_nT -ST |\\
-    &= |s_n (t_n - T) +(s_n - S) T|
-  \end{align}
-  By the triangle inequality
-  \begin{align}
-    |s_n(t_n - T) + (s_n - S) T| &\leq |s_n (t_n - T) | + |(s_n - S) T|\nonumber\\
-    &\leq |s_n| |t_n - T| + |s_n - S| |T|
-  \end{align}
-  Since every convergent sequence is also bounded, there is some bound $B$, such that for every $n$
-  \begin{align}
-    |s_n| < B
-  \end{align}
-  \begin{align}
-    |s_n| |t_n - T| + |s_n - S| |T| \leq B |t_n - T| + |s_n - S| |T|
-  \end{align}
-  Let $M:= \max\{ C , |T| \}$.
-  Then
-  \begin{align}
-    B |t_n - T| + |s_n - S| |T| \leq M (|s_n - S| + |t_n -T|)
-  \end{align}
-  Let $\varepsilon := 2M \varepsilon'$, then
-  \begin{align}
-    |s_n - S| < \varepsilon' = \frac{\varepsilon}{2M}\\
-    |t_n - T| < \varepsilon' = \frac{\varepsilon}{2M}
-  \end{align}
-  Then
-  \begin{align}
-    M (|s_n - S| + |t_n -T|) < M \left(\frac{\varepsilon}{2M} + \frac{\varepsilon}{2M}\right) = \varepsilon
-  \end{align}
-  Thus, for $n> N$
-  \begin{align}
-    |s_nt_n - ST| < \varepsilon
-  \end{align}
-  or
-  \begin{align}
-    \lim_n s_n t_n = ST
+    \lim_n \left(s_n \cdot t_n\right)= S \cdot T = \left(\lim_n s_n\right)\left( \lim_n t_n\right).
   \end{align}
 \end{proof}
 
 
 \begin{theorem}
-  If a sequence converges, then the limit is unique.
+  If a sequence converges, then its limit is unique.
 \end{theorem}
 \begin{proof}
   Assume without loss of generality that some convergent sequence $s$ has two distinct limits $L$ and $L'$.
