@@ -99,7 +99,7 @@
 \end{definition}
 
 \begin{definition}[Convergent Sequence]
-  A sequence $(s_n)$ in a metric space $(M, d)$ \emph{converges} to $l\in M$ if, for every $\epsilon>0$, there exists an integer $N\in\mathbb{N}$ such that whenever $n>N$, we have:
+  A sequence $(s_n)$ in a metric space $(M, d)$ \emph{converges} to $l \in M$ if, for every $\varepsilon>0$, there exists an integer $N \in \mathbb{N}$ such that whenever $n > N$, we have:
   \begin{align*}
     d(s_n, l) < \varepsilon.
   \end{align*}
@@ -109,7 +109,7 @@
   \end{align*}
 \end{definition}
 
-\begin{theorem}[Convergence Implies Bounded]\label{Thm:ConvergentImpliesBounded}
+\begin{theorem}\label{Thm:ConvergentImpliesBounded}
   Every convergent sequence is bounded.
 \end{theorem}
 \begin{proof}
@@ -157,8 +157,8 @@
   Let $N:= \max \{ N_s, N_t\}$, then for all $n>N$, we compute
   \begin{align*}
     d(s_n+t_n, S+T) &= d(s_n+t_n-S-T,0)&&\text{(by translation invariance)},\\
-    &= d((s_n-S)+(t_n-T),0)&&\text{(by commutativity and associativity)},\\
-    &\leq d(s_n-S, 0) + d(t_n-T, 0)&&\text{(by symmetry and triangle identity)}\\
+    &= d((s_n-S)+(t_n-T),0),\\
+    &\leq d(s_n-S, 0) + d(t_n-T, 0)&&\text{(by the triangle identity)},\\
     &= d(s_n, S) + d(t_n, T)&&\text{(by translation invariance)}.
   \end{align*}
   By the definition of convergence
@@ -207,12 +207,12 @@
   Let $N := \max\{N_s, N_t\}$, then for all $n > N$, we compute:
   \begin{align*}
     d(s_n \cdot t_n, S \cdot T)
-    &= d(s_n \cdot t_n - T \cdot T, 0) && \text{(by translation invariance)}\\
-    &= d(s_n \cdot t_n -s_n \cdot T + s_n \cdot T - S \cdot T, 0) && \text{(by additive inverse and identity)}\\
-    &= d(s_n \cdot (t_n - T) + (s_n - S) \cdot T, 0) && \text{(by distributivity)}\\
-    &= d(s_n \cdot (t_n - T), (s_n - S) \cdot T) && \text{(by translation invariance)}\\
-    &\leq d(s_n \cdot (t_n - T), 0)+d((s_n - S) \cdot T, 0) && \text{(by triangle inequality)}\\
-    &= d(s_n \cdot t_n , s_n \cdot T) +d(s_n \cdot T, S \cdot T) && \text{(by translation invariance)}
+    &= d(s_n \cdot t_n - T \cdot T, 0) && \text{(translation invariance)}\\
+    &= d(s_n \cdot t_n -s_n \cdot T + s_n \cdot T - S \cdot T, 0)\\
+    &= d(s_n \cdot (t_n - T) + (s_n - S) \cdot T, 0)\\
+    &= d(s_n \cdot (t_n - T), (s_n - S) \cdot T) && \text{(translation invariance)}\\
+    &\leq d(s_n \cdot (t_n - T), 0)+d((s_n - S) \cdot T, 0) && \text{(triangle inequality)}\\
+    &= d(s_n \cdot t_n , s_n \cdot T) +d(s_n \cdot T, S \cdot T) && \text{(translation invariance)}
   \end{align*}
   By uniform compatibility, there is $C_1, C_2>0$:
   \begin{align*}
@@ -224,9 +224,9 @@
     d(s_n \cdot t_n, S \cdot T) < \varepsilon
   \end{align*}
   Therefore, by the definition of convergence,
-  \begin{align}
+  \begin{align*}
     \lim_n \left(s_n \cdot t_n\right)= S \cdot T = \left(\lim_n s_n\right)\left( \lim_n t_n\right).
-  \end{align}
+  \end{align*}
 \end{proof}
 
 
@@ -234,42 +234,46 @@
   If a sequence converges, then its limit is unique.
 \end{theorem}
 \begin{proof}
-  Assume without loss of generality that some convergent sequence $s$ has two distinct limits $L$ and $L'$.
-  %By the non-negativity property of the metric $|L-L| \geq 0$.
-  %By the identity of indiscernibles $|L-L'|\neq0 $ giving $|L-L'| > 0$.
-  Define the distance between these two limits $d:= |L- L'|$. From the definition of the metric, $d>0$. 
-  From the definition of convergence, there is a $N$ and $N'$ such that
-  \begin{align}
-    n > N \implies |s_n - L | < \frac{d}{2}
-  \end{align}
-  and
-  \begin{align}
-    n > N' \implies |s_n - L | < \frac{d}{2}
-  \end{align}
-  Let $M:= \max \{N, N'\}$. For $n>M$
-  \begin{align}
-    d:=|L- L' | = |L - s_n +s_n-L'|
-  \end{align}
-  By the triangle identity
-  \begin{align}
-    |L- s_n + s_n - L'| \leq |s_n - L | + |s_n - L'|
-  \end{align}
-  From the definition of convergence
-  \begin{align}
-    |s_n - L | &< \frac{d}{2} \\
-    |s_n - L' | &< \frac{d}{2}
-  \end{align}
-  By $a<b \land c< d \implies a+c < b+d$
-  \begin{align}
-    |s_n - L | + |s_n - L'| < \frac{d}{2} + \frac{d}{2} = d
-  \end{align}
-  which implies 
-  \begin{align}
-    d < d
-  \end{align}
+  Suppose a sequence $(s_n)$ in a metric space $(M, d)$ converges to two distinct limits $L$ and $L'$.
+  By the identity of indiscernibles, $d(L, L')>0$.
+  Let $\varepsilon:=d(L,L')>0$.
+  Then from the definition of convergence, there is a $N$ and $N'$ such that
+  \begin{align*}
+    n > N \implies d(s_n, L) < \frac{\varepsilon}{2}, \\
+    n > N' \implies d(s_n, L') < \frac{\varepsilon}{2}.
+  \end{align*}
+  Let $M:= \max\{N, N'\}$. Then for all $n>M$, we have
+  \begin{align*}
+    d(s_n, L) + d(s_n, L') < \varepsilon.
+  \end{align*}
+  By the triangle inequality,
+  \begin{align*}
+     d(L, L') \leq d(L, s_n) + d(s_n, L') < \varepsilon = d(L, L'),
+  \end{align*}
   which is a contradiction.
+  Therefore, no such distinct $L$ and $L'$ can exist. The limit is unique.
 \end{proof}
 
+
+\begin{theorem}[Convergence by Proximity]
+  Let $(x_n)$ and $(y_n)$ be sequences in a metric space $(M, d)$.
+  If $(x_n)$ converges to $L \in M$ and $d(x_n, y_n)$ converges to zero, then $(y_n)$ also converges to $L$.
+\end{theorem}
+\begin{proof}
+  Assume $(x_n)$ converges to $L \in M$, and $d(x_n, y_n)$ converges to $0$.
+  Fix $\varepsilon > 0$.
+  By convergence, there exists integers $N_1, N_2\in\mathbb{N}$,
+  \begin{align*}
+    n > N_1 \implies d(x_n, L) < \frac{\varepsilon}{2},\text{ and}\\
+    n > N_2 \implies d(x_n, y_n) < \frac{\varepsilon}{2}.
+  \end{align*}
+  Let $N:= \max\{N_1, N_2\}$.
+  For all $n > N$, by the triangle inequality,
+  \begin{align*}
+    d(y_n, L) \leq d(y_n, x_n) + d(x_n, L) < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon.
+  \end{align*}
+  Hence, by the definition of convergence, $(y_n)$ converges to $L$.
+\end{proof}
 
 \begin{theorem}[Squeeze Theorem]
   For all sequences $s$, and all convergent sequences $r, t$ such that
@@ -2912,5 +2916,9 @@
     \lim_n x_n = r
   \end{align}
 \end{proof}
-
+\partmark{Functional Analysis}
+\section{Normed Spaces}
+\section{Functionals}
+\section{Fr\'{e}chet \& Gateaux Derivatives}
+\section{Weak Convergence}
 \end{document}
