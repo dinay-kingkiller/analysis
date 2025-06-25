@@ -28,6 +28,7 @@
 \let\oldendproof\endproof
 \renewenvironment{proof}[1][\proofname]{%
   \setcounter{case}{0}
+  \setcounter{step}{0}
   \oldproof[#1]%
 }{\oldendproof}
 % Changes the header to \partmark{Part Title}
@@ -47,17 +48,19 @@
 \newtheorem*{example}{Example}
 \newtheorem{case}{Case}
 \newtheorem*{case*}{Case}
+\newtheorem{step}{Step}
+
 % Begin Document
 \begin{document}
 \maketitle
 % \setcounter{tocdepth}{1}
-\tableofcontents
+% \tableofcontents
 \partmark{Real Analysis}
 \section{Convergent Sequences}
 \begin{definition}[Metric]
-  Let $M$ be a set. A \emph{metric} on $M$ is a function
+  Let $M$ be a set and $R$ be an ordered ring. A \emph{metric} on $M$ is a function
   \begin{align*}
-    d: M \times M \to \mathbb{R}
+    d: M \times M \to R
   \end{align*}
   satisfying, for all $x,y,z\in M$:
   \begin{enumerate}
@@ -134,10 +137,10 @@
     \item $(M, +)$ forms a commutative group, and
     \item $(M, d)$ forms a metric space.
   \end{enumerate}
-  In these notes, whenever we work with such a structure using the symbol $+$, we tacitly assumed the metric is \emph{translation-invariant} with respect to this operation:
-  \begin{equation*}
+  In these notes, whenever we work with such a structure using the symbol $+$, we tacitly assume the metric is \emph{translation-invariant} with respect to this operation:
+  \begin{align*}
     d(x + z, y + z) = d(x, y)\text{ for all }x, y, z \in M.
-  \end{equation*}
+  \end{align*}
 \end{definition}
 
 \begin{theorem}
@@ -180,13 +183,13 @@
   In these notes, for a commutative metric ring, we assume:
   \begin{itemize}
     \item The metric is \emph{translation-invariant}:
-    \begin{equation*}
+    \begin{align*}
       d(x + z, y + z) = d(x, y)\text{ for all } x, y, z \in M,
-    \end{equation*}
+    \end{align*}
     \item Multiplication is \emph{uniformly compatible} with the metric: there exists a constant $C > 0$ such that
-    \begin{equation*}
+    \begin{align*}
       d(x \cdot y, x \cdot z) \leq C \cdot d(y, z)\text{ for all } x, y, z \in M.
-    \end{equation*}
+    \end{align*}
   \end{itemize}
 \end{definition}
 
@@ -207,12 +210,12 @@
   Let $N := \max\{N_s, N_t\}$, then for all $n > N$, we compute:
   \begin{align*}
     d(s_n \cdot t_n, S \cdot T)
-    &= d(s_n \cdot t_n - T \cdot T, 0) && \text{(translation invariance)}\\
+    &= d(s_n \cdot t_n - S \cdot T, 0) && \text{(translation invariance)}\\
     &= d(s_n \cdot t_n -s_n \cdot T + s_n \cdot T - S \cdot T, 0)\\
     &= d(s_n \cdot (t_n - T) + (s_n - S) \cdot T, 0)\\
-    &= d(s_n \cdot (t_n - T), (s_n - S) \cdot T) && \text{(translation invariance)}\\
-    &\leq d(s_n \cdot (t_n - T), 0)+d((s_n - S) \cdot T, 0) && \text{(triangle inequality)}\\
-    &= d(s_n \cdot t_n , s_n \cdot T) +d(s_n \cdot T, S \cdot T) && \text{(translation invariance)}
+    &= d(s_n \cdot (t_n - T), -(s_n - S) \cdot T) && \text{(translation invariance)}\\
+    &\leq d(s_n \cdot (t_n - T), 0) + d((S-s_n) \cdot T, 0) && \text{(triangle inequality)}\\
+    &= d(s_n \cdot t_n , s_n \cdot T) +d(S \cdot T, s_n\cdot T) && \text{(translation invariance)}
   \end{align*}
   By uniform compatibility, there is $C_1, C_2>0$:
   \begin{align*}
@@ -228,7 +231,6 @@
     \lim_n \left(s_n \cdot t_n\right)= S \cdot T = \left(\lim_n s_n\right)\left( \lim_n t_n\right).
   \end{align*}
 \end{proof}
-
 
 \begin{theorem}
   If a sequence converges, then its limit is unique.
@@ -275,102 +277,107 @@
   Hence, by the definition of convergence, $(y_n)$ converges to $L$.
 \end{proof}
 
-\begin{theorem}[Squeeze Theorem]
-  For all sequences $s$, and all convergent sequences $r, t$ such that
-  \begin{align}
-    \lim_n r_n = L\nonumber\\
-    \lim_n t_n = L
-  \end{align}
-  and for all $n\in\mathbb{Z}^+$
-  \begin{align}
-    r_n < s_n < t_n
-  \end{align}
-  implies that $s$ is a convergent sequence and its limit is given by
-  \begin{align}
-    \lim_n s_n = L
-  \end{align}
-\end{theorem}
-\begin{proof}
-  Fix $\varepsilon> 0 $.
-  Then by the definition of the convergent sequence
-  \begin{align}
-    \exists N_1: n > N_1 \implies |y_n - L | < \varepsilon\nonumber\\
-    \exists N_2: n > N_2 \implies |z_n - L| < \varepsilon
-  \end{align}
-  Let $N:= \max \{ N_1, N_2 \}$, then for all $n> N$
-  \begin{align}
-    L- \varepsilon < y_n < L + \varepsilon\nonumber\\
-    L - \varepsilon < z_n < L + \varepsilon
-  \end{align}
-  Using the trichotomy property of order
-  \begin{align}
-    L - \varepsilon < y_n < x_n < z_n < L+\varepsilon
-  \end{align}
-  or
-  \begin{align}
-    L - \varepsilon < x_n < L+ \varepsilon
-  \end{align}
-  Therefor $n>N$ implies
-  \begin{align}
-    |x_n - L | < \varepsilon
-  \end{align}
-  or
-  \begin{align}
-    \lim_n x_n = L
-  \end{align}
-\end{proof}
+\section{Complete Spaces}
+
+\begin{definition}[Pinched Sequence]
+  A sequence $(s_n)$ in a metric space $(M, d)$ is \emph{pinched} if, for every $\varepsilon > 0$, there exists an integer $N \in \mathbb{N}$ such that whenever $n, m>N$, we have
+  \begin{align*}
+    d(s_n, s_m) < \varepsilon.
+  \end{align*}
+\end{definition}
+
+\begin{definition}[Complete Space]
+  A metric space $(M, d)$ is \emph{complete} if every pinched sequence in $M$ converges to a point in $M$.
+  That is, for every sequence $(s_n)$ in $M$, if
+  \begin{align*}
+    \forall \varepsilon > 0\ \exists N \in \mathbb{N}\ \forall n, m> N: d(s_n, s_m) < \varepsilon,
+  \end{align*}
+  then there exists a point $L \in M$ such that
+  \begin{align*}
+    \forall \varepsilon > 0\ \exists N' \in \mathbb{N}\ \forall n > N': d(s_n, L) < \varepsilon.
+  \end{align*}
+\end{definition}
 
 \begin{theorem}
-  \begin{align}
-    \lim_n \frac{1}{n} = 0
-  \end{align}
+  The metric space $(\mathbb{Q},d)$, where $d(x,y) = |x-y|$, is not complete.
 \end{theorem}
 \begin{proof}
-  Choose an $\varepsilon' \in \mathbb{R}^+$.
-  By the Archimedean property
-  \begin{align}
-    \exists N \in \mathbb{Z}^+: N > \varepsilon '
-  \end{align}
-  Since both $N>0$ and $\varepsilon'>0$
-  \begin{align}
-    \frac{1}{N} < \frac{1}{\varepsilon'}
-  \end{align}
-  Define $\varepsilon:= \frac{1}{\varepsilon'} \in\mathbb{R}^+$
-  \begin{align}
-    \frac{1}{N} < \varepsilon
-  \end{align}
-  Let $n>N>0$, then
-  \begin{align}
-    \frac{1}{N} > \frac{1}{n}
-  \end{align}
-  By trichotomy
-  \begin{align}
-    \frac{1}{n} &< \varepsilon\\
-    n>N \implies \left| \frac{1}{n} - 0 \right| &< \varepsilon
-  \end{align}
-  or
-  \begin{align}
-    \lim_n \frac{1}{n} = 0
-  \end{align}
-\end{proof}
+  Proof by counter-example. Let $(F_n):\mathbb{N}\to\mathbb{N}$ be a sequence defined recursively:
+  \begin{align*}
+    F_{n+1} = F_n + F_{n-1}
+  \end{align*}
+  where $F_0=1$ and $F_1=1$. $(F_n)$ can be shown to be shown to be a sequence of increasing positive integers. Let $(x_n):\mathbb{N} \to \mathbb{Q}$ be a rational sequence defined by
+  \begin{align*}
+    x_n := \frac{F_{n+1}}{F_n}.
+  \end{align*}
+  Transforming $x_n$ into a recursive sequence:
+  \begin{align*}
+    x_{n+1} = \frac{F_{n+2}}{F_{n+1}} = \frac{F_{n+1}+F_n}{F_{n+1}} = 1 + \frac{F_n}{F_{n+1}} = 1+\frac{1}{x_n}.
+  \end{align*}
 
-\begin{lemma}\label{Lemma:ExponentialConvergentSequence}
-  If $\{|a_n-L|\}$ converges to zero, then $\{a_i\}$ converges to $L$.
-  \begin{align}
-    \lim_n |a_n-L| = 0 \implies \lim_n a_n = L
-  \end{align}
-\end{lemma}
-\begin{proof}
-  Since $\{|a_n-L|\}$ converges to zero, for any $\varepsilon>0$, there is an $N$
-  \begin{align}
-    n> N \implies \left| |a_n- L | - 0\right|&< \varepsilon\\
-    \left| |a_n - L | \right|&< \varepsilon\\
-    n>N\implies |a_n-L| &< \varepsilon
-  \end{align}
-  Then
-  \begin{align}
-    \lim_n a_n = L
-  \end{align}
+  \step A well-known identity says that $F_{n+2}F_n-F_{n+1}^2=(-1)^n$. We'll show it by showing for the base case $(n=0)$:
+  \begin{align*}
+    (2)(1)-(1)^2=1=(-1)^0
+  \end{align*}
+  And then the inductive case $n=k \implies n=k+1$:
+  \begin{align*}
+    F_{k+3}F_{k+1}-F_{k+2}^2 &= (F_{k+2}+F_{k+1})F_{k+1}-F_{k+2}^2 \\
+    &=F_{k+2}(F_{k+1}-F_{k+2})+F_{k+1}^2
+  \end{align*}
+  Using a re-arrangement of $F_{k+2}=F_{k+1}+F_k$:
+  \begin{align*}
+    F_{k+3}F_{k+1}-F_{k+2}^2 &= F_{k+2}(-F_k)+F_{k+1}^2\\
+    &= (-1)(F_{k+2}F_k-F_{k+1}^2) = (-1)^{k+1}
+  \end{align*}
+  So by induction $F_{n+2}F_n-F_{n+1}^2=(-1)^n$ is true for all $n \in \mathbb{N}$.
+
+  \step For all $n \geq 2$, we have $F_n\geq n$.
+  We show this with a proof by induction.
+  The base cases are $F_2=2\geq2$ and $F_3=3\geq3$.
+  Now to show that $F_k \geq k$ and $F_{k-1}\geq k-1$ implies $F_{k+1}\geq k+1$:
+  \begin{align*}
+    F_{k+1} = F_k+F_{k-1} \geq k + (k-1) = 2k-1 \geq k+1.
+  \end{align*}
+  since $k\geq2$.
+  \step Show that $|x_{n+1}-x_n|=\frac{1}{F_{n+1}F_n}$.
+  Consider two successive terms $x_{n+1}$ and $x_n$:
+  \begin{align*}
+    |x_{n+1} - x_n| = \left|\frac{F_{n+2}}{F_{n+1}}-\frac{F_{n+1}}{F_n}\right| = \left|\frac{F_{n+2}F_n-F_{n+1}^2}{F_{n+1}F_n}\right|=\left| \frac{(-1)^n}{F_{n+1}F_n}\right|
+  \end{align*}
+  Since $F_n>0$ for all $n$, this can be further reduced to
+  \begin{align*}
+    |x_{n+1} - x_n| = \frac{1}{F_{n+1}F_n}
+  \end{align*}
+  \step We show that $(x_n)$ is pinched. Choose $\varepsilon>0$ and define
+  \begin{align*}
+    N:=\max\left\{2, \left\lceil\frac{1}{\varepsilon}\right\rceil\right\}.
+  \end{align*}
+  For $m>n>N$, the triangle inequality gives
+  \begin{align*}
+    |x_m-x_n| \leq \sum^{n-1}_{k=m} |x_{k+1}-x_k| = \sum^{n-1}_{k=m} \frac{1}{F_kF_{k+1}}
+  \end{align*}
+  Since $m>n\geq2$: $F_k \geq k$:
+  \begin{align*}
+    |x_m-x_n| \leq \sum^{m-1}_{k=n}\frac{1}{k(k+1)} &= \sum^{m-1}_{k=n} \left(\frac{1}{k}-\frac{1}{k+1}\right)\\
+    &= \sum^{m-1}_{k=n}\frac{1}{k}-\sum^m_{k=n+1}\frac{1}{k} \\
+    &= \frac{1}{n}+\sum^{m-1}_{k=n+1}-\frac{1}{m}-\sum^{m-1}_{k=n+1}\frac{1}{k} \\
+    &= \frac{1}{n} - \frac{1}{m} < \frac{1}{n} < \frac{1}{N}<\varepsilon.
+  \end{align*}
+  which implies that $(x_n)$ is pinched.
+  \step Show by proof by contradiction that $(x_n)$ has no rational limit. Suppose a limit exists. By the recursive equation it must converge to an $L$ such that
+  \begin{align*}
+    L = 1 + \frac{1}{L}.
+  \end{align*}
+  Rearranging into a standard quadratic form:
+  \begin{align*}
+    L^2-L-1 = 0
+  \end{align*}
+  For a quadratic equation with integer coefficients, the roots are rational if and only if the discriminant is a perfect square.
+  The discriminant for this equation is:
+  \begin{align*}
+    \Delta=(-1)^2-4(1)(-1)=5,
+  \end{align*}
+  which is not a perfect square, therefore $L$ is not rational.
 \end{proof}
 
 \section{Closed Sets}
@@ -787,24 +794,7 @@
 \end{proof}
 
 
-\section{Fundamental Sequences}
-
-\begin{definition}[Fundamental Sequence]
-  A sequence is fundamental if every $\varepsilon$ has a $N$-tail, that is $\varepsilon$-pinched.
-  \begin{align}
-    \forall \varepsilon>0: \exists N\in \mathbb{N}: \forall m,n> N: d(s_{m} , s_{n} ) < \varepsilon
-  \end{align}
-\end{definition}
-
-\begin{theorem}
-  Every convergent sequence is fundamental.
-\end{theorem}
-
 \section{Complete Spaces}
-
-\begin{definition}
-  A space is complete if every fundamental sequence is convergent.
-\end{definition}
 
 \begin{theorem}[Monotone Convergence Theorem]
   A monotonic sequence converges if and only if it is bounded.
@@ -2916,6 +2906,7 @@
     \lim_n x_n = r
   \end{align}
 \end{proof}
+
 \partmark{Functional Analysis}
 \section{Normed Spaces}
 \section{Functionals}
