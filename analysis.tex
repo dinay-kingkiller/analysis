@@ -8,10 +8,12 @@
 \usepackage{amssymb}
 \usepackage{amsthm}
 % \usepackage{hyperref}
+\usepackage{mathrsfs}
 
 % Options
 % \mathtoolsset{showonlyrefs}
 % \allowdisplaybreaks
+\numberwithin{equation}{section}
 
 % Begin Definitions
 \DeclareMathOperator{\mesh}{mesh}
@@ -21,18 +23,18 @@
 \newcommand{\lxor}{\otimes}
 \newcommand{\comp}{\backslash}
 \newcommand{\union}{\cup}
-\renewcommand{\implies}{\Rightarrow}
-\renewcommand{\impliedby}{\Leftarrow}
-%\iff
-\def\revdots{\mathinner{\mkern1mu\raise1pt\vbox{\kern7pt\hbox{.}}\mkern2mu\raise4pt\hbox{.}\mkern2mu \raise7pt\hbox{.}\mkern1mu}}
 % Custom Proof environment to allow cases
 \expandafter\let\expandafter\oldproof\csname\string\proof\endcsname
 \let\oldendproof\endproof
 \renewenvironment{proof}[1][\proofname]{%
   \setcounter{case}{0}
+  \setcounter{step}{0}
   \oldproof[#1]%
 }{\oldendproof}
+% Changes the header to \partmark{Part Title}
+\newcommand{\partmark}[1]{\markboth{\MakeUppercase{#1}}{\MakeUppercase{#1}}}
 % Theorem
+\theoremstyle{plain}
 \newtheorem*{theorem*}{Theorem}
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{axiom}[theorem]{Axiom}
@@ -42,400 +44,215 @@
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem*{definition*}{Definition}
 \theoremstyle{remark}
-\newtheorem{remark}[theorem]{Remark}
+\newtheorem*{remark}{Remark}
+\newtheorem*{example}{Example}
 \newtheorem{case}{Case}
 \newtheorem*{case*}{Case}
+\newtheorem{step}{Step}
+
 % Begin Document
 \begin{document}
-\begin{titlepage}
 \maketitle
-\end{titlepage}
-\setcounter{tocdepth}{1}
-\tableofcontents
-\newpage
-
-
-\section{Metric Spaces}
+% \setcounter{tocdepth}{1}
+% \tableofcontents
+\partmark{Real Analysis}
+\section{Convergent Sequences}
 \begin{definition}[Metric]
-  A \emph{metric} is a function defined by
-  \begin{align}
-    d: M \times M \to \mathbb{R}
-  \end{align}
-  such that for any $x,y,z\in M$, the separation axiom
-  \begin{align}
-    d(x,y) \geq 0,
-  \end{align}
-  the indiscernible identity
-  \begin{align}
-    d(x,y) = 0 \iff x = y
-  \end{align}
-  the symmetry axiom
-  \begin{align}
-    d(x,y) = d(y,x)
-  \end{align}
-  and the triangle inequality
-  \begin{align}
-    d(x,z) \leq d(x,y) + d(y,z)
-  \end{align}
-  all hold. A \emph{metric space} is a set with a metric defined.
+  Let $M$ be a set and $R$ be an ordered ring. A \emph{metric} on $M$ is a function
+  \begin{align*}
+    d: M \times M \to R
+  \end{align*}
+  satisfying, for all $x,y,z\in M$:
+  \begin{enumerate}
+    \item \emph{Non-negativity}: $d(x,y) \geq 0$,
+    \item \emph{Identity of indiscernibles}: $d(x,y) = 0 \iff x = y$,
+    \item \emph{Symmetry}: $d(x,y) = d(y,x)$,
+    \item \emph{Triangle inequality}: $d(x,z) \leq d(x,y) + d(y,z)$.
+  \end{enumerate}
+  A \emph{metric space} $\mathscr{M}$ is a pair $(M, d)$ where $M$ is a set and $d$ is a metric on $M$.
 \end{definition}
-
-\begin{definition}[Absolute Difference]
-  The \emph{absolute difference} is a function $\mathbb{R}\times \mathbb{R}\to \mathbb{R}$
-  \begin{align}
-    d(x,y) := |x - y|
-  \end{align}
-\end{definition}
-
-\begin{definition}[Euclidean Metric]
-  \begin{align}
-    d(x,y) := \sqrt{\sum_{i} d_i(x_i,y_i)^2}
-  \end{align}
-\end{definition}
-
-\begin{definition}[Taxi-Cab Metric]
-  \begin{align}
-    d(x,y) := \sum_{i} d_i(x_i,y_i) 
-  \end{align}
-\end{definition}
-
-\begin{definition}[Maximum Metric]
-  \begin{align}
-    d(x,y) := \max\{d_i(x_i,y_i) \}
-  \end{align}
-\end{definition}
-
-
-\section{Bounded Sequences}
 
 \begin{definition}[Bounded Sequence]
-  A sequence is \emph{bounded} if there is a $p\in M$ and $r\in\mathbb{R}$ , such that
-  \begin{align}
-    \forall n\in\mathbb{N}: d(s_n, p) \leq r
-  \end{align}
-\end{definition}
-
-\begin{definition}[Pinched Sequence]
-  A sequence is \emph{pinched} by $r\in\mathbb{R}$, if
-  \begin{align}
-    \forall m,n\in\mathbb{N}: d(s_m, s_n) \leq r
-  \end{align}
-\end{definition}
-
-\begin{definition}
-  A real sequence is \emph{bounded above} by $B$ if
-  \begin{align}
-    \forall n: s_n < B
-  \end{align}
-  and is \emph{bounded below} by $b$ if
-  \begin{align}
-    \forall n: b < s_n
-  \end{align}
-  A sequence is \emph{totally bounded} if it is bounded above and below.
-\end{definition}
-
-\begin{theorem}
-  A real sequence is totally bounded, iff it is bounded.
-\end{theorem}
-\begin{proof}
-  Let $s:\mathbb{N}\to \mathbb{R}$ be a totally bounded sequence
-  \begin{align}
-    \forall n\in\mathbb{N}:b< s_n < B
-  \end{align}
-  Let $p$ be the average of the two bounds
-  \begin{align}
-    p:= \frac{B+b}{2}
-  \end{align}
-  and $r$ be the distance from $B$ to $p$
-  \begin{align}
-    r:= B-p
-  \end{align}
-  Rearranging
+  A sequence $(s_n)$ in a metric space $(M, d)$ is \emph{bounded} if there exists $p \in M$ and $r>0$ such that
   \begin{align*}
-    B = r+p
-    b = 2p-B
+    d(s_n, p) \leq r \quad \text{for all } n \in \mathbb{N}.
   \end{align*}
-  \begin{align*}
-    2p- (r+p) < s_n &< r+p\\
-    p-r < s_n &< p+r\\
-    |s_n-p| &< r
-  \end{align*}
-  Now assume that $\langle s_n \rangle$ is bounded, that is that there are $p,r\in\mathbb{R}$ such that 
-  \begin{align*}
-    |s_n - p| &< r\\
-    p-r < s_n &< p+r
-  \end{align*}
-  Let $b := p-r$ and $B:= p+r$
-  \begin{align}
-    b < s_n < B
-  \end{align}
-\end{proof}
-
-
-\section{Convergent Sequences}
+\end{definition}
 
 \begin{definition}[Convergent Sequence]
-  A sequence $\langle s_n \rangle$ in $M$ \emph{converges} to $l\in M$, if
-  \begin{align}
-    \forall \varepsilon > 0: \exists N \in \mathbb{N}:\forall n>N: d(s_{n}, l)< \varepsilon
-  \end{align}
+  A sequence $(s_n)$ in a metric space $(M, d)$ \emph{converges} to $l \in M$ if, for every $\varepsilon>0$, there exists an integer $N \in \mathbb{N}$ such that whenever $n > N$, we have:
+  \begin{align*}
+    d(s_n, l) < \varepsilon.
+  \end{align*}
+  The limit of a sequence is denoted by
+  \begin{align*}
+    l = \lim_n s_n.
+  \end{align*}
 \end{definition}
-
 
 \begin{theorem}\label{Thm:ConvergentImpliesBounded}
   Every convergent sequence is bounded.
 \end{theorem}
 \begin{proof}
-  Let $M= (A, d)$ be a metric space and 
-  let $\langle s_n \rangle$ be a sequence in $M$ that converges to $l\in M$. Let $\varepsilon>0$. Since $\langle s_n \rangle$ converges, there is an $N$ such that if $n>N$
-  \begin{align}
-    d(s_n, l) < \varepsilon
-  \end{align}
-  Set $B'$ be a bound of the sequence before $N$
-  \begin{align}
-    B'&:= \max \{ d(s_n, l) : n\leq N \}\nonumber
-  \end{align}
-  Finally set
-  \begin{align}
-    B &:= \max \{ B', \varepsilon \}
-  \end{align}
-  Then $B$ is a bound for all $n\in\mathbb{N}$
-  \begin{align}
-    \forall n\in\mathbb{N}: d(s_n, l) \leq B
-  \end{align}
-  which implies that $\langle s_n \rangle$ is bounded.
+  Let $(s_n)$ be a sequence in a metric space $(M, d)$ that converges to $l\in M$. Since $(s_n)$ converges, there exists $\varepsilon > 0$ and some $N \in \mathbb{N}$ such that for all $n > N$, we have
+  \begin{align*}
+    d(s_n, l) < \varepsilon.
+  \end{align*}
+  The finitely many terms $\{s_n : 0 \leq n \leq N\}$ are each at some distance from $l$, so define
+  \begin{align*}
+    B' := \max_{0 \leq n \leq N} \{ d(s_n, l) \}.
+  \end{align*}
+  Now let
+  \begin{align*}
+    B := \max \{B', \varepsilon\}.
+  \end{align*}
+  Then for all $n\in\mathbb{N}$, we have $d(s_n, l) \leq B$, so the entire sequence lies within the ball of radius $B$ centered at $l$. Hence, $s_n$ is bounded.
 \end{proof}
 
+\begin{definition}[Commutative Metric Group]
+  A triple $(M, +, d)$ is called a \emph{commutative metric group} if:
+  \begin{enumerate}
+    \item $(M, +)$ forms a commutative group, and
+    \item $(M, d)$ forms a metric space.
+  \end{enumerate}
+  In these notes, whenever we work with such a structure using the symbol $+$, we tacitly assume the metric is \emph{translation-invariant} with respect to this operation:
+  \begin{align*}
+    d(x + z, y + z) = d(x, y)\text{ for all }x, y, z \in M.
+  \end{align*}
+\end{definition}
 
 \begin{theorem}
-  If
-  \begin{align}
-    S &= \lim_n s_n\nonumber\\
-    T &= \lim_n t_n
-  \end{align}
-  Then
-  \begin{align}
-    \lim_n (s_n + t_n ) &= S+T
-  \end{align}
+  Let $(s_n)$ and $(t_n)$ be convergent sequences in a commutative metric group $(M, +, d)$. Then the sequence $(s_n + t_n)$ also converges, and
+  \begin{align*}
+    \lim_n (s_n + t_n) &= \lim_n s_n + \lim_n t_n.
+  \end{align*}
 \end{theorem}
 \begin{proof}
-  Choose an $\varepsilon'>0$ and define $\varepsilon:= 2\varepsilon'$. 
-  By the definition of convergence, there exists an $N_s$ and $N_t$ such that
-  \begin{align}
-    n > N_s \implies |s_n - S| < \varepsilon'\\
-    n> N_t \implies |t_n - T| < \varepsilon'
-  \end{align}
-  Let $N:= \max \{ N_s, N_t\}$, then for $n>N$, by the triangle inequality
-  \begin{align}
-    |(s_n+t_n) - (S+T) | \leq |s_n - S| + |t_n - T|
-  \end{align}
+  Let $(s_n)$ and $(t_n)$ converge to $S$ and $T$ respectively.
+  Choose $\varepsilon'>0$ and define $\varepsilon:= 2\varepsilon'$.
+  By the definition of convergence, there exists integers $N_s$ and $N_t$ such that:
+  \begin{align*}
+    n > N_s \implies d(s_n, S) < \varepsilon'\\
+    n > N_t \implies d(t_n, T) < \varepsilon'.
+  \end{align*}
+  Let $N:= \max \{ N_s, N_t\}$, then for all $n>N$, we compute
+  \begin{align*}
+    d(s_n+t_n, S+T) &= d(s_n+t_n-S-T,0)&&\text{(by translation invariance)},\\
+    &= d((s_n-S)+(t_n-T),0),\\
+    &\leq d(s_n-S, 0) + d(t_n-T, 0)&&\text{(by the triangle identity)},\\
+    &= d(s_n, S) + d(t_n, T)&&\text{(by translation invariance)}.
+  \end{align*}
   By the definition of convergence
-  \begin{align}
-    |s_n - S | + |t_n - T| < \varepsilon ' + \varepsilon' = \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon
-  \end{align}
-  Thus 
-  \begin{align}
-    \lim_n (s_n+t_n) = S+T
-  \end{align}
+  \begin{align*}
+    d(s_n+t_n, S+T) \leq d(s_n, S) + d(t_n, T) < \varepsilon ' + \varepsilon' = \varepsilon.
+  \end{align*}
+  Thus, again by the definition of convergence
+  \begin{align*}
+    \lim_n (s_n+t_n) = S+T = \lim_n s_n + \lim_n t_n.
+  \end{align*}
+\end{proof}
+
+\begin{definition}[Commutative Metric Ring]
+  A quadruple $(M, +, \cdot, d)$ is called a \emph{commutative metric ring} if:
+  \begin{enumerate}
+    \item $(M, +, \cdot)$ is a commutative ring,
+    \item $(M, d)$ is a metric space.
+  \end{enumerate}
+  In these notes, for a commutative metric ring, we assume:
+  \begin{itemize}
+    \item The metric is \emph{translation-invariant}:
+    \begin{align*}
+      d(x + z, y + z) = d(x, y)\text{ for all } x, y, z \in M,
+    \end{align*}
+    \item Multiplication is \emph{uniformly compatible} with the metric: there exists a constant $C > 0$ such that
+    \begin{align*}
+      d(x \cdot y, x \cdot z) \leq C \cdot d(y, z)\text{ for all } x, y, z \in M.
+    \end{align*}
+  \end{itemize}
+\end{definition}
+
+\begin{theorem}
+  Let $(s_n)$ and $(t_n)$ be convergent sequences in a commutative metric ring $(M, +, \cdot, d)$. Then the sequence $(s_n \cdot t_n)$ also converges, and
+  \begin{align*}
+    \lim_n (s_n \cdot t_n) &= \left(\lim_n s_n\right)\left( \lim_n t_n\right).
+  \end{align*}
+\end{theorem}
+\begin{proof}
+  Let $(s_n)$ and $(t_n)$ converge to $S$ and $T$ respectively.
+  Choose $\varepsilon'>0$.
+  By the definition of convergence, there exists integers $N_s$ and $N_t$ such that:
+  \begin{align*}
+    n > N_s \implies d(s_n, S) < \varepsilon',\\
+    n > N_t \implies d(t_n, T) < \varepsilon'.
+  \end{align*}
+  Let $N := \max\{N_s, N_t\}$, then for all $n > N$, we compute:
+  \begin{align*}
+    d(s_n \cdot t_n, S \cdot T)
+    &= d(s_n \cdot t_n - S \cdot T, 0) && \text{(translation invariance)}\\
+    &= d(s_n \cdot t_n -s_n \cdot T + s_n \cdot T - S \cdot T, 0)\\
+    &= d(s_n \cdot (t_n - T) + (s_n - S) \cdot T, 0)\\
+    &= d(s_n \cdot (t_n - T), -(s_n - S) \cdot T) && \text{(translation invariance)}\\
+    &\leq d(s_n \cdot (t_n - T), 0) + d((S-s_n) \cdot T, 0) && \text{(triangle inequality)}\\
+    &= d(s_n \cdot t_n , s_n \cdot T) +d(S \cdot T, s_n\cdot T) && \text{(translation invariance)}
+  \end{align*}
+  By uniform compatibility, there is $C_1, C_2>0$:
+  \begin{align*}
+    d(s_n\cdot t_n, s_n\cdot T)&\leq C_1\cdot d(t_n, T) < C_1 \cdot \varepsilon'\\
+    d(s_n\cdot T, S\cdot T)&\leq C_2\cdot d(s_n, S) < C_2 \cdot \varepsilon'
+  \end{align*}
+  Let $\varepsilon:=C_1\cdot \varepsilon' + C_2 \cdot \varepsilon'$. Then for all $n > N$:
+  \begin{align*}
+    d(s_n \cdot t_n, S \cdot T) < \varepsilon
+  \end{align*}
+  Therefore, by the definition of convergence,
+  \begin{align*}
+    \lim_n \left(s_n \cdot t_n\right)= S \cdot T = \left(\lim_n s_n\right)\left( \lim_n t_n\right).
+  \end{align*}
 \end{proof}
 
 \begin{theorem}
-  If
-  \begin{align}
-    S &= \lim_n s_n\nonumber\\
-    T &= \lim_n t_n
-  \end{align}
-  Then
-  \begin{align}
-    \lim_n (s_n \cdot t_n ) &= ST
-  \end{align}
+  If a sequence converges, then its limit is unique.
 \end{theorem}
 \begin{proof}
-  Choose an $\varepsilon'>0$
-  By the definition of convergence, there exists an $N_s$ and $N_t$ such that
-  \begin{align}
-    n > N_s \implies |s_n - S| < \varepsilon'\\
-    n> N_t \implies |t_n - T| < \varepsilon'
-  \end{align}
-  Let $N:= \max \{ N_s, N_t\}$, then for $n>N$
-  \begin{align}
-    |(s_nt_n) - (ST) | &= |s_nt_n - s_nT + s_nT -ST |\\
-    &= |s_n (t_n - T) +(s_n - S) T|
-  \end{align}
-  By the triangle inequality
-  \begin{align}
-    |s_n(t_n - T) + (s_n - S) T| &\leq |s_n (t_n - T) | + |(s_n - S) T|\nonumber\\
-    &\leq |s_n| |t_n - T| + |s_n - S| |T|
-  \end{align}
-  Since every convergent sequence is also bounded, there is some bound $B$, such that for every $n$
-  \begin{align}
-    |s_n| < B
-  \end{align}
-  \begin{align}
-    |s_n| |t_n - T| + |s_n - S| |T| \leq B |t_n - T| + |s_n - S| |T|
-  \end{align}
-  Let $M:= \max\{ C , |T| \}$.
-  Then
-  \begin{align}
-    B |t_n - T| + |s_n - S| |T| \leq M (|s_n - S| + |t_n -T|)
-  \end{align}
-  Let $\varepsilon := 2M \varepsilon'$, then
-  \begin{align}
-    |s_n - S| < \varepsilon' = \frac{\varepsilon}{2M}\\
-    |t_n - T| < \varepsilon' = \frac{\varepsilon}{2M}
-  \end{align}
-  Then
-  \begin{align}
-    M (|s_n - S| + |t_n -T|) < M \left(\frac{\varepsilon}{2M} + \frac{\varepsilon}{2M}\right) = \varepsilon
-  \end{align}
-  Thus, for $n> N$
-  \begin{align}
-    |s_nt_n - ST| < \varepsilon
-  \end{align}
-  or
-  \begin{align}
-    \lim_n s_n t_n = ST
-  \end{align}
-\end{proof}
-
-
-\begin{theorem}
-  If a sequence converges, then the limit is unique.
-\end{theorem}
-\begin{proof}
-  Assume without loss of generality that some convergent sequence $s$ has two distinct limits $L$ and $L'$.
-  %By the non-negativity property of the metric $|L-L| \geq 0$.
-  %By the identity of indiscernibles $|L-L'|\neq0 $ giving $|L-L'| > 0$.
-  Define the distance between these two limits $d:= |L- L'|$. From the definition of the metric, $d>0$. 
-  From the definition of convergence, there is a $N$ and $N'$ such that
-  \begin{align}
-    n > N \implies |s_n - L | < \frac{d}{2}
-  \end{align}
-  and
-  \begin{align}
-    n > N' \implies |s_n - L | < \frac{d}{2}
-  \end{align}
-  Let $M:= \max \{N, N'\}$. For $n>M$
-  \begin{align}
-    d:=|L- L' | = |L - s_n +s_n-L'|
-  \end{align}
-  By the triangle identity
-  \begin{align}
-    |L- s_n + s_n - L'| \leq |s_n - L | + |s_n - L'|
-  \end{align}
-  From the definition of convergence
-  \begin{align}
-    |s_n - L | &< \frac{d}{2} \\
-    |s_n - L' | &< \frac{d}{2}
-  \end{align}
-  By $a<b \land c< d \implies a+c < b+d$
-  \begin{align}
-    |s_n - L | + |s_n - L'| < \frac{d}{2} + \frac{d}{2} = d
-  \end{align}
-  which implies 
-  \begin{align}
-    d < d
-  \end{align}
+  Suppose a sequence $(s_n)$ in a metric space $(M, d)$ converges to two distinct limits $L$ and $L'$.
+  By the identity of indiscernibles, $d(L, L')>0$.
+  Let $\varepsilon:=d(L,L')>0$.
+  Then from the definition of convergence, there is a $N$ and $N'$ such that
+  \begin{align*}
+    n > N \implies d(s_n, L) < \frac{\varepsilon}{2}, \\
+    n > N' \implies d(s_n, L') < \frac{\varepsilon}{2}.
+  \end{align*}
+  Let $M:= \max\{N, N'\}$. Then for all $n>M$, we have
+  \begin{align*}
+    d(s_n, L) + d(s_n, L') < \varepsilon.
+  \end{align*}
+  By the triangle inequality,
+  \begin{align*}
+     d(L, L') \leq d(L, s_n) + d(s_n, L') < \varepsilon = d(L, L'),
+  \end{align*}
   which is a contradiction.
+  Therefore, no such distinct $L$ and $L'$ can exist. The limit is unique.
 \end{proof}
 
 
-\begin{theorem}[Squeeze Theorem]
-  For all sequences $s$, and all convergent sequences $r, t$ such that
-  \begin{align}
-    \lim_n r_n = L\nonumber\\
-    \lim_n t_n = L
-  \end{align}
-  and for all $n\in\mathbb{Z}^+$
-  \begin{align}
-    r_n < s_n < t_n
-  \end{align}
-  implies that $s$ is a convergent sequence and its limit is given by
-  \begin{align}
-    \lim_n s_n = L
-  \end{align}
+\begin{theorem}[Convergence by Proximity]
+  Let $(x_n)$ and $(y_n)$ be sequences in a metric space $(M, d)$.
+  If $(x_n)$ converges to $L \in M$ and $d(x_n, y_n)$ converges to zero, then $(y_n)$ also converges to $L$.
 \end{theorem}
 \begin{proof}
-  Fix $\varepsilon> 0 $.
-  Then by the definition of the convergent sequence
-  \begin{align}
-    \exists N_1: n > N_1 \implies |y_n - L | < \varepsilon\nonumber\\
-    \exists N_2: n > N_2 \implies |z_n - L| < \varepsilon
-  \end{align}
-  Let $N:= \max \{ N_1, N_2 \}$, then for all $n> N$
-  \begin{align}
-    L- \varepsilon < y_n < L + \varepsilon\nonumber\\
-    L - \varepsilon < z_n < L + \varepsilon
-  \end{align}
-  Using the trichotomy property of order
-  \begin{align}
-    L - \varepsilon < y_n < x_n < z_n < L+\varepsilon
-  \end{align}
-  or
-  \begin{align}
-    L - \varepsilon < x_n < L+ \varepsilon
-  \end{align}
-  Therefor $n>N$ implies
-  \begin{align}
-    |x_n - L | < \varepsilon
-  \end{align}
-  or
-  \begin{align}
-    \lim_n x_n = L
-  \end{align}
-\end{proof}
-
-\begin{theorem}
-  \begin{align}
-    \lim_n \frac{1}{n} = 0
-  \end{align}
-\end{theorem}
-\begin{proof}
-  Choose an $\varepsilon' \in \mathbb{R}^+$.
-  By the Archimedean property
-  \begin{align}
-    \exists N \in \mathbb{Z}^+: N > \varepsilon '
-  \end{align}
-  Since both $N>0$ and $\varepsilon'>0$
-  \begin{align}
-    \frac{1}{N} < \frac{1}{\varepsilon'}
-  \end{align}
-  Define $\varepsilon:= \frac{1}{\varepsilon'} \in\mathbb{R}^+$
-  \begin{align}
-    \frac{1}{N} < \varepsilon
-  \end{align}
-  Let $n>N>0$, then
-  \begin{align}
-    \frac{1}{N} > \frac{1}{n}
-  \end{align}
-  By trichotomy
-  \begin{align}
-    \frac{1}{n} &< \varepsilon\\
-    n>N \implies \left| \frac{1}{n} - 0 \right| &< \varepsilon
-  \end{align}
-  or
-  \begin{align}
-    \lim_n \frac{1}{n} = 0
-  \end{align}
-\end{proof}
-
-\begin{lemma}\label{Lemma:ExponentialConvergentSequence}
-  If $\{|a_n-L|\}$ converges to zero, then $\{a_i\}$ converges to $L$.
-  \begin{align}
-    \lim_n |a_n-L| = 0 \implies \lim_n a_n = L
-  \end{align}
-\end{lemma}
-\begin{proof}
-  Since $\{|a_n-L|\}$ converges to zero, for any $\varepsilon>0$, there is an $N$
-  \begin{align}
-    n> N \implies \left| |a_n- L | - 0\right|&< \varepsilon\\
-    \left| |a_n - L | \right|&< \varepsilon\\
-    n>N\implies |a_n-L| &< \varepsilon
-  \end{align}
-  Then
-  \begin{align}
-    \lim_n a_n = L
-  \end{align}
+  Assume $(x_n)$ converges to $L \in M$, and $d(x_n, y_n)$ converges to $0$.
+  Fix $\varepsilon > 0$.
+  By convergence, there exists integers $N_1, N_2\in\mathbb{N}$,
+  \begin{align*}
+    n > N_1 \implies d(x_n, L) < \frac{\varepsilon}{2},\text{ and}\\
+    n > N_2 \implies d(x_n, y_n) < \frac{\varepsilon}{2}.
+  \end{align*}
+  Let $N:= \max\{N_1, N_2\}$.
+  For all $n > N$, by the triangle inequality,
+  \begin{align*}
+    d(y_n, L) \leq d(y_n, x_n) + d(x_n, L) < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon.
+  \end{align*}
+  Hence, by the definition of convergence, $(y_n)$ converges to $L$.
 \end{proof}
 
 \section{Closed Sets}
@@ -852,24 +669,516 @@
 \end{proof}
 
 
-\section{Fundamental Sequences}
+\section{Complete Spaces}
 
-\begin{definition}[Fundamental Sequence]
-  A sequence is fundamental if every $\varepsilon$ has a $N$-tail, that is $\varepsilon$-pinched.
-  \begin{align}
-    \forall \varepsilon>0: \exists N\in \mathbb{N}: \forall m,n> N: d(s_{m} , s_{n} ) < \varepsilon
-  \end{align}
+\begin{definition}[Pinched Sequence]
+  A sequence $(s_n)$ in a metric space $(M, d)$ is \emph{pinched} if, for every $\varepsilon > 0$, there exists an integer $N \in \mathbb{N}$ such that whenever $n, m>N$, we have
+  \begin{align*}
+    d(s_n, s_m) < \varepsilon.
+  \end{align*}
+\end{definition}
+
+\begin{definition}[Complete Space]
+  A metric space $(M, d)$ is \emph{complete} if every pinched sequence in $M$ converges to a point in $M$.
+  That is, for every sequence $(s_n)$ in $M$, if
+  \begin{align*}
+    \forall \varepsilon > 0\ \exists N \in \mathbb{N}\ \forall n, m> N: d(s_n, s_m) < \varepsilon,
+  \end{align*}
+  then there exists a point $L \in M$ such that
+  \begin{align*}
+    \forall \varepsilon > 0\ \exists N' \in \mathbb{N}\ \forall n > N': d(s_n, L) < \varepsilon.
+  \end{align*}
 \end{definition}
 
 \begin{theorem}
-  Every convergent sequence is fundamental.
+  The metric space $(\mathbb{Q},d)$, where $d(x,y) = |x-y|$, is not complete.
 \end{theorem}
+\begin{proof}
+  Proof by counter-example. Let $(F_n):\mathbb{N}\to\mathbb{N}$ be a sequence defined recursively:
+  \begin{align*}
+    F_{n+1} = F_n + F_{n-1}
+  \end{align*}
+  where $F_0=1$ and $F_1=1$. $(F_n)$ can be shown to be shown to be a sequence of increasing positive integers. Let $(x_n):\mathbb{N} \to \mathbb{Q}$ be a rational sequence defined by
+  \begin{align*}
+    x_n := \frac{F_{n+1}}{F_n}.
+  \end{align*}
+  Transforming $x_n$ into a recursive sequence:
+  \begin{align*}
+    x_{n+1} = \frac{F_{n+2}}{F_{n+1}} = \frac{F_{n+1}+F_n}{F_{n+1}} = 1 + \frac{F_n}{F_{n+1}} = 1+\frac{1}{x_n}.
+  \end{align*}
 
-\section{Complete Spaces}
+  \step A well-known identity says that $F_{n+2}F_n-F_{n+1}^2=(-1)^n$. We'll show it by showing for the base case $(n=0)$:
+  \begin{align*}
+    (2)(1)-(1)^2=1=(-1)^0
+  \end{align*}
+  And then the inductive case $n=k \implies n=k+1$:
+  \begin{align*}
+    F_{k+3}F_{k+1}-F_{k+2}^2 &= (F_{k+2}+F_{k+1})F_{k+1}-F_{k+2}^2 \\
+    &=F_{k+2}(F_{k+1}-F_{k+2})+F_{k+1}^2
+  \end{align*}
+  Using a re-arrangement of $F_{k+2}=F_{k+1}+F_k$:
+  \begin{align*}
+    F_{k+3}F_{k+1}-F_{k+2}^2 &= F_{k+2}(-F_k)+F_{k+1}^2\\
+    &= (-1)(F_{k+2}F_k-F_{k+1}^2) = (-1)^{k+1}
+  \end{align*}
+  So by induction $F_{n+2}F_n-F_{n+1}^2=(-1)^n$ is true for all $n \in \mathbb{N}$.
 
-\begin{definition}
-  A space is complete if every fundamental sequence is convergent.
+  \step For all $n \geq 2$, we have $F_n\geq n$.
+  We show this with a proof by induction.
+  The base cases are $F_2=2\geq2$ and $F_3=3\geq3$.
+  Now to show that $F_k \geq k$ and $F_{k-1}\geq k-1$ implies $F_{k+1}\geq k+1$:
+  \begin{align*}
+    F_{k+1} = F_k+F_{k-1} \geq k + (k-1) = 2k-1 \geq k+1.
+  \end{align*}
+  since $k\geq2$.
+  \step Show that $|x_{n+1}-x_n|=\frac{1}{F_{n+1}F_n}$.
+  Consider two successive terms $x_{n+1}$ and $x_n$:
+  \begin{align*}
+    |x_{n+1} - x_n| = \left|\frac{F_{n+2}}{F_{n+1}}-\frac{F_{n+1}}{F_n}\right| = \left|\frac{F_{n+2}F_n-F_{n+1}^2}{F_{n+1}F_n}\right|=\left| \frac{(-1)^n}{F_{n+1}F_n}\right|
+  \end{align*}
+  Since $F_n>0$ for all $n$, this can be further reduced to
+  \begin{align*}
+    |x_{n+1} - x_n| = \frac{1}{F_{n+1}F_n}
+  \end{align*}
+  \step We show that $(x_n)$ is pinched. Choose $\varepsilon>0$ and define
+  \begin{align*}
+    N:=\max\left\{2, \left\lceil\frac{1}{\varepsilon}\right\rceil\right\}.
+  \end{align*}
+  For $m>n>N$, the triangle inequality gives
+  \begin{align*}
+    |x_m-x_n| \leq \sum^{m-1}_{k=n} |x_{k+1}-x_k| = \sum^{m-1}_{k=n} \frac{1}{F_kF_{k+1}}
+  \end{align*}
+  Since $m>n\geq2$: $F_k \geq k$:
+  \begin{align*}
+    |x_m-x_n| \leq \sum^{m-1}_{k=n}\frac{1}{k(k+1)} &= \sum^{m-1}_{k=n} \left(\frac{1}{k}-\frac{1}{k+1}\right)\\
+    &= \sum^{m-1}_{k=n}\frac{1}{k}-\sum^m_{k=n+1}\frac{1}{k} \\
+    &= \frac{1}{n}+\sum^{m-1}_{k=n+1}\frac{1}{k}-\frac{1}{m}-\sum^{m-1}_{k=n+1}\frac{1}{k} \\
+    &= \frac{1}{n} - \frac{1}{m} < \frac{1}{n} < \frac{1}{N}<\varepsilon.
+  \end{align*}
+  which implies that $(x_n)$ is pinched.
+  \step Show by proof by contradiction that $(x_n)$ has no rational limit. Suppose a limit exists. By the recursive equation it must converge to an $L$ such that
+  \begin{align*}
+    L = 1 + \frac{1}{L}.
+  \end{align*}
+  Rearranging into a standard quadratic form:
+  \begin{align*}
+    L^2-L-1 = 0
+  \end{align*}
+  For a quadratic equation with integer coefficients, the roots are rational if and only if the discriminant is a perfect square.
+  The discriminant for this equation is:
+  \begin{align*}
+    \Delta=(-1)^2-4(1)(-1)=5,
+  \end{align*}
+  which is not a perfect square, therefore $L$ is not rational.
+\end{proof}
+
+\begin{theorem}
+  The sum of two fundamental sequences is fundamental.
+\end{theorem}
+\begin{proof}
+  By the triangle inequality
+  \begin{align}
+    |s_m - s_n + t_m - t_n | \leq |s_m - s_n| + |t_m - t_n|
+  \end{align}
+  By the definition of fundamental sequences, $\forall \varepsilon_s, \varepsilon_t\in\mathbb{Q}^+$, there is a $N_s, N_t\in\mathbb{Z}^+$ and $N:=\max\{N_s, N_t\}$, such that if $m,n > N$
+  \begin{align}
+    |s_m - s_n| &< \varepsilon_s\nonumber\\
+    |t_m - t_n| &< \varepsilon_t
+  \end{align}
+  By $a<b\land c<d\implies a+c<b+d$
+  \begin{align}
+    |s_m - s_n| + |t_m - t_n| < \varepsilon_s + \varepsilon_t
+  \end{align}
+  Let $\varepsilon:= \varepsilon_s+\varepsilon_t$
+  \begin{align}
+    |s_m - s_n +t_m - t_n| &< \varepsilon\\
+    \left|(s_m + t_m) - (s_n + t_n) \right| &< \varepsilon
+  \end{align}
+\end{proof}
+
+\begin{definition}[Equivalence]
+  Two sequences are equivalent mod $\mathcal{Z}$ if and only if their difference is in $\mathcal{Z}$
+  \begin{align}
+    s\equiv_\mathcal{Z} t \iff s-t\in\mathcal{Z}
+  \end{align}
 \end{definition}
+
+\begin{theorem}[Equivalence Reflexivity]
+  \begin{align}
+    a\equiv_\mathcal{Z} a 
+  \end{align}
+\end{theorem}
+\begin{proof}
+  \begin{align}
+    a-a&: n \mapsto a_n - a_n = 0\\
+    a-a&: n \mapsto 0\\
+    a-a &= 0^*\in\mathbb{Z}
+  \end{align}
+  \begin{align}
+    a\equiv_\mathcal{Z} a
+  \end{align}
+\end{proof}
+
+\begin{theorem}[Equivalence Symmetry]
+  \begin{align}
+    a\equiv_\mathcal{Z} b \iff b\equiv_\mathcal{Z} a
+  \end{align}
+\end{theorem}
+\begin{proof}
+  \begin{align}
+    a\equiv_\mathcal{Z} b
+  \end{align}
+  \begin{align}
+    a-b&\in\mathcal{Z}\\
+    -(a-b) &\in\mathcal{Z}\\
+    b-a &\in\mathcal{Z}
+  \end{align}
+  \begin{align}
+    b\equiv_\mathcal{Z} a
+  \end{align}
+\end{proof}
+
+\begin{theorem}[Equivalence Transitivity]
+  \begin{align}
+    a\equiv_\mathcal{Z} b \land b \equiv_\mathcal{Z} c \implies a\equiv_\mathcal{Z} c
+  \end{align}
+\end{theorem}
+\begin{proof}
+  \begin{align}
+    a\equiv_\mathcal{Z} b &\land b \equiv_\mathcal{Z} c\\
+    a-b\in\mathcal{Z} &\land b-c \in\mathcal{Z}
+  \end{align}
+  Since addition is closed on $\mathbb{Z}$
+  \begin{align}
+    (a-b) + (b-c) &\in\mathcal{Z}\\
+    a-c &\in\mathcal{Z}
+  \end{align}
+  \begin{align}
+    a\equiv_\mathcal{Z} c
+  \end{align}
+\end{proof}
+
+\begin{theorem}
+  Addition is compatible with equivalence
+  \begin{align}
+    s\equiv_\mathcal{Z} s' \land t\equiv_\mathcal{Z} t' \implies s+t \equiv_\mathcal{Z} s'+t'
+  \end{align}
+\end{theorem}
+\begin{proof}
+  Since $s\equiv_\mathcal{Z} s'$ and $t\equiv_\mathcal{Z} t'$
+  \begin{align}
+    s-s'\in\mathcal{Z}\\
+    t-t'\in\mathcal{Z}
+  \end{align}
+  Since $\mathcal{Z}$ is closed on addition
+  \begin{align}
+    (s-s')+(t-t')\in\mathcal{Z}\\
+    (s+t)-(s'+t') \in\mathcal{Z}
+  \end{align}
+  which implies that
+  \begin{align}
+    s+t \equiv_\mathcal{Z} s'+t'
+  \end{align}
+\end{proof}
+
+\begin{theorem}
+  Multiplication is compatible with equivalence for bounded sequences
+  \begin{align}
+    \forall s,s',t,t'\in\mathcal{B}:s\equiv_\mathcal{Z} s' \land t\equiv_\mathcal{Z} t' \implies st \equiv_\mathcal{Z} s't'
+  \end{align}
+\end{theorem}
+\begin{proof}
+  Assume $s\equiv_\mathcal{Z} s'$ and $t\equiv_\mathcal{Z} t'$, then
+  \begin{align}
+    s-s'&\in\mathcal{Z}\\
+    t-t'&\in\mathcal{Z}
+  \end{align}
+  Since $s\in\mathcal{B}$ and $t'\in\mathcal{B}$
+  \begin{align}
+    s(t-t')\in\mathcal{Z}\\
+    st-st'\in\mathcal{Z}
+  \end{align}
+  and
+  \begin{align}
+    (s-s')t'\in\mathcal{Z}\\
+    st'-s't'\in\mathcal{Z}
+  \end{align}
+  Since $\mathcal{Z}$ is closed on addition
+  \begin{align}
+    st-st'+st'-s't'\in\mathcal{Z}\\
+    st-s't'\in\mathcal{Z}
+  \end{align}
+  By the definition of equivalence
+  \begin{align}
+    st \equiv_\mathcal{Z} s't'
+  \end{align}
+\end{proof}
+
+\begin{theorem}
+  If $x\equiv_\mathcal{z} y$ and $\lim_n x_n = L$, then $\lim_n y_n = L$
+\end{theorem}
+\begin{proof}
+  Fix $\varepsilon\in\mathbb{Q}^+$
+  \begin{align}
+    \exists N_1\in\mathbb{Z}^+: \forall n> N_1: |x_n - y_n|< \varepsilon\\
+    \exists N_2\in\mathbb{Z}^+: \forall n> N_2: |x_n - L| < \varepsilon
+  \end{align}
+  Let $N:= \max\{N_1, N_2\}$, if $n>N$
+  \begin{align}
+    |x_n-y_n| < \varepsilon\\
+    |x_n - L| < \varepsilon
+  \end{align}
+  By the triangle identity
+  \begin{align}
+    |y_n-L | = |y_n-x_n+x_n-L| \leq |x_n-y_n| + |x_n- L| < \varepsilon +  \varepsilon = 2\varepsilon
+  \end{align}
+  Let $\varepsilon':= 2\varepsilon$. For all $n>N$
+  \begin{align}
+    |y_n-L| < \varepsilon
+  \end{align}
+  Or
+  \begin{align}
+    \lim_n y_n = L
+  \end{align}
+\end{proof}
+
+\begin{theorem}
+  Positive fundamental sequences are closed over equivalence
+  \begin{align}
+    \forall x\in\mathcal{F}^+: x\equiv_\mathcal{Z} y \implies y\in\mathcal{F}^+
+  \end{align}
+\end{theorem}
+\begin{proof}
+  Since $x$ is in $\mathcal{F}^+$, there is an $r\in\mathcal{Q}^+$ and $N\in\mathbb{Z}^+$ such that for all $n>N$
+  \begin{align}
+    x_n > r>0
+  \end{align}
+  Since the rationals are dense, there is a rational $s$ such that
+  \begin{align}
+    r> s>0\\
+    r-s>0
+  \end{align}
+  Since $x-y\in\mathcal{Z}$, there is an $N'\in\mathcal{Z}^+$ such that
+  \begin{align}
+    n> N'> N \implies |x_n - y_n| < r-s
+  \end{align}
+  If $n> N'$
+  \begin{align}
+    s-r < y_n - x_n
+  \end{align}
+  Along with $r< x_n$
+  \begin{align}
+    s- r+ r = s < y_n- x_n +x_n = y_n
+  \end{align}
+  \begin{align}
+    \forall n>N': s>y_n
+  \end{align}
+  So $y\in\mathcal{F}^+$
+\end{proof}
+
+\begin{definition}[The Real Field]
+  The \emph{real field} is the partition of equivalence classes in $\mathcal{F}$
+  \begin{align}
+    \mathbb{R} := \mathcal{F} / \equiv_\mathcal{Z}
+  \end{align}
+\end{definition}
+
+
+\begin{definition}[Convergent Sequence]
+  A real, convergent sequence converges to $L\in\mathbb{R}$ if
+  \begin{align}
+    \forall \varepsilon \in \mathbb{R}^+: \exists N \in \mathbb{Z}^+: n > N \implies |x_n - L | < \varepsilon
+  \end{align}
+  If $L$ exists it is called the \emph{limit} of the function
+  \begin{align}
+    L = \lim_n x_n
+  \end{align}
+\end{definition}
+
+\begin{theorem}%[Archimedean Property]
+  For every real number there is a greater positive integer.
+  \begin{align}
+    \forall x\in\mathbb{R}: \exists n \in \mathbb{Z}^+: n^* > x 
+  \end{align}
+  where $n^*:= m \mapsto n$ and $\mathbb{Z}^+ \subset \mathbb{Q}$
+\end{theorem}
+\begin{proof}
+  Let $x\in\mathbb{R}$ be any real number.
+  By definition it is a fundamental sequence of rationals $x\in\mathcal{C}$.
+  Every fundamental sequence is bounded, so there exists $b,B\in\mathbb{Q}$, such that, for all $i\in\mathbb{Z}+$
+  \begin{align}
+    b < x_i < B
+  \end{align}
+  By the Archimedean property of rationals, there exists an $n\in\mathbb{Z}^+$, such that $n>B$.
+  \begin{align}
+    x_i < n
+  \end{align}
+  Consider the constant sequence $n^*: i \mapsto n$
+  \begin{align}
+    x_i < n = n^*_i
+  \end{align}
+  Choose any $\varepsilon \in\mathbb{Q}^+$ and any $N\in\mathbb{Z}^+$
+  \begin{align}
+    i > N \implies x_i < n_i^*
+  \end{align}
+  which by definition of order on the reals
+  \begin{align}
+    x< n^*
+  \end{align}
+\end{proof}
+
+\begin{theorem}
+  $\mathbb{Q}^*$ is a dense subset of $\mathbb{R}$
+  \begin{align}
+    \forall x \in \mathbb{R}, \varepsilon \in \mathbb{Q}^+: \exists r \in \mathbb{Q}^*: |x - r | < \varepsilon
+  \end{align}
+\end{theorem}
+\begin{proof}
+  Fix $\varepsilon\in \mathbb{Q}^+$ and $x \in\mathbb{R}$.
+  Since $x$ is a rational, fundamental sequence, there is an $N\in\mathbb{Z}^+$ such that
+  \begin{align}
+    m,n > N \implies |x_m - x_n | < \varepsilon
+  \end{align}
+  Choose $l>m$, let $r:= n \mapsto x_l$
+  \begin{align}
+    n> N \implies |x_n - r_n| < \varepsilon
+  \end{align}
+  By the definition of order on $\mathbb{R}$ and the definition of a limit
+  \begin{align}
+    \lim_n |x_n - r_n | < \varepsilon
+  \end{align}
+  By the definition of the absolute value on $\mathbb{R}$
+  \begin{align}
+    |x- r| < \varepsilon
+  \end{align}
+\end{proof}
+
+\begin{theorem}
+  Every fundamental sequence of rational, constant sequences converges to a fundamental sequence.
+  \begin{align}
+    \lim_n r^*_n = r
+  \end{align}
+  where $r^*: n \mapsto ( m \mapsto r_n)$
+\end{theorem}
+\begin{proof}
+  Let $r\in\mathcal{F}$ be a rational, fundamental sequence. Choose some $\varepsilon\in\mathbb{R}^+$, then there is some $N\in\mathbb{Z}^+$ such that
+  \begin{align}
+    m,n > N \implies |r_m - r_n | <\varepsilon
+  \end{align}
+  Fixing $m>N$, the definition of a limit gives
+  \begin{align}
+    \lim_n r_n = r_m
+  \end{align}
+  \begin{align}
+    \left|\lim_n r_n - r_m \right| = 0 < \varepsilon
+  \end{align}
+  Define $r^*: m  \mapsto (n \mapsto r_m)$, then the limit of the constant sequences $r_m^*$ are the constant
+  \begin{align}
+    \lim_n r_{mn}^* = r_m
+  \end{align}
+  Giving
+  \begin{align}
+    \left|\lim_n r_n - \lim_n r_{mn}^* \right| < \varepsilon
+  \end{align}
+  % Clean after this
+  By the definition of order on $\mathbb{R}$
+  \begin{align}
+    |r_n^* - r | < \varepsilon
+  \end{align}
+  Therefor
+  \begin{align}
+    \forall \varepsilon\in\mathbb{Q}^+: \exists N \in \mathbb{Z}^+: n > N \implies |r_n^* - r| < \varepsilon
+  \end{align}
+  or more succinctly
+  \begin{align}
+    \lim_n r_n^* = r
+  \end{align}
+\end{proof}
+
+
+\begin{theorem}[Completeness]
+  Every real, pinched sequence converges to a real number.
+\end{theorem}
+\begin{proof}
+  Let $(x_n)$ be a real, pinched sequence. Define a sequence of constant, rational sequences $r^*:\mathbb{N}\to\mathbb{Q}^*$ such that
+  \begin{align}
+    x_n-\frac{1}{n} < r_n^* < x_n+\frac{1}{n}
+  \end{align}
+  or
+  \begin{align}
+    |r_n^*-x_n | < \frac{1}{n}
+  \end{align}
+  For any $m,n\in\mathbb{Z}^+$, by triangle identity
+  \begin{align}
+    |r^*_m - r^*_n | &= |r^*_m - x_m + x_m - x_n +x_n - r^*_n|\\
+    &\leq |r_m^* - x_m| + |x_m - x_n| + |r_n^* - x_n|\\
+    &< |x_m - x_n| + \frac{1}{m} + \frac{1}{n}
+  \end{align}
+  Since $x$ is a fundamental sequence, for every $\varepsilon\in\mathbb{R}^+$ there is an $N\in\mathbb{Z}^+$, such that $m,n>N$
+  \begin{align}
+    |x_m - x_n | < \frac{\varepsilon}{3}
+  \end{align}
+  Choose $N'\in\mathbb{Z}^+:N'>\frac{3}{\varepsilon}$, and define $M:=\max\{ N , N'\}$. For all $m, n > M $
+  \begin{align}
+    m > M &> \frac{3}{\varepsilon} > 0\nonumber\\
+    n > M &> \frac{3}{\varepsilon} > 0
+  \end{align}
+  implies
+  \begin{align}
+    \frac{1}{m} < \frac{\varepsilon}{3}\nonumber\\
+    \frac{1}{n} < \frac{\varepsilon}{3}
+  \end{align}
+  Applying this to the earlier inequality
+  \begin{align}
+    |r^*_m - r^*_n| < \frac{\varepsilon}{3} + \frac{\varepsilon}{3} + \frac{\varepsilon}{3} = \varepsilon
+  \end{align}
+  Hence $r^*$ is a fundamental sequence.
+  %Clean after this
+  Therefore by the lemma above
+  \begin{align}
+    \lim_n r^*_n = r
+  \end{align}
+  where $r^*: n \mapsto ( m \mapsto r_n)$. 
+  From the definition of $r^*$, for every $n\in\mathbb{Z}^+$
+  \begin{align}
+    |r^*_n - x_n | < \frac{1}{n}
+  \end{align}
+  Since $\mathbb{R}$ is unbounded
+  \begin{align}
+    \forall \varepsilon \in \mathbb{R}^+: \exists N\in\mathbb{Z}^+ : \frac{1}{N} < \varepsilon
+  \end{align}
+  If $n>N$, then $\frac{1}{n} < \frac{1}{N} < \varepsilon$
+  \begin{align}
+    |r^*_n-x_n| <\frac{1}{N} <  \varepsilon
+  \end{align}
+  Then, for every $\varepsilon\in\mathbb{R}^+$ there is a $N\in\mathbb{Z}^+$ such that if $n>N$
+  \begin{align}
+    |r^*_n-x_n| < \varepsilon
+  \end{align}
+  Since $\lim_n r^*_n = r$
+  \begin{align}
+    \exists N'\in\mathbb{Z}^+: \forall n> N': |r^*_n - r| < \varepsilon
+  \end{align}
+  Let $M:= \max\{N, N'\}$, if $n>M$, then for all $\varepsilon\in\mathbb{R}^+$
+  \begin{align}
+    |r^*_n-x_n| < \frac{\varepsilon}{2}\\
+    |r^*_n - r| < \frac{\varepsilon}{2}
+  \end{align}
+  By the triangle identity
+  \begin{align}
+    |x_n-r | &= |x_n-r^*_n+r^*_n-r|\nonumber\\
+    &\leq |r^*_n-x_n| + |r^*_n - r| < \frac{\varepsilon}{2} +  \frac{\varepsilon}{2} = \varepsilon
+  \end{align}
+  Hence for all $n>M$
+  \begin{align}
+    |x_n-r| < \varepsilon
+  \end{align}
+  Or
+  \begin{align}
+    \lim_n x_n = r
+  \end{align}
+\end{proof}
+
 
 \begin{theorem}[Monotone Convergence Theorem]
   A monotonic sequence converges if and only if it is bounded.
@@ -961,6 +1270,104 @@
 
 
 \section{Summable Sequences}
+
+\begin{theorem}[Squeeze Theorem]
+  For all sequences $s$, and all convergent sequences $r, t$ such that
+  \begin{align}
+    \lim_n r_n = L\nonumber\\
+    \lim_n t_n = L
+  \end{align}
+  and for all $n\in\mathbb{Z}^+$
+  \begin{align}
+    r_n < s_n < t_n
+  \end{align}
+  implies that $s$ is a convergent sequence and its limit is given by
+  \begin{align}
+    \lim_n s_n = L
+  \end{align}
+\end{theorem}
+\begin{proof}
+  Fix $\varepsilon> 0 $.
+  Then by the definition of the convergent sequence
+  \begin{align}
+    \exists N_1: n > N_1 \implies |y_n - L | < \varepsilon\nonumber\\
+    \exists N_2: n > N_2 \implies |z_n - L| < \varepsilon
+  \end{align}
+  Let $N:= \max \{ N_1, N_2 \}$, then for all $n> N$
+  \begin{align}
+    L- \varepsilon < y_n < L + \varepsilon\nonumber\\
+    L - \varepsilon < z_n < L + \varepsilon
+  \end{align}
+  Using the trichotomy property of order
+  \begin{align}
+    L - \varepsilon < y_n < x_n < z_n < L+\varepsilon
+  \end{align}
+  or
+  \begin{align}
+    L - \varepsilon < x_n < L+ \varepsilon
+  \end{align}
+  Therefor $n>N$ implies
+  \begin{align}
+    |x_n - L | < \varepsilon
+  \end{align}
+  or
+  \begin{align}
+    \lim_n x_n = L
+  \end{align}
+\end{proof}
+
+\begin{theorem}
+  \begin{align}
+    \lim_n \frac{1}{n} = 0
+  \end{align}
+\end{theorem}
+\begin{proof}
+  Choose an $\varepsilon' \in \mathbb{R}^+$.
+  By the Archimedean property
+  \begin{align}
+    \exists N \in \mathbb{Z}^+: N > \varepsilon '
+  \end{align}
+  Since both $N>0$ and $\varepsilon'>0$
+  \begin{align}
+    \frac{1}{N} < \frac{1}{\varepsilon'}
+  \end{align}
+  Define $\varepsilon:= \frac{1}{\varepsilon'} \in\mathbb{R}^+$
+  \begin{align}
+    \frac{1}{N} < \varepsilon
+  \end{align}
+  Let $n>N>0$, then
+  \begin{align}
+    \frac{1}{N} > \frac{1}{n}
+  \end{align}
+  By trichotomy
+  \begin{align}
+    \frac{1}{n} &< \varepsilon\\
+    n>N \implies \left| \frac{1}{n} - 0 \right| &< \varepsilon
+  \end{align}
+  or
+  \begin{align}
+    \lim_n \frac{1}{n} = 0
+  \end{align}
+\end{proof}
+
+\begin{lemma}\label{Lemma:ExponentialConvergentSequence}
+  If $\{|a_n-L|\}$ converges to zero, then $\{a_i\}$ converges to $L$.
+  \begin{align}
+    \lim_n |a_n-L| = 0 \implies \lim_n a_n = L
+  \end{align}
+\end{lemma}
+\begin{proof}
+  Since $\{|a_n-L|\}$ converges to zero, for any $\varepsilon>0$, there is an $N$
+  \begin{align}
+    n> N \implies \left| |a_n- L | - 0\right|&< \varepsilon\\
+    \left| |a_n - L | \right|&< \varepsilon\\
+    n>N\implies |a_n-L| &< \varepsilon
+  \end{align}
+  Then
+  \begin{align}
+    \lim_n a_n = L
+  \end{align}
+\end{proof}
 
 
 \begin{definition}[Series]
@@ -1940,163 +2347,165 @@
 \section{Integrable Functions}
 
 \begin{definition}[Partition]
-  A \emph{partition} on $[a,b]$ is a finite, increasing sequence $x:[0,n]\to [a,b]$, such that
-  \begin{align}
-    x_0 = a\nonumber\\
-    x_n = b
-  \end{align}
-  The sequence of lengths of partitions $\Delta x_i$ is defined simply as
-  \begin{align}
-    \Delta x_i := x_{i-1} - x_i
-  \end{align}
+  A \emph{partition} on $[a,b]$ is a finite, increasing sequence $x:[0,n]\cap\mathbb{N} \to [a,b]$, such that $x_0 = a$ and $x_n = b$.
+  The sequence of lengths of partitions $\Delta x_i:[1,n]\cap\mathbb{N}\to\mathbb{R}$ is defined simply as
+  \begin{align*}
+    \Delta x_i := x_i - x_{i-1}.
+  \end{align*}
   The \emph{mesh} of a partition is given by
-  \begin{align}
-    \mesh x := \max_i \Delta x_i
-  \end{align}
-  A sequence of sample points $t:[0,n]\to[a,b]$ for a partition 
-  \begin{align}
-    \forall i: x_{i-1}\leq t_i \leq x_i
-  \end{align}
-  A \emph{partition pair} is a tuple of sequences, the partition $x$ and one of its sequence of sample points $t$.
+  \begin{align*}
+    \mesh x := \max_i \Delta x_i.
+  \end{align*}
+  A \emph{partition pair} is a tuple of sequences $(x, t)$, where $x$ is a partition and $t:[0,n]\cap\mathbb{N} \to [a,b]$ is a finite sequence of sample points, that satisfy $x_{i-1}\leq t_i \leq x_i$, for all $i\in[0,n]\cap\mathbb{N}$.  
+\end{definition}
+
+\begin{definition}[Partition Refinement]
+  The sequence $x^*:[0,n^*]\cap\mathbb{N} \to [a, b]$ is a \emph{refinement} of the partition $x:[0, n]\cap\mathbb{N} \to [a, b]$ if every point of $x$ appears in $x^*$.
+  That is, there exists a sequence $p: [0, n]\cap\mathbb{N} \to [0, n^*]\cap\mathbb{N}$, such that
+  \begin{align*}
+    x = x^* \circ p.
+  \end{align*}
 \end{definition}
 
 \begin{definition}[Partition Sum]
-  The \emph{partition sum} of a function on $f$ with partition pair $x,t$ is given by
-  \begin{align}
-    R(f,x,t):= \sum_{i=1}^n f(t_i) \Delta x_i
-  \end{align}
+  The \emph{partition sum} of a function on $f$ with partition pair $(x, t)$ is given by
+  \begin{align*}
+    R(f,x,t):= \sum_{i=1}^n f(t_i) \Delta x_i.
+  \end{align*}
 \end{definition}
 
 \begin{definition}[Integral]
-  A function is \emph{integrable} on $[a,b]$ if there is an $I\in\mathbb{R}$ such that, for all $\varepsilon>0$ there is a $\delta>0$ such that for all partitions $x$
-  \begin{align}
-    \mesh x < \delta \implies |R(f,x,t)- I| < \varepsilon
-  \end{align}
+  A function is \emph{integrable} on $[a,b]$ if there is an $I\in\mathbb{R}$ such that, for all $\varepsilon>0$ there is a $\delta>0$ such that for all partition pairs $(x, t)$
+  \begin{align*}
+    \mesh x < \delta \implies |R(f,x,t)- I| < \varepsilon.
+  \end{align*}
   If $f$ is integrable on $[a,b]$, $I$ is the integral of $f$ over $[a,b]$ and it is denoted by
-  \begin{align}
-    \int^b_a f(x) \,\mathrm{d} x = I = \lim_{\mesh x \to 0} \sum^n_{i=1} f(t_i) \Delta x_i
-  \end{align}
+  \begin{align*}
+    \int^b_a f(x) \,\mathrm{d} x = I = \lim_{\mesh x \to 0} \sum^n_{i=1} f(t_i) \Delta x_i.
+  \end{align*}
 \end{definition}
 
-
 \begin{definition}[Upper Sum]
-  \begin{align}
-    U(f,x) := \sum_{i=1}^n M_i \Delta x_i
-  \end{align}
+  Let $f:[a,b] \to \mathbb{R}$ be bounded above and let $x$ be a partition on $[a,b]$.
+  The \emph{upper sum} of $f$ with respect to partition $x$ is
+  \begin{align*}
+    U(f, x) := \sum_{i=1}^n M_i \Delta x_i,
+  \end{align*}
   where
-  \begin{align}
-    M_i := \sup\{ f(x) : t_{i-1} \leq x_i \leq t_i \}
-  \end{align}
+  \begin{align*}
+    M_i := \sup\left\{ f(x) \mid x \in [x_{i-1}, x_i]\right\}.
+  \end{align*}
 \end{definition}
 
 \begin{definition}[Lower Sum]
-  \begin{align}
-    L(f,x) := \sum_{i=1}^n m_i \Delta x_i
-  \end{align}
+  Let $f:[a,b] \to \mathbb{R}$ be bounded below and let $x$ be a partition on $[a,b]$.
+  The \emph{lower sum} of $f$ with respect to partition $x$ is
+  \begin{align*}
+    L(f, x) := \sum_{i=1}^n m_i \Delta x_i,
+  \end{align*}
   where
-  \begin{align}
-    m_i := \inf\{ f(x) : t_{i-1} \leq x_i \leq t_i \}
-  \end{align}
+  \begin{align*}
+    m_i := \inf\left\{ f(x) \mid x \in [x_{i-1}, x_i]\right\}.
+  \end{align*}
 \end{definition}
-
-\begin{lemma}
-  If $t^*$ is a refinement of $t$, such that $t= t^*\circ p$
-  \begin{align}
-    \sum^{p_i}_{j=p_{i-1}+1} a (t_j^* - t_{j-1}^*) = a (t_i-t_{i-1})
-  \end{align}
-\end{lemma}
-\begin{proof}
-  \begin{align}
-    \sum^{p_i}_{j=p_{i-1}+1} a \left(t^*_j - t_{j-1}^*\right)
-    &= a \sum^{p_i}_{j=p_{i-1}+1} \left(t^*_j - t_{j-1}^*\right)\\
-    &= a \sum^i_{j={i-1}+1} \left(t^*_{p_j} - t^*_{p_{j-1}}\right)\\
-    &= a\sum^i_{j=i} \left(t_j - t_{j-1}\right) \\
-    &= a \left( t_i - t_{i-1} \right) 
-  \end{align}
-\end{proof}
 
 \begin{theorem}
   If $x^*$ is a refinement of $x$, then
-  \begin{align}
-    L(f,x) \leq L(f,x^*)\nonumber\\
-    U(f,x) \geq U(f,x^*)
-  \end{align}
+  \begin{align*}
+    L(f,x) &\leq L(f,x^*)\\
+    U(f,x) &\geq U(f,x^*)
+  \end{align*}
 \end{theorem}
 \begin{proof}
-  Define $M$, $M^*$, $m$ and $m^*$ such that
+  Let $x^*$ be a refinement of partition $x$.
+  Define
   \begin{align*}
-    M_i = \sup \{ f(x) : t_{i-1} \leq x \leq t_{i} \}\\
-    M_i^* = \sup \{ f(x) : t^*_{i-1} \leq x \leq t^*_{i} \}\\
-    m_i = \inf \{ f(x) : t_{i-1} \leq x \leq t_{i} \}\\
-    m_i^* = \inf \{ f(x) : t^*_{i-1} \leq x \leq t^*_{i} \}
+    M_i &:= \sup \left\{f(x) \mid x \in [x_{i-1}, x_i]\right\},\\
+    M_i^* &:= \sup \left\{f(x) \mid x \in [x^*_{i-1}, x^*_i]\right\},\\
+    m_i &:= \inf \left\{f(x) \mid x \in [x_{i-1}, x_i]\right\},\\
+    m_i^* &:= \inf \left\{f(x) \mid x \in [x^*_{i-1}, x^*_i]\right\}.
   \end{align*}
-  Let $p:[0,n]\to [0,n^*]$ be a finite sequence such that
-  \begin{align}
-    t = t^* \circ p
-  \end{align}
+  Since $x^*$ is a refinement of partition $x$, there exists a sequence $p:[0,n]\cap\mathbb{N} \to [0,n^*]\cap\mathbb{N}$ such that $x = x^* \circ p$.
   Then $M$ and $m$ can be written as
   \begin{align*}
-    M_i = \sup \{ f(x) : t^*_{p_{i-1}} \leq x \leq t^*_{p_i} \}\\
-    m_i = \inf \{ f(x) : t^*_{p_{i-1}} \leq x \leq t^*_{p_i} \}
+    M_i &= \sup \left\{ f(x) \mid x \in \left[x^*_{p_{i-1}}, x^*_{p_i}\right] \right\},\\
+    m_i &= \inf \left\{ f(x) \mid x \in \left[x^*_{p_{i-1}}, x^*_{p_i}\right]\right\}.
   \end{align*}
-  Thus $\forall i\in[0,n]:\forall j\in[p_{i-1},p_i]: m^*_j\geq m_i$ and $M^*_j\leq M_i$, thus
-  \begin{align}
-    \sum_{j=p_{i-1}+1}^{p_i} m_j^* (t_j^* - t_{j-1}^*) &\geq \sum_{j=p_{i-1}+1}^{p_i}  m_i (t_j^* - t_{j-1}^*)\\
-    \sum_{j=p_{i-1}+1}^{p_i} M_j^* (t_j^* - t_{j-1}^*) &\leq \sum_{j=p_{i-1}+1}^{p_i} M_i (t_j^* - t_{j-1}^*)
-  \end{align}
-  By the above lemma
-  \begin{align}
-    \sum_{j=p_{i-1}+1}^{p_i} m_j^* (t_j^* - t_{j-1}^*) &\geq m_i (t_i - t_{i-1})\\
-    \sum_{j=p_{i-1}+1}^{p_i} M_j^* (t_j^* - t_{j-1}^*) &\leq M_i (t_i - t_{i-1})
-  \end{align}
-  And
-  \begin{align}
-    \sum_{i=1}^n \sum_{j=p_{i-1}+1}^{p_i} m_j^* (t_j^* - t_{j-1}^*) &\geq \sum_{i=1}^n  m_i (t_i - t_{i-1})\\
-    \sum_{i=1}^n \sum_{j=p_{i-1}+1}^{p_i} M_j^* (t_j^* - t_{j-1}^*) &\leq\sum_{i=1}^n   M_i (t_i - t_{i-1})
-  \end{align}
-  And finally
-  \begin{align}
-    \sum_{i=1}^{n^*=p_n} m_i^* (t_i^* - t_{i-1}^*) &\geq \sum_{i=1}^n  m_i (t_i - t_{i-1})\\
-    \sum_{i=1}^{n^*=p_n} M_i^* (t_i^* - t_{i-1}^*) &\leq\sum_{i=1}^n   M_i (t_i - t_{i-1})
-  \end{align}
-  Giving
-  \begin{align}
-    L(f,t^*) \geq L(f,t)\\
-    U(f,t^*) \leq U(f,t)
-  \end{align}
-\end{proof}
-
-\begin{lemma}
-  For a partition $P$
-  \begin{align}
-    L(f,P) \leq U(f,P)
-  \end{align}
-\end{lemma}
-\begin{proof}
-  Define $M$ and $m$ such that
-  \begin{align}
-    M_i = \sup \{ f(x) : t_{i-1} \leq x \leq t_{i} \}\\
-    m_i = \inf \{ f(x) : t_{i-1} \leq x \leq t_{i} \}
-  \end{align}
-  then for every $i: m_i \leq M_i$, thus
-  \begin{align}
-    \sum^n_{i=1} m_i (t_i - t_{i-1} \leq \sum^n_{i=1} M_i (t_i - t_{i-1})
-  \end{align}
-  Hence $L(f,t) \leq U(f,t)$
+  Since every subinterval $[x_{j-1}^*, x_j^*] \subseteq [x_{i-1}, x_i]$, we have
+  \begin{align*}
+    m_j^* \geq m_i \text{ and } M_j^* \leq M_i \text{ for all } j \in[p_{i-1}, p_i].
+  \end{align*}
+  So,
+  \begin{align*}
+    \sum_{j=p_{i-1}+1}^{p_i} m_j^* (x_j^* - x_{j-1}^*) &\geq \sum_{j=p_{i-1}+1}^{p_i}  m_i (x_j^* - x_{j-1}^*)\\
+    \sum_{j=p_{i-1}+1}^{p_i} M_j^* (x_j^* - x_{j-1}^*) &\leq \sum_{j=p_{i-1}+1}^{p_i} M_i (x_j^* - x_{j-1}^*)
+  \end{align*}
+  Since $x^*$ is a refinement of $x$, the sum over $[x_{j-1}^*,x_{j_i}^*]$ for $j=p_{i-1}+1$ to $p_i$ telescopes to $[x_{i-1}, x_i]$.
+  \begin{align*}
+    \sum_{j=p_{i-1}+1}^{p_i} m_j^* (x_j^* - x_{j-1}^*) &\geq m_i (x_i - x_{i-1})\\
+    \sum_{j=p_{i-1}+1}^{p_i} M_j^* (x_j^* - x_{j-1}^*) &\leq M_i (x_i - x_{i-1}).
+  \end{align*}
+  Summing over all intervals $[x_{i-1}, x_i]$
+  \begin{align*}
+    \sum_{i=1}^n \sum_{j=p_{i-1}+1}^{p_i} m_j^* (x_j^* - x_{j-1}^*) &\geq \sum_{i=1}^n  m_i (x_i - x_{i-1}),\\
+    \sum_{i=1}^n \sum_{j=p_{i-1}+1}^{p_i} M_j^* (x_j^* - x_{j-1}^*) &\leq\sum_{i=1}^n   M_i (x_i - x_{i-1}).
+  \end{align*}
+  The double sum on the left spans all subintervals of $x^*$, so it equals the full lower or upper sum over $x^*$.
+  The left side sum over sums is the full sum over the full interval $[x_0, x_{n^*}]$
+  \begin{align*}
+    \sum_{i=1}^{n^*=p_n} m_i^* (x_i^* - x_{i-1}^*) &\geq \sum_{i=1}^n  m_i (x_i - x_{i-1}),\\
+    \sum_{i=1}^{n^*=p_n} M_i^* (x_i^* - x_{i-1}^*) &\leq\sum_{i=1}^n   M_i (x_i - x_{i-1}),
+  \end{align*}
+  which are the definitions of the upper and lower sums
+  \begin{align*}
+    L(f, x^*) &\geq L(f, x),\\
+    U(f, x^*) &\leq U(f, x).
+  \end{align*}
 \end{proof}
 
 \begin{theorem}
-  For all partitions, $P_1$, $P_2$,
-  \begin{align}
-    L(f,P_1) \leq U(f,P_2)
-  \end{align}
+  Let $f:[a, b] \to \mathbb{R}$ be a bounded function. For any partition pair $(x, t)$
+  \begin{align*}
+    L(f, x) \leq R(f, x, t) \leq U(f, x).
+  \end{align*}
+\end{theorem}
+\begin{proof}
+  Define $M$ and $m$ such that
+  \begin{align*}
+    M_i &= \sup \{ f(x) \mid x \in [x_{i-1}, x_i] \},\\
+    m_i &= \inf \{ f(x) \mid x \in [x_{i-1}, x_i] \}.
+  \end{align*}
+  Then for all pieces of the partition, the inequality holds
+  \begin{align*}
+    \forall i: m_i  \leq f(t_i) \leq M_i.
+  \end{align*}
+  So for the full partition, multiplying through by the size of the pieces
+  \begin{align*}
+    m_i \Delta x_i \leq f(t_i) \Delta x_i \leq M_i \Delta x_i.  
+  \end{align*}
+  Summing over all \( i \), we get:
+  \begin{align*}
+    \sum_{i=1}^n m_i \Delta x_i \leq \sum_{i=1}^n f(t_i) \Delta x_i \leq \sum_{i=1}^n M_i \Delta x_i.
+  \end{align*}
+  That is,
+  \begin{align*}
+    L(f, x) \leq R(f, x, t) \leq U(f, x).
+  \end{align*}
+\end{proof}
+
+\begin{theorem}
+  Let $f:[a,b] \to \mathbb{R}$ be a bounded function. 
+  For all partitions, $x_1$, $x_2$,
+  \begin{align*}
+    L(f, x_1) \leq R(f, x^*, t) \leq U(f, x_2).
+  \end{align*}
 \end{theorem}
 \begin{proof}
   Let $t^*$ be the common refinement of $t_1$ and $t_2$, then
-  \begin{align}
+  \begin{align*}
     L(f,t_1) \leq L(f,t^*)\\
-    U(f,t^*) \leq U(f,t_2)
-  \end{align}
+    U(f,t^*) \leq U(f,t_2).
+  \end{align*}
   By the above lemma
   \begin{align}
     L(f,t^*) \leq U(f,t^*)
@@ -2112,16 +2521,24 @@
 %\end{corollary}
 
 \begin{theorem}
-  A bounded function $f$ is integrable on $[a,b]$, if for every $\varepsilon>0$, there is a partition $x$ such that
-  \begin{align}
-    U(f,x) - L(f,x) < \varepsilon
-  \end{align}
+  Let $f: [a,b] \to \mathbb{R}$ be a bounded function. Then $f$ is integrable on $[a, b]$ if and only if, for every $\varepsilon>0$, there exists a partition $x$ of $[a, b]$ such that
+  \begin{align*}
+    U(f,x) - L(f,x) < \varepsilon.
+  \end{align*}
 \end{theorem}
 \begin{proof}
-  Let $\varepsilon>0$ and suppose such a partition $x$ exists such that
-  \begin{align}
-    U(f,x)-L(f,x)<\varepsilon
-  \end{align}
+  First, assume the bounded function $f$ is integrable. That is, there is an $I \in \mathbb{R}$ such that, for all $\varepsilon' > 0$ there is a $\delta > 0$ such that for every partition pair $(x, t)$
+  \begin{align*}
+    \mesh x < \delta \implies |R(f, x, t) - I| < \varepsilon'.
+  \end{align*}
+  Define $\varepsilon:=2\varepsilon'$, so that
+  \begin{align*}
+    |R(f, x, t) - I| < \frac{\varpsilon}{2}.
+  \end{align*}
+  If $f$ is integrable on $[a,b]$, $I$ is the integral of $f$ over $[a,b]$ and it is denoted by
+  \begin{align*}
+    \int^b_a f(x) \,\mathrm{d} x = I = \lim_{\mesh x \to 0} \sum^n_{i=1} f(t_i) \Delta x_i.
+  \end{align*}
 \end{proof}
 
 
@@ -2132,7 +2549,7 @@
   \begin{align}
     \forall x\in(a,b): F'(x) = f(x)
   \end{align}
-  
+
 \end{definition}
 
 \begin{lemma}
@@ -2156,830 +2573,11 @@
 \end{theorem}
 
 
-\pagebreak
-\appendix
-\section{Real Numbers}
 
-\subsection{Rational Sequences}
-
-\begin{definition}[Sequence] 
-  A \emph{sequence} of rationals is a function whose domain is the positive integers and co-domain is a subset of rationals.
-  \begin{align}
-    s: \mathbb{Z}^+ &\to \mathbb{Q}\nonumber\\
-    n &\mapsto s_n
-  \end{align}
-  Let $\mathcal{S}$ denote the set of all rational sequences.
-\end{definition}
-
-\begin{definition}[Constant Sequence]
-  A \emph{constant sequence} is a sequence $c^*\in\mathcal{S}$ in which all the values are the same. 
-  \begin{align}
-    \forall n \in \mathbb{Z}^+: c^*_n = c
-  \end{align}
-  where $c\in\mathbb{Q}$. Let $\mathbb{Q}^*$ denote the set of all constant, rational sequences.
-\end{definition}
-
-\begin{definition}[Convergent Sequence]
-  A \emph{convergent sequence} of rationals is a sequence $s\in\mathcal{S}$, in which there is an $L \in\mathbb{Q}$ such that
-  \begin{align}
-    \forall \varepsilon \in\mathbb{Q}^+ : \exists N \in\mathbb{Z}^+: n > N \implies |s_n - L | < \varepsilon
-  \end{align}
-  If $s$ converges to $L$, then $L$ is called the \emph{limit} of the sequence, denoted by
-  \begin{align}
-    \lim_n s = L
-  \end{align}
-  Let $\mathcal{C}$ denote the set of all convergent, rational sequences.
-\end{definition}
-
-\begin{theorem}\label{Theorem:ConstantIsConvergent}
-  Every constant sequence is convergent, the limit being the value of the function.
-  \begin{align}
-    \mathbb{Q}^* \subset \mathcal{C}
-  \end{align}
-  and for $c \in \mathbb{Q}$
-  \begin{align}
-    c^*: n \mapsto c \implies \lim_n c^*_n = c
-  \end{align}
-\end{theorem}
-\begin{proof}
-  Let $c^*:n\mapsto c$ be a rational, constant sequence.
-  Choose any $\varepsilon\in \mathbb{Q}^+$ and any $N \in \mathbb{Z}^+$.
-  For all $n$, including $n>N$,
-  \begin{align}
-    |c^*_n - c | = 0 < \varepsilon
-  \end{align}
-  which is the criterion for a convergent sequence
-  \begin{align}
-    \lim_n c^*_n = c
-  \end{align}
-\end{proof}
-
-\begin{definition}[Fundamental Sequence] 
-  A \emph{fundamental sequence} of rationals is a sequence $s\in\mathcal{S}$, where
-  \begin{align}
-    \forall \varepsilon\in\mathbb{Q}^+: \exists N \in \mathbb{Z}^+: m,n > N  \implies |s_m-s_n| < \varepsilon
-  \end{align}
-  Let $\mathcal{F}$ denote the set of all fundamental, convergent sequences.
-\end{definition}
-
-\begin{theorem}
-  Every convergent sequence is fundamental.
-  \begin{align}
-    \mathcal{C} \subset \mathcal{F}
-  \end{align}
-\end{theorem}
-\begin{proof}
-  Let $s$ be a convergent sequence $s\in\mathcal{F}$.
-  Choose $\varepsilon\in \mathbb{Q}^+$, which implies $\exists N \in \mathbb{Z}^+$, such that for $m,n > N$, the convergent criterion holds.
-  \begin{align}
-    |s_m - s_n | = |(s_m - L) - (s_n - L)|
-  \end{align}
-  By triangle inequality
-  \begin{align}
-    |(s_m- L) - (s_n - L) | \leq|s_m - L | + |s_n - L|
-  \end{align}
-  Define $\varepsilon' := 2\varepsilon$. By the definition of a convergent sequence, for all $n > N$
-  \begin{align}
-    |s_n - L | < \varepsilon = \frac{\varepsilon'}{2}
-  \end{align}
-  By $a<b\land c<d \implies a_c<b+d$
-  \begin{align}
-    |s_m- L | + |s_n- L| < \frac{\varepsilon'}{2} + \frac{\varepsilon'}{2} = \varepsilon'
-  \end{align}
-  Therefor
-  \begin{align}
-    |s_m - s_n | < \varepsilon'
-  \end{align}
-  which is the fundamental criterion.
-\end{proof}
-
-\begin{definition}[Bounded Sequence]
-  A sequence $s\in\mathcal{S}$ is \emph{completely bounded} by the interval $(b,B)$ if
-  \begin{align}
-    \forall n\in\mathbb{Z}^+: b< s_n < B
-  \end{align}
-  Let $\mathcal{B}$ denote the set of all bounded sequences
-\end{definition}
-
-\begin{theorem}
-  Every fundamental sequence is bounded.
-  \begin{align}
-    \mathcal{F} \subset \mathcal{B}
-  \end{align}
-\end{theorem}
-\begin{proof}
-  Choose a fundamental sequence $s\in\mathcal{F}$ and choose a $\varepsilon \in \mathbb{Q}^+$. This implies the existence of $N\in\mathbb{Z}^+$ where if $m, n>N$ the fundamental criterion holds.
-  Define $M:=N+1$.
-  Since $\{|s_n|:n\leq M\}$ is a finite set, $\max\{|s_n|:n\leq M\}$ is just a rational number.
-  Define a number
-  \begin{align}
-    B:= \max \{|s_n|:n\leq M\}+ \varepsilon
-  \end{align}
-  The number $B-\varepsilon$ bounds the sequence for $n\leq M$; for $n> M$:
-  \begin{align*}
-    |s_n| = |s_n -s_M +s_M|
-  \end{align*}
-  By the triangle inequality
-  \begin{align*}
-    |s_n| \leq |s_n- s_M| + |s_M|
-  \end{align*}
-  From the definition of a fundamental sequence
-  \begin{align}
-    |s_n - s_M| < \varepsilon
-  \end{align}
-  Since $B-\varepsilon$ is a bound for $n\leq M$
-  \begin{align}
-    |s_M| < B - \varepsilon
-  \end{align}
-  By $a<b\land c<d\implies a+c<b+d$
-  \begin{align}
-    |s_n| < \varepsilon + B - \varepsilon = B
-  \end{align}
-\end{proof}
-
-
-\subsection{The Sequence Subrings}
-
-\begin{definition}
-  Define addition of two sequences as
-  \begin{align}
-    s+t:=i\mapsto s_i+t_i
-  \end{align}
-  Subtraction of two sequences by
-  \begin{align}
-    s-t := i \mapsto s_i - t_i
-  \end{align}
-  and multiplication of two sequences as
-  \begin{align}
-    st:= i \mapsto s_i t_i
-  \end{align}
-\end{definition}
-
-\begin{theorem}
-  The sum of two fundamental sequences is fundamental.
-\end{theorem}
-\begin{proof}
-  By the triangle inequality
-  \begin{align}
-    |s_m - s_n + t_m - t_n | \leq |s_m - s_n| + |t_m - t_n|
-  \end{align}
-  By the definition of fundamental sequences, $\forall \varepsilon_s, \varepsilon_t\in\mathbb{Q}^+$, there is a $N_s, N_t\in\mathbb{Z}^+$ and $N:=\max\{N_s, N_t\}$, such that if $m,n > N$
-  \begin{align}
-    |s_m - s_n| &< \varepsilon_s\nonumber\\
-    |t_m - t_n| &< \varepsilon_t
-  \end{align}
-  By $a<b\land c<d\implies a+c<b+d$
-  \begin{align}
-    |s_m - s_n| + |t_m - t_n| < \varepsilon_s + \varepsilon_t
-  \end{align}
-  Let $\varepsilon:= \varepsilon_s+\varepsilon_t$
-  \begin{align}
-    |s_m - s_n +t_m - t_n| &< \varepsilon\\
-    \left|(s_m + t_m) - (s_n + t_n) \right| &< \varepsilon
-  \end{align}
-\end{proof}
-
-\begin{theorem}
-  The product of two fundamental sequences is fundamental.
-\end{theorem}
-\begin{proof}
-  \begin{align}
-    |s_m t_m - s_n t_n | &= |s_m t_m - s_m t_n + s_m t_n - s_n t_n |\\
-    &= \left|s_m ( t_m - t_n) + t_n (s_m - s_n) \right| 
-  \end{align}
-  By the triangle identity
-  \begin{align}
-    |s_m ( t_m - t_n) + t_n (s_m - s_n) |  \leq |s_m (t_m - t_n ) | + |t_n (s_m -s_n ) |
-  \end{align}
-  Let $b_s$ and $b_t$ be bounds of sequences $s$ and $t$ respectively.
-  Define $B:=2 \max\{b_s, b_t\}$, then by the definition of bounding and order transitivity
-  \begin{align}
-    |s_m| < \frac{B}{2} \land |t_n| < \frac{B}{2}
-  \end{align}
-  The definition of a closing sequences holds for $\frac{\varepsilon}{B}$, so
-  \begin{align}
-    |s_m - s_n | < \frac{\varepsilon }{ B} \land |t_m - t_n | < \frac{\varepsilon}{B}
-  \end{align}
-  By $0<a<b\land 0<c<d \implies ac< bd$
-  \begin{align}
-    |s_m | |t_m - t_n | &< \frac{B}{2} \frac{\varepsilon}{B} = \frac{\varepsilon}{2}\nonumber\\
-    |t_n | |s_m - s_n | &< \frac{B}{2} \frac{\varepsilon}{B} = \frac{\varepsilon}{2}
-  \end{align}
-  By $a<b \land c<d\implies a+c < b+d$
-  \begin{align}
-    |s_m||t_m- t_n| + |t_n| |s_m - s_n| < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon
-  \end{align}
-  Therefor
-  \begin{align}
-    |s_m t_m - s_n t_n| < \varepsilon
-  \end{align}
-\end{proof}
-
-\begin{theorem}
-  The sum of two convergent sequences is convergent
-  \begin{align}
-    \lim_n s_n + \lim_n t_n = \lim_n (s_n+t_n)
-  \end{align}
-\end{theorem}
-
-\begin{theorem}
-  The product of two convergent sequences is convergent
-  \begin{align}
-    \lim_n s_n \cdot \lim_n t_n = \lim_n (s_n t_n)
-  \end{align}
-\end{theorem}
-
-\subsection{Ordered Rings}
-
-\begin{definition}
-  \begin{align}
-    \mathcal{Z} := \left\{\{s_n\}\in\mathcal{C}:\lim_n s_n = 0\right\}
-  \end{align}
-\end{definition}
-
-\begin{definition}[Positive]
-  The set of \emph{positive} fundamental sequences are sequences that have a tail that eventually is greater than some positive rational.
-  \begin{align}
-    \mathcal{F}^+ := \left\{ \{s_n\}\in \mathcal{F}\middle| \exists \varepsilon\in\mathbb{Q}^+,N\in\mathbb{Z}^+: n>N \implies s_n >\varepsilon \right\}
-  \end{align}
-\end{definition}
-
-\begin{theorem}
-  For all fundamental sequences $\{s_n\} \in\mathcal{F}$, exactly one of the following is true: $\{s_n\} \in \mathcal{Z}$, $\{s_n\} \in\mathcal{F}^+$, or $\{-s_n\} \in \mathcal{F}^+$
-\end{theorem}
-\begin{proof}
-  If a sequence $\{s_n\}$ is fundamental then,
-  \begin{align}
-    \forall \varepsilon\in\mathbb{Q}^+, \exists N \in \mathbb{Z}^+, \forall m,n>N: |s_m-s_n| < \varepsilon
-  \end{align}
-  but not $\mathcal{Z}$
-  \begin{align}
-    \exists \varepsilon' \in \mathbb{Q}^+, \forall N \in \mathbb{Z}^+, \exists n > N: |s_n| \geq \varepsilon'
-  \end{align}
-  If there is such an $\varepsilon'$, then there must be an $r$ such that $\varepsilon'> r> 0$
-  \begin{align}
-    \forall N \in\mathbb{Z}^+, \exists n > N : |s_n| > r
-  \end{align}
-  Choose some $\varepsilon$, such that $r>\varepsilon>0$ and $N$
-  \begin{align}
-    \forall m,n>N \implies |s_m -s _n| < \varepsilon
-  \end{align}
-  Choose $n>N$ such that
-  \begin{align}
-    |s_n| > r
-  \end{align}
-  Use the definition of a fundamental sequence
-  \begin{align}
-    s_n - \varepsilon < s_m < s_n + \varepsilon
-  \end{align}
-  If $s_n>0$, then $s_n>r$
-  \begin{align}
-    r-\varepsilon < s_n - \varepsilon < s_m
-  \end{align}
-  Since $r> \varepsilon$
-  \begin{align}
-    0< r- \varepsilon <s_m
-  \end{align}
-  So that, for every $m>N$
-  \begin{align}
-    0< s_m
-  \end{align}
-  If $s_n<0$, then $s_n<-r$
-  \begin{align}
-    s_m<\varepsilon + s_n < \varepsilon - r
-  \end{align}
-  Since $r>\varepsilon$
-  \begin{align}
-    s_m<\varepsilon-r<0
-  \end{align}
-  So that, for every $m>N$
-  \begin{align}
-    s_m < 0
-  \end{align}
-  Therefor, for every sequence $\{s_n\}\in\mathbb{F} - \mathbb{Z}$, one of the following is true
-  \begin{align}
-    \exists N: n>N \implies 0 < s_n\\
-    \exists N: n>N \implies s_n < 0
-  \end{align}
-  The first one implies that $\{s_n\}\in\mathcal{F}^+$, for the second one, take $\{-s_n\}$, then
-  \begin{align}
-    \exists N: n>N \implies 0 < -s_n
-  \end{align}
-  so that $\{-s_n\}\in\mathcal{F}^+$
-\end{proof}
-
-\begin{theorem}[Closure]
-  Addition and multiplication are closed on $\mathcal{F}^+$
-\end{theorem}
-\begin{proof}
-  Choose two sequences $s,t\in\mathcal{F}^+$, then there is an $N_s$, $N_t$ such that
-  \begin{align}
-    n> N_s \implies s_n > 0\\
-    n> N_t \implies t_n >0
-  \end{align}
-  Define $N:=\max\{N_s, N_t\}$, then for any $n>N$
-  \begin{align}
-    s_n > 0\land t_n >0
-  \end{align}
-  Since addition and multiplication are closed on positive rationals
-  \begin{align}
-    s_n+t_n>0 \land s_nt_n > 0
-  \end{align}
-  And
-  \begin{align}
-    s+ t \in \mathcal{F}^+\\
-    s\cdot t \in \mathcal{F}^+
-  \end{align}
-\end{proof}
-
-\begin{definition}
-  \begin{align}
-    x>y \iff x-y \in \mathcal{F}\\
-    x<y \iff y-x \in \mathcal{F}
-  \end{align}
-\end{definition}
-
-\subsection{The Real Field}
-
-\begin{definition*}
-  \begin{align}
-    \mathcal{Z} := \left\{\{s_n\}\in\mathcal{C}:\lim_n s_n = 0\right\}
-  \end{align}
-\end{definition*}
-
-\begin{theorem}
-  $\mathcal{Z}$ is a subgroup of $(\mathcal{S},+)$
-\end{theorem}
-\begin{proof}
-  The additive identity $0^*$ is in $\mathcal{Z}$, since it converges to zero.
-  \begin{align}
-    \lim_n 0^* = 0
-  \end{align}
-  And addition and subtraction is closed on $\mathcal{Z}$. If $a,b\in\mathcal{Z}$
-  \begin{align}
-    \lim_n(a_n+b_n) &= \lim_n a_n + \lim_n b_n = 0+0 = 0\\
-    \lim_n(a_n-b_n) &= \lim_n a_n - \lim_n b_n = 0-0 = 0
-  \end{align}
-\end{proof}
-
-\begin{lemma}
-  The product of a bounded sequence and a sequence in $\mathcal{Z}$ is in $\mathcal{Z}$
-  \begin{align}
-    \forall s\in\mathcal{B}, t\in\mathcal{Z}: st\in\mathcal{Z}
-  \end{align}
-\end{lemma}
-\begin{proof}
-  Since $s$ is bounded
-  \begin{align}
-    \forall n\in\mathbb{Z}^+: b< s_n &< B\\
-    |s_n|&< |B|
-  \end{align}
-  Fix $\varepsilon\in\mathbb{Q}^+$ and $N\in\mathbb{Z}^+$, then for all $n>N$
-  \begin{align}
-    |t_n|< \varepsilon
-  \end{align}
-  Then for all $n>N$
-  \begin{align}
-    |s_n||t_n|< |B| \varepsilon
-    |s_n\cdot t_n| < |B| \varepsilon
-  \end{align}
-  Let $\varepsilon' := |B|\varepsilon$, then for all $\varepsilon'\in\mathbb{Q}^+$
-  \begin{align}
-    n>N \implies |s_n t_n| < \varepsilon'
-  \end{align}
-  or
-  \begin{align}
-    \lim_n s_n t_n = 0
-  \end{align}
-  and
-  \begin{align}
-    s\cdot t\in\mathcal{Z}
-  \end{align}
-\end{proof}
-
-\begin{definition}[Equivalence]
-  Two sequences are equivalent mod $\mathcal{Z}$ if and only if their difference is in $\mathcal{Z}$
-  \begin{align}
-    s\equiv_\mathcal{Z} t \iff s-t\in\mathcal{Z}
-  \end{align}
-\end{definition}
-
-\begin{theorem}[Equivalence Reflexivity]
-  \begin{align}
-    a\equiv_\mathcal{Z} a 
-  \end{align}
-\end{theorem}
-\begin{proof}
-  \begin{align}
-    a-a&: n \mapsto a_n - a_n = 0\\
-    a-a&: n \mapsto 0\\
-    a-a &= 0^*\in\mathbb{Z}
-  \end{align}
-  \begin{align}
-    a\equiv_\mathcal{Z} a
-  \end{align}
-\end{proof}
-
-\begin{theorem}[Equivalence Symmetry]
-  \begin{align}
-    a\equiv_\mathcal{Z} b \iff b\equiv_\mathcal{Z} a
-  \end{align}
-\end{theorem}
-\begin{proof}
-  \begin{align}
-    a\equiv_\mathcal{Z} b
-  \end{align}
-  \begin{align}
-    a-b&\in\mathcal{Z}\\
-    -(a-b) &\in\mathcal{Z}\\
-    b-a &\in\mathcal{Z}
-  \end{align}
-  \begin{align}
-    b\equiv_\mathcal{Z} a
-  \end{align}
-\end{proof}
-
-\begin{theorem}[Equivalence Transitivity]
-  \begin{align}
-    a\equiv_\mathcal{Z} b \land b \equiv_\mathcal{Z} c \implies a\equiv_\mathcal{Z} c
-  \end{align}
-\end{theorem}
-\begin{proof}
-  \begin{align}
-    a\equiv_\mathcal{Z} b &\land b \equiv_\mathcal{Z} c\\
-    a-b\in\mathcal{Z} &\land b-c \in\mathcal{Z}
-  \end{align}
-  Since addition is closed on $\mathbb{Z}$
-  \begin{align}
-    (a-b) + (b-c) &\in\mathcal{Z}\\
-    a-c &\in\mathcal{Z}
-  \end{align}
-  \begin{align}
-    a\equiv_\mathcal{Z} c
-  \end{align}
-\end{proof}
-
-\begin{theorem}
-  Addition is compatible with equivalence
-  \begin{align}
-    s\equiv_\mathcal{Z} s' \land t\equiv_\mathcal{Z} t' \implies s+t \equiv_\mathcal{Z} s'+t'
-  \end{align}
-\end{theorem}
-\begin{proof}
-  Since $s\equiv_\mathcal{Z} s'$ and $t\equiv_\mathcal{Z} t'$
-  \begin{align}
-    s-s'\in\mathcal{Z}\\
-    t-t'\in\mathcal{Z}
-  \end{align}
-  Since $\mathcal{Z}$ is closed on addition
-  \begin{align}
-    (s-s')+(t-t')\in\mathcal{Z}\\
-    (s+t)-(s'+t') \in\mathcal{Z}
-  \end{align}
-  which implies that
-  \begin{align}
-    s+t \equiv_\mathcal{Z} s'+t'
-  \end{align}
-\end{proof}
-
-\begin{theorem}
-  Multiplication is compatible with equivalence for bounded sequences
-  \begin{align}
-    \forall s,s',t,t'\in\mathcal{B}:s\equiv_\mathcal{Z} s' \land t\equiv_\mathcal{Z} t' \implies st \equiv_\mathcal{Z} s't'
-  \end{align}
-\end{theorem}
-\begin{proof}
-  Assume $s\equiv_\mathcal{Z} s'$ and $t\equiv_\mathcal{Z} t'$, then
-  \begin{align}
-    s-s'&\in\mathcal{Z}\\
-    t-t'&\in\mathcal{Z}
-  \end{align}
-  Since $s\in\mathcal{B}$ and $t'\in\mathcal{B}$
-  \begin{align}
-    s(t-t')\in\mathcal{Z}\\
-    st-st'\in\mathcal{Z}
-  \end{align}
-  and
-  \begin{align}
-    (s-s')t'\in\mathcal{Z}\\
-    st'-s't'\in\mathcal{Z}
-  \end{align}
-  Since $\mathcal{Z}$ is closed on addition
-  \begin{align}
-    st-st'+st'-s't'\in\mathcal{Z}\\
-    st-s't'\in\mathcal{Z}
-  \end{align}
-  By the definition of equivalence
-  \begin{align}
-    st \equiv_\mathcal{Z} s't'
-  \end{align}
-\end{proof}
-
-\begin{theorem}
-  If $x\equiv_\mathcal{z} y$ and $\lim_n x_n = L$, then $\lim_n y_n = L$
-\end{theorem}
-\begin{proof}
-  Fix $\varepsilon\in\mathbb{Q}^+$
-  \begin{align}
-    \exists N_1\in\mathbb{Z}^+: \forall n> N_1: |x_n - y_n|< \varepsilon\\
-    \exists N_2\in\mathbb{Z}^+: \forall n> N_2: |x_n - L| < \varepsilon
-  \end{align}
-  Let $N:= \max\{N_1, N_2\}$, if $n>N$
-  \begin{align}
-    |x_n-y_n| < \varepsilon\\
-    |x_n - L| < \varepsilon
-  \end{align}
-  By the triangle identity
-  \begin{align}
-    |y_n-L | = |y_n-x_n+x_n-L| \leq |x_n-y_n| + |x_n- L| < \varepsilon +  \varepsilon = 2\varepsilon
-  \end{align}
-  Let $\varepsilon':= 2\varepsilon$. For all $n>N$
-  \begin{align}
-    |y_n-L| < \varepsilon
-  \end{align}
-  Or
-  \begin{align}
-    \lim_n y_n = L
-  \end{align}
-\end{proof}
-
-\begin{theorem}
-  Positive fundamental sequences are closed over equivalence
-  \begin{align}
-    \forall x\in\mathcal{F}^+: x\equiv_\mathcal{Z} y \implies y\in\mathcal{F}^+
-  \end{align}
-\end{theorem}
-\begin{proof}
-  Since $x$ is in $\mathcal{F}^+$, there is an $r\in\mathcal{Q}^+$ and $N\in\mathbb{Z}^+$ such that for all $n>N$
-  \begin{align}
-    x_n > r>0
-  \end{align}
-  Since the rationals are dense, there is a rational $s$ such that
-  \begin{align}
-    r> s>0\\
-    r-s>0
-  \end{align}
-  Since $x-y\in\mathcal{Z}$, there is an $N'\in\mathcal{Z}^+$ such that
-  \begin{align}
-    n> N'> N \implies |x_n - y_n| < r-s
-  \end{align}
-  If $n> N'$
-  \begin{align}
-    s-r < y_n - x_n
-  \end{align}
-  Along with $r< x_n$
-  \begin{align}
-    s- r+ r = s < y_n- x_n +x_n = y_n
-  \end{align}
-  \begin{align}
-    \forall n>N': s>y_n
-  \end{align}
-  So $y\in\mathcal{F}^+$
-\end{proof}
-
-\begin{definition}[The Real Field]
-  The \emph{real field} is the partition of equivalence classes in $\mathcal{F}$
-  \begin{align}
-    \mathbb{R} := \mathcal{F} / \equiv_\mathcal{Z}
-  \end{align}
-\end{definition}
-
-
-\begin{theorem}
-  Every fundamental sequence not in $\mathcal{Z}$, has a multiplicative inverse.
-  \begin{align}
-    \forall x\in\mathcal{F}-\mathcal{Z}, \exists x^{-1} \in\mathcal{F}: xx^{-1} \equiv_\mathcal{Z} 1^*
-  \end{align}
-\end{theorem}
-\begin{proof}
-  If $x\in\mathcal{F}-\mathcal{Z}$, then either $x\in\mathcal{F}^+$ or $-x\in\mathcal{F}^+$. First assume $x\in\mathcal{F}^+$, then there is an $r\in\mathbb{Q}^+$ such that there is a $N$-tail such that
-  \begin{align}
-    x_n > r >0
-  \end{align}
-  Define $x^{-1}$, such that
-  \begin{align}
-    n>N : x_n^{-1} := \frac{1}{x_n}\\
-    n\geq N : x_n^{-1} := 0
-  \end{align}
-  And let $y_n:= x_{N+n}$ and $y_n^{-1} := x^{-1}_{N+n}$
-  \begin{align}
-    \forall n: y_n y_n^{-1} = x_{N+n} \frac{1}{x_{N+n}} = 1\\
-    y y^{-1} = 1^*
-  \end{align}
-  Since $yy^{-1}$ is a tail of $xx^{-1}$
-  \begin{align}
-    xx^{-1} \equiv_\mathcal{Z} yy^{-1} = 1^*
-  \end{align}
-  Now assume $-x\in\mathcal{F}^+$, then there is a $(-x)^{-1}\in\mathcal{F}$
-  \begin{align}
-    (-x)(-x)^{-1} \equiv_\mathcal{Z} 1^*\\
-    x\left[-(-x)^{-1}\right] \equiv_\mathcal{Z} 1^*
-  \end{align}
-  Therefor each fundamental sequence not in $\mathcal{Z}$ has a multiplicative inverse.
-\end{proof}
-
-
-\subsection{Completion of the Field}
-
-\begin{definition}[Fundamental Sequence]
-  A real, fundamental sequence is defined by
-  \begin{align}
-    \forall \varepsilon \in \mathbb{R}^+: \exists N \in \mathbb{Z}^+: n,m > N \implies |x_m - x_n | < \varepsilon
-  \end{align}
-\end{definition}
-
-\begin{definition}[Convergent Sequence]
-  A real, convergent sequence converges to $L\in\mathbb{R}$ if
-  \begin{align}
-    \forall \varepsilon \in \mathbb{R}^+: \exists N \in \mathbb{Z}^+: n > N \implies |x_n - L | < \varepsilon
-  \end{align}
-  If $L$ exists it is called the \emph{limit} of the function
-  \begin{align}
-    L = \lim_n x_n
-  \end{align}
-\end{definition}
-
-\begin{theorem}%[Archimedean Property]
-  For every real number there is a greater positive integer.
-  \begin{align}
-    \forall x\in\mathbb{R}: \exists n \in \mathbb{Z}^+: n^* > x 
-  \end{align}
-  where $n^*:= m \mapsto n$ and $\mathbb{Z}^+ \subset \mathbb{Q}$
-\end{theorem}
-\begin{proof}
-  Let $x\in\mathbb{R}$ be any real number.
-  By definition it is a fundamental sequence of rationals $x\in\mathcal{C}$.
-  Every fundamental sequence is bounded, so there exists $b,B\in\mathbb{Q}$, such that, for all $i\in\mathbb{Z}+$
-  \begin{align}
-    b < x_i < B
-  \end{align}
-  By the Archimedean property of rationals, there exists an $n\in\mathbb{Z}^+$, such that $n>B$.
-  \begin{align}
-    x_i < n
-  \end{align}
-  Consider the constant sequence $n^*: i \mapsto n$
-  \begin{align}
-    x_i < n = n^*_i
-  \end{align}
-  Choose any $\varepsilon \in\mathbb{Q}^+$ and any $N\in\mathbb{Z}^+$
-  \begin{align}
-    i > N \implies x_i < n_i^*
-  \end{align}
-  which by definition of order on the reals
-  \begin{align}
-    x< n^*
-  \end{align}
-\end{proof}
-
-\begin{theorem}
-  $\mathbb{Q}^*$ is a dense subset of $\mathbb{R}$
-  \begin{align}
-    \forall x \in \mathbb{R}, \varepsilon \in \mathbb{Q}^+: \exists r \in \mathbb{Q}^*: |x - r | < \varepsilon
-  \end{align}
-\end{theorem}
-\begin{proof}
-  Fix $\varepsilon\in \mathbb{Q}^+$ and $x \in\mathbb{R}$.
-  Since $x$ is a rational, fundamental sequence, there is an $N\in\mathbb{Z}^+$ such that
-  \begin{align}
-    m,n > N \implies |x_m - x_n | < \varepsilon
-  \end{align}
-  Choose $l>m$, let $r:= n \mapsto x_l$
-  \begin{align}
-    n> N \implies |x_n - r_n| < \varepsilon
-  \end{align}
-  By the definition of order on $\mathbb{R}$ and the definition of a limit
-  \begin{align}
-    \lim_n |x_n - r_n | < \varepsilon
-  \end{align}
-  By the definition of the absolute value on $\mathbb{R}$
-  \begin{align}
-    |x- r| < \varepsilon
-  \end{align}
-\end{proof}
-
-\begin{theorem}
-  Every fundamental sequence of rational, constant sequences converges to a fundamental sequence.
-  \begin{align}
-    \lim_n r^*_n = r
-  \end{align}
-  where $r^*: n \mapsto ( m \mapsto r_n)$
-\end{theorem}
-\begin{proof}
-  Let $r\in\mathcal{F}$ be a rational, fundamental sequence. Choose some $\varepsilon\in\mathbb{R}^+$, then there is some $N\in\mathbb{Z}^+$ such that
-  \begin{align}
-    m,n > N \implies |r_m - r_n | <\varepsilon
-  \end{align}
-  Fixing $m>N$, the definition of a limit gives
-  \begin{align}
-    \lim_n r_n = r_m
-  \end{align}
-  \begin{align}
-    \left|\lim_n r_n - r_m \right| = 0 < \varepsilon
-  \end{align}
-  Define $r^*: m  \mapsto (n \mapsto r_m)$, then the limit of the constant sequences $r_m^*$ are the constant
-  \begin{align}
-    \lim_n r_{mn}^* = r_m
-  \end{align}
-  Giving
-  \begin{align}
-    \left|\lim_n r_n - \lim_n r_{mn}^* \right| < \varepsilon
-  \end{align}
-  % Clean after this
-  By the definition of order on $\mathbb{R}$
-  \begin{align}
-    |r_n^* - r | < \varepsilon
-  \end{align}
-  Therefor
-  \begin{align}
-    \forall \varepsilon\in\mathbb{Q}^+: \exists N \in \mathbb{Z}^+: n > N \implies |r_n^* - r| < \varepsilon
-  \end{align}
-  or more succinctly
-  \begin{align}
-    \lim_n r_n^* = r
-  \end{align}
-\end{proof}
-
-\begin{theorem}[Completeness]
-  Every real, fundamental sequence converges to a real number.
-\end{theorem}
-\begin{proof}
-  Let $x$ be a real, fundamental sequence. Define a sequence of constant, rational sequences $r^*:\mathbb{Z}^+\to\mathbb{Q}^*$ such that
-  \begin{align}
-    x_n-\frac{1}{n} < r_n^* < x_n+\frac{1}{n}
-  \end{align}
-  or
-  \begin{align}
-    |r_n^*-x_n | < \frac{1}{n}
-  \end{align}
-  For any $m,n\in\mathbb{Z}^+$, by triangle identity
-  \begin{align}
-    |r^*_m - r^*_n | &= |r^*_m - x_m + x_m - x_n +x_n - r^*_n|\\
-    &\leq |r_m^* - x_m| + |x_m - x_n| + |r_n^* - x_n|\\
-    &< |x_m - x_n| + \frac{1}{m} + \frac{1}{n}
-  \end{align}
-  Since $x$ is a fundamental sequence, for every $\varepsilon\in\mathbb{R}^+$ there is an $N\in\mathbb{Z}^+$, such that $m,n>N$
-  \begin{align}
-    |x_m - x_n | < \frac{\varepsilon}{3}
-  \end{align}
-  Choose $N'\in\mathbb{Z}^+:N'>\frac{3}{\varepsilon}$, and define $M:=\max\{ N , N'\}$. For all $m, n > M $
-  \begin{align}
-    m > M &> \frac{3}{\varepsilon} > 0\nonumber\\
-    n > M &> \frac{3}{\varepsilon} > 0
-  \end{align}
-  implies
-  \begin{align}
-    \frac{1}{m} < \frac{\varepsilon}{3}\nonumber\\
-    \frac{1}{n} < \frac{\varepsilon}{3}
-  \end{align}
-  Applying this to the earlier inequality
-  \begin{align}
-    |r^*_m - r^*_n| < \frac{\varepsilon}{3} + \frac{\varepsilon}{3} + \frac{\varepsilon}{3} = \varepsilon
-  \end{align}
-  Hence $r^*$ is a fundamental sequence.
-  %Clean after this
-  Therefore by the lemma above
-  \begin{align}
-    \lim_n r^*_n = r
-  \end{align}
-  where $r^*: n \mapsto ( m \mapsto r_n)$. 
-  From the definition of $r^*$, for every $n\in\mathbb{Z}^+$
-  \begin{align}
-    |r^*_n - x_n | < \frac{1}{n}
-  \end{align}
-  Since $\mathbb{R}$ is unbounded
-  \begin{align}
-    \forall \varepsilon \in \mathbb{R}^+: \exists N\in\mathbb{Z}^+ : \frac{1}{N} < \varepsilon
-  \end{align}
-  If $n>N$, then $\frac{1}{n} < \frac{1}{N} < \varepsilon$
-  \begin{align}
-    |r^*_n-x_n| <\frac{1}{N} <  \varepsilon
-  \end{align}
-  Then, for every $\varepsilon\in\mathbb{R}^+$ there is a $N\in\mathbb{Z}^+$ such that if $n>N$
-  \begin{align}
-    |r^*_n-x_n| < \varepsilon
-  \end{align}
-  Since $\lim_n r^*_n = r$
-  \begin{align}
-    \exists N'\in\mathbb{Z}^+: \forall n> N': |r^*_n - r| < \varepsilon
-  \end{align}
-  Let $M:= \max\{N, N'\}$, if $n>M$, then for all $\varepsilon\in\mathbb{R}^+$
-  \begin{align}
-    |r^*_n-x_n| < \frac{\varepsilon}{2}\\
-    |r^*_n - r| < \frac{\varepsilon}{2}
-  \end{align}
-  By the triangle identity
-  \begin{align}
-    |x_n-r | &= |x_n-r^*_n+r^*_n-r|\nonumber\\
-    &\leq |r^*_n-x_n| + |r^*_n - r| < \frac{\varepsilon}{2} +  \frac{\varepsilon}{2} = \varepsilon
-  \end{align}
-  Hence for all $n>M$
-  \begin{align}
-    |x_n-r| < \varepsilon
-  \end{align}
-  Or
-  \begin{align}
-    \lim_n x_n = r
-  \end{align}
-\end{proof}
-
+\partmark{Functional Analysis}
+\newpage
+\section{Normed Spaces}
+\section{Functionals}
+\section{Fr\'{e}chet \& Gateaux Derivatives}
+\section{Weak Convergence}
 \end{document}
